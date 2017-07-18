@@ -1,0 +1,45 @@
+User API
+    •   회원가입 ( /api/user/signup POST )
+    content type : application/json
+        {
+            studentId :  ,
+            password :  ,
+            name :  ,
+            email :  
+        }
+
+    return value :
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : {error : , code : }
+            code == 0 : 이미 학번이 존재할 때
+            code == 1 : 비밀번호가 형식에 맞지 않을 때
+
+
+    •   로그인 ( /api/user/login POST )
+    content type : application/json
+        {
+            studentId :  ,
+            password :  
+        }
+
+    return value : 
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : {error : , code : }
+            code == 0 : 비밀번호가 틀렸거나 학번이 틀렸을 때
+
+    •   이메일 인증 ( /api/user/confirm POST )
+    content type : application/json
+        {
+            token :   
+        }
+
+    return value : 
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : {error : , code : }
+            code == 0 : 잘못된 토큰이 왔을 때
+
+    •   로그아웃 ( /api/user/logout GET)
+    return value : 
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : {error : , code : }
+            code == 0 : 로그인되어있지 않을 때
