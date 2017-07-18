@@ -12,7 +12,6 @@ router.get('/', (req, res) => {
       code: 0
     });
   };
-
   return res.json({user: req.session.userInfo});
 });
 
@@ -23,26 +22,21 @@ router.post('/signup', (req, res) => {
   const smtpTransport = req.app.get('smtpTransport');
   let passwordRegex = /^/;
   let nameRegex = /^/;
-
   User.findOne({student_id: studentId}, (err, exist) => {
     if (err) throw err;
-
     if (exist) {
-      return res.status().json({
+      return res.status(400).json({
         error: "STUDENT_EXIST",
         code: 0
       });
     };
-
     if (password.length < 8 || typeof password !== "string" || !passwordRegex.test(password)) {
       return res.status(400).json({
         error: "BAD_PASSWORD",
         code: 1
       });
     };
-
     // TODO smart car track check
-    
     let user = new User({student_id: studentId, password, name});
     user.password = user.generateHash(user.password);
     user.save((err) => {
@@ -50,12 +44,12 @@ router.post('/signup', (req, res) => {
     });
 
     let token = uuidV4();
-    redisClient.set(token, studentId);
+    redisClient.set(token, studentId, 'EX', 86400);
     let mailOptions = {
       from: config.mailer.from,
       to: email,
       subject: 'test',
-      text: `test test ${token}`
+      text: `www.shero.com/confirm?token=${token}`
     };
 
     smtpTransport.sendMail(mailOptions, (err, info) => {
@@ -70,7 +64,6 @@ router.post('/login', (req, res) => {
   let { studentId, password } = req.body;
   User.findOne({student_id: studentId}, (err, user) => {
     if (err) throw err;
-    
     if (!user) {
       return res.status(400).json({
         error: "LOGIN_FAILED",
@@ -95,7 +88,7 @@ router.post('/login', (req, res) => {
 
 router.post('/confirm', (req, res) => {
   const redisClient = req.app.get('redisClient');
-  let token = req.query.token;
+  let { token } = req.body;
   redisClient.get(token, (err, reply) => {
     if (err) throw err;
 
@@ -107,14 +100,24 @@ router.post('/confirm', (req, res) => {
     };
 
     User.findOne({student_id: reply}, (err, user) => {
+      if (err) throw err;
       user.confirmed = true;
-      return res.json({success: true});
+      user.save((err) => {
+        if (err) throw err;
+        redisClient.del(token);
+        return res.json({success: true});
+      });
     });
   });
-
 });
 
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(400).json({
+      error: "NOT_LOGGED_IN",
+      code: 0
+    });
+  };
   req.session.destroy((err) => { if(err) throw err });
   return res.json({success: true});
 });
