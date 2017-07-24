@@ -1,6 +1,6 @@
 import express from 'express';
 import uuidV4 from 'uuid/v4';
-import User from '../models/user';
+import { User } from '../models';
 import config from '../config';
 
 const router = express.Router();
@@ -12,51 +12,58 @@ router.get('/', (req, res) => {
       code: 0
     });
   };
-  return res.json({user: req.session.userInfo});
+  User.findOne({student_id: req.session.userInfo.studentId}, (err, user) => {
+    if (err) throw err;
+    if (!user) {
+      return res.status(400).json({
+        error: "INVALID_ID",
+        code: 1
+      });
+    };
+    return res.json({ user });
+  })
 });
 
 router.post('/signup', (req, res) => {
-  // TODO sign up
   let { studentId, password, name, email } = req.body;
-  const redisClient = req.app.get('redisClient');
-  const smtpTransport = req.app.get('smtpTransport');
   let passwordRegex = /^/;
-  let nameRegex = /^/;
-  User.findOne({student_id: studentId}, (err, exist) => {
+  User.findOne({student_id: studentId}, (err, user) => {
     if (err) throw err;
-    if (exist) {
+    if (!user) {
       return res.status(400).json({
-        error: "STUDENT_EXIST",
+        error: "NOT_IN_LIST",
         code: 0
+      });
+    };
+    if (user.active) {
+      return res.status(400).json({
+        error: "ALREADY_EXIST",
+        code: 1
       });
     };
     if (password.length < 8 || typeof password !== "string" || !passwordRegex.test(password)) {
       return res.status(400).json({
         error: "BAD_PASSWORD",
-        code: 1
+        code: 2
       });
     };
-    // TODO smart car track check
-    let user = new User({student_id: studentId, password, name});
-    user.password = user.generateHash(user.password);
+    if (user.name !== name) {
+      return res.status(400).json({
+        error: "BAD_NAME",
+        code: 3
+      });
+    };
+
+    user.student_id = studentId;
+    user.active = true;
+    user.password = user.generateHash(password);
     user.save((err) => {
       if (err) throw err;
     });
 
-    let token = uuidV4();
-    redisClient.set(token, studentId, 'EX', 86400);
-    let mailOptions = {
-      from: config.mailer.from,
-      to: email,
-      subject: 'test',
-      text: `www.shero.com/confirm?token=${token}`
-    };
+    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
 
-    smtpTransport.sendMail(mailOptions, (err, info) => {
-      if (err) throw err;
-      console.log('email sent to %s', email);
-    });
-    return res.json({success: true});
+    return res.json({ success: true });
   });
 });
 
@@ -71,6 +78,13 @@ router.post('/login', (req, res) => {
       });
     };
 
+    if (!user.active) {
+      return res.status(403).json({
+        error: "NOT_SIGNED",
+        code: 1
+      });
+    };
+
     if (!user.validateHash(password)) {
       return res.status(400).json({
         error: "LOGIN_FAILED",
@@ -82,7 +96,11 @@ router.post('/login', (req, res) => {
       id: user._id,
       studentId
     };
-    return res.json({success: true});
+
+    return res.json({
+      success: true,
+      confirmed: user.confirmed
+    });
   });
 });
 
@@ -111,7 +129,7 @@ router.post('/confirm', (req, res) => {
   });
 });
 
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   if (typeof req.session.userInfo === "undefined") {
     return res.status(400).json({
       error: "NOT_LOGGED_IN",
@@ -121,5 +139,33 @@ router.get('/logout', (req, res) => {
   req.session.destroy((err) => { if(err) throw err });
   return res.json({success: true});
 });
+
+router.post('/reconfirm', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(400).json({
+      error: "NOT_LOGGED_IN",
+      code: 0
+    });
+  };
+
+  sendMail(req.body.studentId, req.body.email, req.app.get('redisClient'), req.app.get(smtpTransport));
+  return res.json({ success: true });
+});
+
+function sendMail(studentId, email, redisClient, smtpTransport) {
+  let token = uuidV4();
+  redisClient.set(token, studentId, 'EX', 60 * 60 * 4);
+  let mailOptions = {
+    from: config.mailer.from,
+    to: email,
+    subject: '스마트카 팩토리 이용 페이지의 인증메일입니다.',
+    text: `www.shero.com/confirm?token=${token}`
+  };
+
+  smtpTransport.sendMail(mailOptions, (err, info) => {
+    if (err) throw err;
+    console.log('email sent to %s', email);
+  });
+};
 
 export default router;
