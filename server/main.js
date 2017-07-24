@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import session from 'express-session'; 
 import RedisStore from 'connect-redis';
 import nodemailer from 'nodemailer';
+import helmet from 'helmet';
+import csrf from 'csurf'; 
 import redis from 'redis';
 import config from './config';
 import api from './routes';
@@ -28,17 +30,14 @@ mongoose.connect(`mongodb://${config.mongo.user}:${config.mongo.password}@${mong
 /* redis connection */
 const redisStore = RedisStore(session);
 const redisClient = redis.createClient(config.redis.port, config.redis.host, {auth_pass: config.redis.password, db: 5});
-const redisConfig = {
-  client: redisClient,
-  ttl: 300,
-}
 
 /* session configuration */
 app.use(session({
-  store: new redisStore(redisConfig),
+store: new redisStore({ client: redisClient }),
   secret: config.redis.secret,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  ttl: 60 * 60 * 4 // 4 hours 
 }));
 
 const smtpTransport = nodemailer.createTransport({
@@ -50,22 +49,36 @@ const smtpTransport = nodemailer.createTransport({
 
 app.set('smtpTransport', smtpTransport);
 app.set('redisClient', redisClient);
-app.use('/', express.static(path.join(__dirname, './../dist')));
+app.use('/', express.static(path.resolve(__dirname, './../dist')));
+app.use(helmet());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(csrf());
+app.use((req, res, next) => {
+  req.session.csrftoken = req.csrfToken();
+  return next();
+});
 app.use('/api', api);
-
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, './../dist/index.html'));
 });
 
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  if (err.code === 'EBADCSRFTOKEN') {
+    res.status(403).json({
+      error: "INVALID_REQUEST",
+      code: -2
+    });
+  } else {
+    res.status(500).json({
+      error: "SOMETHING_BROKE",
+      code: -1
+    });
+  };
 });
-
 
 app.listen(port, () => {
   console.log('Express is listening on port', port);

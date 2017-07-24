@@ -3,19 +3,20 @@ import bcrypt from 'bcryptjs';
 
 const Schema = mongoose.Schema;
 
-const User = new Schema({
+const userSchema = new Schema({
   student_id: String,
   name: String,
   password: String,
+  active: { type: Boolean, default: false },
   confirmed: { type: Boolean, default: false },
 });
 
-User.methods.generateHash = function(password){
+userSchema.methods.generateHash = function(password){
   return bcrypt.hashSync(password, 10);
 };
 
-User.methods.validateHash = function(password){
+userSchema.methods.validateHash = function(password){
   return bcrypt.compareSync(password, this.password);
 };
 
-export default mongoose.model('user', User);
+export default mongoose.model('User', userSchema);
