@@ -12,16 +12,10 @@ router.get('/', (req, res) => {
       code: 0
     });
   };
-  User.findOne({student_id: req.session.userInfo.studentId}, (err, user) => {
-    if (err) throw err;
-    if (!user) {
-      return res.status(400).json({
-        error: "INVALID_ID",
-        code: 1
-      });
-    };
-    return res.json({ user });
-  })
+  return res.json({ 
+    name: req.session.userInfo.name,
+    studentId: req.session.userInfo.studentId
+  });
 });
 
 router.post('/signup', (req, res) => {
@@ -92,15 +86,24 @@ router.post('/login', (req, res) => {
       });
     };
 
-    req.session.userInfo = {
-      id: user._id,
-      studentId
-    };
+    if (!user.confirmed) {
+      return res.json({
+        success: false,
+        studentId
+      });
+    } else {
+      req.session.userInfo = {
+        id: user._id,
+        studentId,
+        name: user.name
+      };
 
-    return res.json({
-      success: true,
-      confirmed: user.confirmed
-    });
+      return res.json({
+        success: true,
+        name: user.name,
+        studentId
+      });
+    };
   });
 });
 
@@ -141,15 +144,34 @@ router.post('/logout', (req, res) => {
 });
 
 router.post('/reconfirm', (req, res) => {
-  if (typeof req.session.userInfo === "undefined") {
-    return res.status(400).json({
-      error: "NOT_LOGGED_IN",
-      code: 0
-    });
-  };
+  let { studentId, password, email } = req.body;
 
-  sendMail(req.body.studentId, req.body.email, req.app.get('redisClient'), req.app.get(smtpTransport));
-  return res.json({ success: true });
+  User.findOne({student_id: studentId}, (err, user) => {
+    if (err) throw err;
+    if (!user) {
+      return res.status(400).json({
+        error: "AUTH_FAILED",
+        code: 0
+      });
+    };
+
+    if (!user.active) {
+      return res.status(403).json({
+        error: "NOT_SIGNED",
+        code: 1
+      });
+    };
+
+    if (!user.validateHash(password)) {
+      return res.status(400).json({
+        error: "AUTH_FAILED",
+        code: 0
+      });
+    };
+
+    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
+    return res.json({ success: true });
+  };
 });
 
 function sendMail(studentId, email, redisClient, smtpTransport) {
