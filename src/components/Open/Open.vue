@@ -1,10 +1,10 @@
 <template>
 	<div class="open">
 		<div v-if="isOpen">
-			<img src="../../assets/open_on.png" @click='sendSignal'>
+			<img src="../../assets/open/open_on.png" @click='sendSignal'>
 		</div>
 		<div v-else>
-			<img src="../../assets/open_off.png" @click='sendSignal'>
+			<img src="../../assets/open/open_off.png" @click='sendSignal'>
 		</div>
 	</div>
 </template>

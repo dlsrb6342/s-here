@@ -1,12 +1,11 @@
 <template>
 	<div class="app-nav">
-		<ul>
-			<li><a :href="gotoMP">SMART CAR FACTORY</a></li>
-			<li><a :href="gotoMP">Home</a></li>
-			<li><a :href="gotoAbout">About</a></li>
-			<li><a :href="gotoBook">Book</a></li>
-			<li><a :href="gotoContact">Contact</a></li>
-		</ul>
+		<img src="../assets/logo/skku_logo.jpg" height="42" width="42">
+		<a :href="gotoMP">SMART CAR FACTORY</a>
+		<a :href="gotoMP">Home</a>
+		<a :href="gotoAbout">About</a>
+		<a :href="gotoBook">Book</a>
+		<a :href="gotoContact">Contact</a>
 	</div>
 </template>
 
@@ -31,3 +30,4 @@ export default {
 <style>
 
 </style>
+

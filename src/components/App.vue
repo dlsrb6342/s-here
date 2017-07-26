@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="../assets/skku_logo.jpg">
+    
     <app-nav v-bind:pstate="state"></app-nav>
     <p v-if="state == 'mainpage'">
       <mainpage></mainpage>
@@ -17,14 +17,14 @@
     <p v-if="state == 'check'">
       <check></check>
     </p>
-    <p v-if="state == 'book'">
+    <p v-if="state == 'reserve'">
       <reserve></reserve>
     </p>
     <p v-if="state == 'user'">
       <user></user>
     </p>
-    <p v-if="state == 'register'">
-      <register></register>
+    <p v-if="state == 'signup'">
+      <signup></signup>
     </p>
     <app-footer></app-footer>
   </div>
@@ -42,10 +42,10 @@ import Contact from './About/Contact'
 import Open from './Open/Open'
 
 import User from './User/User'
-import Register from './User/Register'
+import Signup from './User/Signup'
 
 import Check from './Check/Check'
-import Book from './Check/Book'
+import Reserve from './Check/Reserve'
 
 import Admin from './Admin/Admin'
 
@@ -57,9 +57,9 @@ export default {
     'about': About,
     'open': Open,
     'user': User,
-    'register': Register,
+    'signup': Signup,
     'check': Check,
-    'book': Book,
+    'reserve': Reserve,
     'admin': Admin,
     'app-footer': AppFooter
   },
