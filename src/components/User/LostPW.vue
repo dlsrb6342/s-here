@@ -1,12 +1,12 @@
 <template>
-	<div class="contact">
-    <p>This is Contact</p>
+	<div class="lostpw">
+    <p>Lost Password?</p>
 	</div>
 </template>
 
 <script>
 export default {
-  name: 'contact'
+  name: 'lostpw'
 }
 </script>
 

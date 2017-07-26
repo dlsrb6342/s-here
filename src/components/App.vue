@@ -1,29 +1,38 @@
 <template>
   <div id="app">
-    <app-nav @change="changeState"></app-nav>
-    <p v-if="state == 'mainpage'">
+    <app-nav
+    @change="changeState"
+    :user="currentUser"></app-nav>
+    <p v-show="state == 'mainpage'">
       <mainpage></mainpage>
     </p>
-    <p v-if="state == 'about'">
-      <about></about>
+    <p v-show="state == 'about'">
+      <about @change="changeState"></about>
     </p>
-    <p v-if="state == 'contact'">
-      <contact></contact>
+    <p v-show="state == 'contact'">
+      <contact @change="changeState"></contact>
     </p>
-    <p v-if="state == 'open'">
-      <open></open>
+    <p v-show="state == 'open'">
+      <open @change="changeState"></open>
     </p>
-    <p v-if="state == 'check'">
-      <check></check>
+    <p v-show="state == 'check'">
+      <check @change="changeState"></check>
     </p>
-    <p v-if="state == 'reserve'">
-      <reserve></reserve>
+    <p v-show="state == 'reserve'">
+      <reserve @change="changeState"></reserve>
     </p>
-    <p v-if="state == 'user'">
-      <user></user>
+    <p v-show="state == 'user'">
+      <user @change="changeState"></user>
     </p>
-    <p v-if="state == 'signup'">
+    <p v-show="state == 'signup'">
       <signup @change="changeState"></signup>
+    </p>
+    <p v-show="state == 'login'">
+      <login @change="changeState"
+      @setUser="changeUser"></login>
+    </p>
+    <p v-show="state == 'lostpw'">
+      <lostpw @change="changeState"></lostpw>
     </p>
     <app-footer></app-footer>
   </div>
@@ -42,6 +51,8 @@ import Open from './Open/Open'
 
 import User from './User/User'
 import Signup from './User/Signup'
+import Login from './User/Login'
+import LostPW from './User/LostPW'
 
 import Check from './Check/Check'
 import Reserve from './Check/Reserve'
@@ -58,6 +69,8 @@ export default {
     'open': Open,
     'user': User,
     'signup': Signup,
+    'login': Login,
+    'lostpw': LostPW,
     'check': Check,
     'reserve': Reserve,
     'admin': Admin,
@@ -65,13 +78,15 @@ export default {
   },
   data () {
     return {
-      state: 'mainpage'
+      state: 'mainpage',
+      currentUser: null,
     }
   },
   methods: {
-    changeState: function (gotState) {
-      if (gotState) this.state = gotState
-    }
+    changeState: function (gotState) { if (gotState) this.state = gotState },
+    changeUser: user => this.currentUser = user,
+    getUser: () => this.currentUser,
+    logoutUser: () => { this.currentUser = null },
   }
 }
 </script>

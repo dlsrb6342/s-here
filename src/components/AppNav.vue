@@ -6,18 +6,24 @@
 		<a href="javascript:void(0)" @click="goPage('about')">About</a>
 		<a href="javascript:void(0)" @click="goPage('reserve')">Book</a>
 		<a href="javascript:void(0)" @click="goPage('contact')">Contact</a>
-    <!-- 회원가입 테스트가 마땅찮아서 임의로 만듬 -->
-    <a @click="goPage('signup')">SignUp</a>
-
+    <!-- 로그인 여부 판단 -->
+		<div v-if="this.user">
+			<a href="javascript:void(0)" @click="goPage('user')">My Page</a>
+		</div>
+		<div v-else>
+			<a href="javascript:void(0)" @click="goPage('login')">Login</a>
+			<a href="javascript:void(0)" @click="goPage('signup')">SignUp</a>
+		</div>
 	</div>
 </template>
 
 <script>
 export default {
 	name: 'app-nav',
+	props: ['user'],
 	methods: {
-		goPage: function (goMessage) { this.$emit('change', goMessage) }
-	}
+		goPage: function (goMessage) { this.$emit('change', goMessage) }		
+	},
 }
 </script>
 

@@ -6,7 +6,7 @@
     사용자 학번: <input type="text" v-model="studentId"><br>
     Password: <input type="password" v-model="Password"><br>
     Verify: <input type="password" v-model="Verify"><br>
-
+    학생증 사진: <input type="file" @fileUp="processFile($event)" accept="image/*">
     <button @click="submit">제출</button>
     <button @click="cancel">취소</button>
 	</div>
@@ -15,13 +15,14 @@
 <script>
 export default {
   name: 'signup',
-  data: function () {
+  data () {
     return {
       Email: '',
       userName: '',
       studentId: '',
       Password: '',
       Verify: '',
+      Picture: null,
     }
   },
   methods: {
@@ -37,6 +38,7 @@ export default {
           '","email":"' + this.Email + '@skku.edu"}')
         /*
         // JSON POST 요청 전송은 확인되었지만, 실제로 작동하는지는 모름
+        // 아직 사진파일 업로드도 미완성.
         console.log(xhr.status)
         switch (xhr.responseText) {
           case 0:
@@ -63,8 +65,10 @@ export default {
       this.Password = ''
       this.Verify = ''
       this.encodedPassword = ''
+      this.Picture = null
       this.$emit('change', 'mainpage')
-    }
+    },
+    processFile: (event) => { this.Picture = event.target.files[0] },
   }
 }
 </script>
