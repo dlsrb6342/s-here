@@ -22,7 +22,8 @@
       <reserve @change="changeState"></reserve>
     </p>
     <p v-show="state == 'user'">
-      <user @change="changeState"></user>
+      <user @change="changeState"
+      @logout="logoutUser"></user>
     </p>
     <p v-show="state == 'signup'">
       <signup @change="changeState"></signup>
@@ -86,7 +87,14 @@ export default {
     changeState: function (gotState) { if (gotState) this.state = gotState },
     changeUser: user => this.currentUser = user,
     getUser: () => this.currentUser,
-    logoutUser: () => { this.currentUser = null },
+    logoutUser: () => {
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', '/api/user/logout')
+      xhr.send(' ')
+      /*
+      XMLHttpRequest 응답을 보고 판단.
+      if (result['success']) */this.currentUser = null
+    },
   }
 }
 </script>
