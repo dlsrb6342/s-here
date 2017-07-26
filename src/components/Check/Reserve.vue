@@ -1,6 +1,6 @@
 <template>
 	<div class="reserve">
-		
+    <p>This is Reserve</p>
 	</div>
 </template>
 

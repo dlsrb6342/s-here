@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    
-    <app-nav v-bind:pstate="state"></app-nav>
+    <app-nav @change="changeState"></app-nav>
     <p v-if="state == 'mainpage'">
       <mainpage></mainpage>
     </p>
@@ -24,7 +23,7 @@
       <user></user>
     </p>
     <p v-if="state == 'signup'">
-      <signup></signup>
+      <signup @change="changeState"></signup>
     </p>
     <app-footer></app-footer>
   </div>
@@ -55,6 +54,7 @@ export default {
     'app-nav': AppNav,
     'mainpage': MainPage,
     'about': About,
+    'contact': Contact,
     'open': Open,
     'user': User,
     'signup': Signup,
@@ -68,8 +68,10 @@ export default {
       state: 'mainpage'
     }
   },
-  computed: {
-    changeState: (state) => this.state = state
+  methods: {
+    changeState: function (gotState) {
+      if (gotState) this.state = gotState
+    }
   }
 }
 </script>
