@@ -17,9 +17,9 @@ export default {
 			isOpen: false
 		}
 	},
-	computed: {
+	methods: {
 		sendSignal: function (click) {
-			var xmlHttp = new XMLHttpRequest()
+			var xhr = new XMLHttpRequest()
 		}
 	}
 }
