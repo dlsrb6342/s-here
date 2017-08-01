@@ -18,9 +18,6 @@
     <p v-show="state == 'check'">
       <check @change="changeState"></check>
     </p>
-    <p v-show="state == 'reserve'">
-      <reserve @change="changeState"></reserve>
-    </p>
     <p v-show="state == 'user'">
       <user @change="changeState"
       @logout="logoutUser"></user>
@@ -41,7 +38,7 @@
 
 <script>
 
-import Nav from './Nav'
+import Nav from './Navbar'
 import Footer from './Footer'
 
 import MainPage from '@/pages/MainPage'
@@ -57,7 +54,6 @@ import Login from '@/pages/User/Login'
 import LostPW from '@/pages/User/LostPW'
 
 import Check from '@/pages/Check/Check'
-import Reserve from '@/pages/Check/Reserve'
 
 import Admin from '@/pages/Admin/Admin'
 
@@ -74,14 +70,13 @@ export default {
     'login': Login,
     'lostpw': LostPW,
     'check': Check,
-    'reserve': Reserve,
     'admin': Admin,
     'app-footer': Footer
   },
   data () {
     return {
       state: 'mainpage',
-      currentUser: null,
+      currentUser: [null, null],
     }
   },
   methods: {
@@ -91,10 +86,10 @@ export default {
     logoutUser: () => {
       let xhr = new XMLHttpRequest()
       xhr.open('POST', '/api/user/logout')
-      xhr.send(' ')
-      /*
-      XMLHttpRequest 응답을 보고 판단.
-      if (result['success']) */this.currentUser = null
+      xhr.send(null)
+      while (xhr.readyState != XMLHttpRequest.DONE) {}
+      let result = JSON.parse(xhr.responseText)
+      if (result.hasOwnProperty('success')) this.currentUser = [null, null]
     },
   }
 }
