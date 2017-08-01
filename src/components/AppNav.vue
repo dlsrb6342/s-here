@@ -6,6 +6,7 @@
 		<a href="javascript:void(0)" @click="goPage('about')">About</a>
 		<a href="javascript:void(0)" @click="goPage('reserve')">Book</a>
 		<a href="javascript:void(0)" @click="goPage('contact')">Contact</a>
+
     <!-- 로그인 여부 판단 -->
 		<div v-if="this.user">
 			<a href="javascript:void(0)" @click="goPage('user')">My Page</a>
@@ -22,7 +23,7 @@ export default {
 	name: 'app-nav',
 	props: ['user'],
 	methods: {
-		goPage: function (goMessage) { this.$emit('change', goMessage) }		
+		goPage: function (goMessage) { this.$emit('change', goMessage) }
 	},
 }
 </script>
