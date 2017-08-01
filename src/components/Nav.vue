@@ -9,7 +9,7 @@
 
     <!-- 로그인 여부 판단 -->
 		<div v-if="this.user">
-			<a href="javascript:void(0)" @click="goPage('user')">My Page</a>
+			<a href="javascript:void(0)" @click="goPage('user')">{{ this.user[1] }}님, 환영합니다.</a>
 		</div>
 		<div v-else>
 			<a href="javascript:void(0)" @click="goPage('login')">Login</a>

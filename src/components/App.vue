@@ -40,30 +40,31 @@
 </template>
 
 <script>
-import AppNav from './AppNav'
-import AppFooter from './AppFooter'
 
-import MainPage from './MainPage'
+import Nav from './Nav'
+import Footer from './Footer'
 
-import About from './About/About'
-import Contact from './About/Contact'
+import MainPage from '@/pages/MainPage'
 
-import Open from './Open/Open'
+import About from '@/pages/About/About'
+import Contact from '@/pages/About/Contact'
 
-import User from './User/User'
-import Signup from './User/Signup'
-import Login from './User/Login'
-import LostPW from './User/LostPW'
+import Open from '@/pages/Open/Open'
 
-import Check from './Check/Check'
-import Reserve from './Check/Reserve'
+import User from '@/pages/User/User'
+import Signup from '@/pages/User/Signup'
+import Login from '@/pages/User/Login'
+import LostPW from '@/pages/User/LostPW'
 
-import Admin from './Admin/Admin'
+import Check from '@/pages/Check/Check'
+import Reserve from '@/pages/Check/Reserve'
+
+import Admin from '@/pages/Admin/Admin'
 
 export default {
   name: 'app',
   components: {
-    'app-nav': AppNav,
+    'app-nav': Nav,
     'mainpage': MainPage,
     'about': About,
     'contact': Contact,
@@ -75,7 +76,7 @@ export default {
     'check': Check,
     'reserve': Reserve,
     'admin': Admin,
-    'app-footer': AppFooter
+    'app-footer': Footer
   },
   data () {
     return {
