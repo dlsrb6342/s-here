@@ -14,7 +14,7 @@
           <ul class="nav navbar-nav">
             <li class="active"><a class="navbar-hover" href="#home" @click="goPage('mainpage')">Home</a></li>
             <li><a class="navbar-hover" href="#" @click="goPage('about')">About</a></li>
-            <li><a class="navbar-hover" href="#" @click="goPage('reserve')">Book</a></li>
+            <li><a class="navbar-hover" href="#" @click="goPage('check')">Book</a></li>
             <li><a class="navbar-hover" href="#" @click="goPage('contact')">Contact</a></li>
           </ul>
       </div>
