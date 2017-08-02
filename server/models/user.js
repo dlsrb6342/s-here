@@ -9,6 +9,7 @@ const userSchema = new Schema({
   password: String,
   active: { type: Boolean, default: false },
   confirmed: { type: Boolean, default: false },
+  penalty: { type: Number, default: 0 },
 });
 
 userSchema.methods.generateHash = function(password){

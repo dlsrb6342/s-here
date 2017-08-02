@@ -1,4 +1,11 @@
 User API
+    •   로그인한 회원정보 ( /api/user/ GET )
+      return value :
+        요청에 성공했을 때 : { name: , studentId: }
+        실패했을 때 : { error : , code : }
+            code == 0 : 로그인이 안되어있을 때
+
+
     •   회원가입 ( /api/user/signup POST )
       content type : application/json
         {
@@ -10,7 +17,7 @@ User API
 
       return value :
         요청에 성공했을 때 : { success: true }
-        실패했을 때 : {error : , code : }
+        실패했을 때 : { error : , code : }
             code == 0 : 스마트카 트랙 이수 학생이 아닐 때
             code == 1 : 이미 학번이 존재할 때
             code == 2 : 비밀번호가 형식에 맞지 않을 때
@@ -30,7 +37,7 @@ User API
                 { success: false, studentId : }
             success == true : 이메일 인증을 완료했을 때
                 { success: true, studentId: , name: }
-        실패했을 때 : {error : , code : }
+        실패했을 때 : { error : , code : }
             code == 0 : 비밀번호가 틀렸거나 학번이 틀렸을 때
             code == 1 : 스마트카 트랙 이수 학생이지만 회원가입을 안했을 때
 
