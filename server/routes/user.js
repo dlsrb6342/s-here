@@ -41,9 +41,9 @@ router.post('/signup', (req, res) => {
         code: 2
       });
     };
-    if (user.name !== name) {
+    if (user.name !== name || user.email !== email) {
       return res.status(400).json({
-        error: "BAD_NAME",
+        error: "BAD_INFORMATION",
         code: 3
       });
     };
@@ -139,8 +139,11 @@ router.post('/logout', (req, res) => {
       code: 0
     });
   };
-  req.session.destroy((err) => { if(err) throw err });
-  return res.json({success: true});
+
+  req.session.destroy((err) => { 
+    if(err) throw err;
+    return res.json({success: true});
+  });
 });
 
 router.post('/reconfirm', (req, res) => {
@@ -171,7 +174,7 @@ router.post('/reconfirm', (req, res) => {
 
     sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
     return res.json({ success: true });
-  };
+  });
 });
 
 function sendMail(studentId, email, redisClient, smtpTransport) {
