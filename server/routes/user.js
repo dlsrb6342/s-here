@@ -55,7 +55,7 @@ router.post('/signup', (req, res) => {
       if (err) throw err;
     });
 
-    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
+    sendMail(studentId, email, req.app.get('redisClient'), req.app.get('smtpTransport'));
 
     return res.json({ success: true });
   });
@@ -165,7 +165,7 @@ router.post('/reconfirm', (req, res) => {
       });
     };
 
-    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
+    sendMail(studentId, email, req.app.get('redisClient'), req.app.get('smtpTransport'));
     return res.json({ success: true });
   });
 });
