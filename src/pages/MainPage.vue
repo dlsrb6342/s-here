@@ -1,38 +1,73 @@
 <template>
-  <div class="mainpage">
-    <p>Hello World!</p>
+  <div class="mainpage container vertical-center elemnet">
+    <div class="menu-box row">
+      <hr class="prime-line">
+      <div class="col-md-4 col-xs-4 text-center">
+        <a href="#" class="icon hidden-xs" @click="goPage('mainpage')">
+          <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-3x"></i>
+        </a>
+        <a class="icon visible-xs" @click="goPage('mainpage')">
+          <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-2x"></i>
+        </a>
+        <div class="caption hidden-xs">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+        </div>
+        <div class="caption-xs visible-xs">
+          xs viewport size, consectetur adipiscing elit.
+        </div>
+
+      </div>
+      <div class="col-md-4 col-xs-4 text-center">
+        <a href="#" class="icon hidden-xs" @click="goPage('check')">
+          <i class="fa fa-calendar fa-icon-eff fa-3x"></i>
+        </a>
+        <a href="#" class="icon visible-xs" @click="goPage('check')">
+          <i class="fa fa-calendar fa-icon-eff fa-2x"></i>
+        </a>
+        <div class="caption hidden-xs">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+        </div>
+        <div class="caption-xs visible-xs">
+          xs viewport size, consectetur adipiscing elit.
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-4 text-center">
+        <a href="#" class="icon hidden-xs" @click="goPage('contact')">
+          <i class="fa fa-list fa-icon-eff fa-3x"></i>
+        </a>
+        <a class="icon visible-xs" @click="goPage('contact')">
+          <i class="fa fa-list fa-icon-eff fa-2x"></i>
+        </a>
+        <div class="caption hidden-xs">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+        </div>
+        <div class="caption-xs visible-xs">
+          xs viewport size, consectetur adipiscing elit.
+        </div>
+      </div>
+      <hr class="prime-line">
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'mainpage',
+  methods: {
+    goPage: function (goMessage) { this.$emit('change', goMessage) }
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
   },
-  
+
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
 a {
-  color: #42b983;
+  color: #203050;
 }
 </style>

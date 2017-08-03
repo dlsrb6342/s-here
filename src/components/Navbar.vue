@@ -31,4 +31,7 @@ export default {
 }
 </script>
 <style>
+  .navbar-brand{
+    color: #0074d6
+  }
 </style>
