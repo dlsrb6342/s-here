@@ -56,7 +56,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(csrf());
 app.use((req, res, next) => {
-  req.session.csrftoken = req.csrfToken();
+  let csrfToken = req.csrfToken()
+  req.session._csrf = csrfToken;
+  res.cookie('_csrf', csrfToken);
   return next();
 });
 app.use('/api', api);

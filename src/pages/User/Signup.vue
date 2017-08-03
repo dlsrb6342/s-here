@@ -36,8 +36,8 @@ export default {
       else {
         let xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function () {
-          let result = JSON.parse(xhr.responseText)
-          if (xhr.readyState !== 4 || xhr.status !== 200) alert('알수없는 오류입니다.')
+          let result = JSON.parse(xhr.response)
+          if (xhr.readyState !== 4) alert('알수없는 오류입니다.')
           else if (result.hasOwnProperty('success')) {
             alert('회원가입이 완료되었습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
             this.Email = ''
@@ -48,7 +48,7 @@ export default {
             this.$emit('change', 'mainpage')
           }
           else {
-            switch (result['code']) {
+            switch (result.code) {
               case 0:
                 alert('스마트카 트랙 이수 학생이 아닙니다.\n스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.')
                 break
@@ -71,8 +71,8 @@ export default {
         xhr.send('{"studentId": "' + this.studentId +
           '","password": "' + this.Password +
           '","name": "' + this.userName +
-          '","email": "' + this.Email + '@skku.edu"' +
-          '","csrftoken": "' + document.cookie.split("_xsrf=") + '"}')
+          '","email": "' + this.Email + '@skku.edu' +
+          '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
       }
     },
     cancel: function () {

@@ -151,7 +151,7 @@ router.post('/reconfirm', (req, res) => {
 
   User.findOne({student_id: studentId}, (err, user) => {
     if (err) throw err;
-    if (!user) {
+    if (!user || !user.validateHash(password)) {
       return res.status(400).json({
         error: "AUTH_FAILED",
         code: 0
@@ -165,15 +165,81 @@ router.post('/reconfirm', (req, res) => {
       });
     };
 
-    if (!user.validateHash(password)) {
+    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
+    return res.json({ success: true });
+  });
+});
+
+router.post('/lostpw', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(401).json({
+      error: "NO_INFO",
+      code: 0
+    });
+  };
+
+  let { studentId, email } = req.body;
+  let redisClient = req.app.get('redisClient');
+  let smtpTransport = req.app.get('smtpTransport');
+
+  User.findOne({student_id: studentId}, (err, user) => {
+    if (err) throw err;
+    if (!user || user.email === email) {
       return res.status(400).json({
         error: "AUTH_FAILED",
         code: 0
       });
     };
 
-    sendMail(studentId, email, req.app.get('redisClient'), req.app.get(smtpTransport));
-    return res.json({ success: true });
+    if (!user.active) {
+      return res.status(403).json({
+        error: "NOT_SIGNED",
+        code: 1
+      });
+    };
+    newPassword = uuidV4();
+    user.password = user.generateHash(newPassword);
+    let mailOptions = {
+      from: config.mailer.from,
+      to: email,
+      subject: '스마트카 팩토리',
+      text: `새로운 비밀번호입니다. ${newPassword}`
+    }
+
+    smtpTransport.sendMail(mailOptions, (err, info) => {
+      if (err) throw err;
+      user.save(err => {
+        if (err) throw err;
+        return res.json({ success: true });
+      });
+    });
+  });
+});
+
+router.post('/changepw', (req, res) => {
+  let { oldPassword, newPassword } = req.body;
+  let passwordRegex = /^/;
+  User.findById(req.session.userInfo._id, (err, user) => {
+    if (err) throw err;
+    if (!user || !user.validateHash(password)) {
+      return res.status(400).json({
+        error: "AUTH_FAILED",
+        code: 0
+      });
+    };
+
+    if (newPassword.length < 8 || typeof newPassword !== "string" || !passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        error: "BAD_PASSWORD",
+        code: 1
+      });
+    };
+
+    user.password = user.generateHash(newPassword);
+    user.save(err => {
+      if (err) throw err;
+      return res.json({ success: true });
+    });
   });
 });
 
