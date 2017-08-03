@@ -31,6 +31,9 @@ export default {
 }
 </script>
 <style>
+  a:hover {
+    text-decoration: none;
+  }
   .navbar-brand{
     color: #0074d6
   }
