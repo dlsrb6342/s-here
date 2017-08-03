@@ -52,7 +52,8 @@ export default {
 					}
 				}
 				xhr.send('{"studentId":"' + this.studentId +
-								'","password":"' + this.Password + '"}')
+								 '","password":"' + this.Password +
+          			 '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 			}
 		},
   }

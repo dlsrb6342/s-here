@@ -32,6 +32,9 @@
     <p v-show="state == 'lostpw'">
       <lostpw @change="changeState"></lostpw>
     </p>
+    <p v-show="state == 'resetpw'">
+      <resetpw @change="changeState"></resetpw>
+    </p>
     <app-footer></app-footer>
   </div>
 </template>
@@ -52,6 +55,7 @@ import User from '@/pages/User/User'
 import Signup from '@/pages/User/Signup'
 import Login from '@/pages/User/Login'
 import LostPW from '@/pages/User/LostPW'
+import ResetPW from '@/pages/User/ResetPW'
 
 import Check from '@/pages/Check/Check'
 
@@ -69,6 +73,7 @@ export default {
     'signup': Signup,
     'login': Login,
     'lostpw': LostPW,
+    'resetpw': ResetPW,
     'check': Check,
     'admin': Admin,
     'app-footer': Footer
