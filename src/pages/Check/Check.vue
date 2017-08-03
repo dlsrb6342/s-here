@@ -35,7 +35,14 @@
 				</table>
 			</center>
 			{{ showFocus }}
-			<a class="btn">해당 날짜 예약하기</a>
+			<a class="btn" @click="reserve">해당 날짜 예약하기</a>
+			<div v-if="showTimeTable" min-height="3">
+				<center>
+					<canvas id="TableCanvas" width="500" height="320">
+						
+					</canvas>
+				</center>
+			</div>
 		</div>
 	</div>
 </template>
@@ -52,7 +59,7 @@ export default {
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],],
 			focus: new Date(),
-			showTimeTable: false,
+			showTimeTable: true,
 			TimeTable: null,
 		}
 	},
@@ -66,6 +73,24 @@ export default {
 				if (date[0] < 15) res.setMonth(this.focus.getMonth() + 1)
 				else res.setMonth(this.focus.getMonth() - 1)
 				this.drawCalendar
+			}
+		},
+		retrieveTimeList: function () {
+			let xhr = new XMLHttpRequest()
+			xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.send(null)
+			while (xhr.readyState != XMLHttpRequest.DONE) {}
+			let result = JSON.parse(xhr.responseText)
+			if (result.hasOwnProperty('data')) {
+				for (data of result['data']) {
+					
+				}
+
+			}
+			else {
+				alert('조회에 실패하였습니다.')
+				this.showTimeTable = false
 			}
 		}
 	},

@@ -35,41 +35,44 @@ export default {
       }
       else {
         let xhr = new XMLHttpRequest()
-        xhr.open('POST', '/api/user/signup')
-        xhr.setRequestHeader("Content-type", "application/json")
-        xhr.send('{"studentId":"' + this.studentId +
-          '","password":"' + this.Password +
-          '","name":"' + this.userName +
-          '","email":"' + this.Email + '@skku.edu"}')
-        while (xhr.readyState != XMLHttpRequest.DONE) {}
-        let result = JSON.parse(xhr.responseText)
-        if (result.hasOwnProperty('success')) {
-          alert('회원가입이 완료되었습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
-          this.Email = ''
-          this.studentId = ''
-          this.userName = ''
-          this.Password = ''
-          this.Verify = ''
-          this.$emit('change', 'mainpage')
-        }
-        else {
-          switch (result['code']) {
-            case 0:
-              alert('스마트카 트랙 이수 학생이 아닙니다.\n스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.')
-              break
-            case 1:
-              alert('해당 학번이 존재합니다.')
-              break
-            case 2:
-              alert('비밀번호가 형식에 맞지 않습니다.')
-              break
-            case 3:
-              alert('등록된 이름과 다른 이름을 입력하셨습니다.\n입력 내용을 확인하시고 이상이 없다면 관리자에게 문의해 주세요.')
-              break
-            default:
-              alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+        xhr.onreadystatechange = function () {
+          let result = JSON.parse(xhr.responseText)
+          if (xhr.readyState !== 4 || xhr.status !== 200) alert('알수없는 오류입니다.')
+          else if (result.hasOwnProperty('success')) {
+            alert('회원가입이 완료되었습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
+            this.Email = ''
+            this.studentId = ''
+            this.userName = ''
+            this.Password = ''
+            this.Verify = ''
+            this.$emit('change', 'mainpage')
+          }
+          else {
+            switch (result['code']) {
+              case 0:
+                alert('스마트카 트랙 이수 학생이 아닙니다.\n스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.')
+                break
+              case 1:
+                alert('해당 학번이 존재합니다.')
+                break
+              case 2:
+                alert('비밀번호가 형식에 맞지 않습니다.')
+                break
+              case 3:
+                alert('등록된 이름과 다른 이름을 입력하셨습니다.\n입력 내용을 확인하시고 이상이 없다면 관리자에게 문의해 주세요.')
+                break
+              default:
+                alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+            }
           }
         }
+        xhr.open('POST', '/api/user/signup')
+        xhr.setRequestHeader("Content-type", "application/json")
+        xhr.send('{"studentId": "' + this.studentId +
+          '","password": "' + this.Password +
+          '","name": "' + this.userName +
+          '","email": "' + this.Email + '@skku.edu"' +
+          '","csrftoken": "' + document.cookie.split("_xsrf=") + '"}')
       }
     },
     cancel: function () {

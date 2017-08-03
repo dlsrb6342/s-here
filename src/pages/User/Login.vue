@@ -28,30 +28,31 @@ export default {
 				let xhr = new XMLHttpRequest()
 				xhr.open('POST', '/api/user/login')
 				xhr.setRequestHeader('Content-type', 'application/json')
-				xhr.send('{"studentId":"' + this.studentId +
-								'","password":"' + this.Password + '"}')
-				while (xhr.readyState != XMLHttpRequest.DONE) {}
-				let result = JSON.parse(xhr.responseText)
-				this.studentId = ''
-				this.Password = ''
-				if (result.hasOwnProperty('success')) {
-					if (result['success']) this.$emit('setUser', [result['studentId'], result['name']])
-					else alert('이메일 인증이 완료되지 않았습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
-					this.$emit('change', 'mainpage')
-				}
-				else {
-					switch (result['code']) {
-						case 0:
-							alert('학번 또는 비밀번호가 틀렸습니다.')
-							break
-						case 1:
-							alert('회원가입을 하셔야만 이용할 수 있는 서비스입니다.\n회원가입 페이지로 이동합니다.')
-							this.$emit('change', 'signup')
-							break
-						default:
-							alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+				xhr.onreadystatechange = function () {
+					result = JSON.parse(xhr.responseText)
+					this.studentId = ''
+					this.Password = ''
+					if (result.hasOwnProperty('success')) {
+						if (result['success']) this.$emit('setUser', [result['studentId'], result['name']])
+						else alert('이메일 인증이 완료되지 않았습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
+						this.$emit('change', 'mainpage')
+					}
+					else {
+						switch (result['code']) {
+							case 0:
+								alert('학번 또는 비밀번호가 틀렸습니다.')
+								break
+							case 1:
+								alert('회원가입을 하셔야만 이용할 수 있는 서비스입니다.\n회원가입 페이지로 이동합니다.')
+								this.$emit('change', 'signup')
+								break
+							default:
+								alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+						}
 					}
 				}
+				xhr.send('{"studentId":"' + this.studentId +
+								'","password":"' + this.Password + '"}')
 			}
 		},
   }
