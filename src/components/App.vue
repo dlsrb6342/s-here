@@ -4,7 +4,7 @@
     @change="changeState"
     :user="currentUser"></app-nav>
     <p v-show="state == 'mainpage'">
-      <mainpage></mainpage>
+      <mainpage @change="changeState"></mainpage>
     </p>
     <p v-show="state == 'about'">
       <about @change="changeState"></about>
