@@ -37,8 +37,7 @@ export default {
         let xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function () {
           let result = JSON.parse(xhr.response)
-          if (xhr.readyState !== 4) alert('알수없는 오류입니다.')
-          else if (result.hasOwnProperty('success')) {
+          if (result.hasOwnProperty('success')) {
             alert('회원가입이 완료되었습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
             this.Email = ''
             this.studentId = ''

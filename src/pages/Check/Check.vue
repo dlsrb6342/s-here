@@ -60,7 +60,7 @@ export default {
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],],
 			focus: new Date(),
 			showTimeTable: true,
-			TimeTable: null,
+			TimeTable: [],
 		}
 	},
 	created () { this.drawCalendar },
@@ -75,22 +75,23 @@ export default {
 				this.drawCalendar
 			}
 		},
-		retrieveTimeList: function () {
+		retTimeList: function () {
 			let xhr = new XMLHttpRequest()
 			xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.send(null)
-			while (xhr.readyState != XMLHttpRequest.DONE) {}
-			let result = JSON.parse(xhr.responseText)
-			if (result.hasOwnProperty('data')) {
-				for (data of result['data']) {
-					
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					let result = JSON.parse(xhr.responseText)
+					if (result.hasOwnProperty('data')) {
+						this.TimeTable = result['data']
+						this.showTimeTable = true
+					}
+					else {
+						alert('조회에 실패하였습니다.')
+						this.showTimeTable = false
+					}
 				}
-
-			}
-			else {
-				alert('조회에 실패하였습니다.')
-				this.showTimeTable = false
 			}
 		}
 	},
@@ -106,7 +107,8 @@ export default {
 			for (i = last.getDate() + offset; i < 42; i++) this.calendar[parseInt(i / 7)][i % 7] = [i - last.getDate() - offset + 1, false]
 		},
 		showTimeline: function () {
-
+			this.retTimeList
+			
 		}
 	}
 }
