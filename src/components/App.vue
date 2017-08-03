@@ -18,6 +18,9 @@
     <p v-show="state == 'check'">
       <check @change="changeState"></check>
     </p>
+    <p v-show="state == 'confirm'">
+      <confirm @change="changeState"></confirm>
+    </p>
     <p v-show="state == 'user'">
       <user @change="changeState"
       @logout="logoutUser"></user>
@@ -52,10 +55,12 @@ import Contact from '@/pages/About/Contact'
 import Open from '@/pages/Open/Open'
 
 import User from '@/pages/User/User'
-import Signup from '@/pages/User/Signup'
 import Login from '@/pages/User/Login'
 import LostPW from '@/pages/User/LostPW'
 import ResetPW from '@/pages/User/ResetPW'
+
+import Signup from '@/pages/Signup/Signup'
+import Confirm from '@/pages/Signup/Confirm'
 
 import Check from '@/pages/Check/Check'
 
@@ -75,6 +80,7 @@ export default {
     'lostpw': LostPW,
     'resetpw': ResetPW,
     'check': Check,
+    'confirm': Confirm,
     'admin': Admin,
     'app-footer': Footer
   },
