@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   student_id: String,
   name: String,
+  email: String,
   password: String,
   active: { type: Boolean, default: false },
   confirmed: { type: Boolean, default: false },
