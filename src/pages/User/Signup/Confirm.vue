@@ -1,12 +1,13 @@
 <template>
-	<div class="resetpw">
-    <p>Reset Password</p>
+	<div class="user">
+    <p>This is User</p>
 	</div>
 </template>
 
 <script>
 export default {
-  name: 'resetpw'
+    name: 'user',
+    props: ['skey']
 }
 </script>
 

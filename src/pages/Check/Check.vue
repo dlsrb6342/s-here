@@ -34,14 +34,11 @@
 					</tbody>
 				</table>
 			</center>
-			{{ showFocus }}
-			<a class="btn" @click="reserve">해당 날짜 예약하기</a>
+			<a class="btn" @click="showTimeline">{{ showFocus }} 일정 확인하기</a>
 			<div v-if="showTimeTable" min-height="3">
 				<center>
-					<canvas id="TableCanvas" width="500" height="320">
-						
-					</canvas>
 				</center>
+				<a class="btn" @click="reserve">해당 시각 예약하기</a>
 			</div>
 		</div>
 	</div>
@@ -50,6 +47,7 @@
 <script>
 export default {
 	name: 'check',
+	props: ['date'],
 	data () {
 		return {
 			calendar: [[[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
@@ -59,11 +57,16 @@ export default {
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],],
 			focus: new Date(),
-			showTimeTable: true,
+			showTimeTable: false,
 			TimeTable: [],
 		}
 	},
-	created () { this.drawCalendar },
+	created () {
+		if (typeof(this.date) === 'string') {
+			if (this.date.length == 8) this.focus = new Date(this.date.slice(0,4), this.date.slice(4,6)-1, this.date.slice(6,8), new Date().getHours())
+		}
+		this.drawCalendar
+	},
 	methods: {
 		changeToday: function () { this.focus = new Date() },
 		changeFocus: function (date) {
@@ -79,20 +82,45 @@ export default {
 			let xhr = new XMLHttpRequest()
 			xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
 			xhr.setRequestHeader("Content-type", "application/json")
-			xhr.send(null)
 			xhr.onreadystatechange = function () {
-				if (xhr.readyState === 4 && xhr.status === 200) {
-					let result = JSON.parse(xhr.responseText)
-					if (result.hasOwnProperty('data')) {
-						this.TimeTable = result['data']
-						this.showTimeTable = true
+				let result = JSON.parse(xhr.responseText)
+				this.TimeTable = []
+				if (result.hasOwnProperty('data')) {
+					for (data of result['data']) {
+						this.TimeTable.push(data)
 					}
-					else {
-						alert('조회에 실패하였습니다.')
-						this.showTimeTable = false
-					}
+					this.showTimeTable = true
+				}
+				else {
+					alert('조회에 실패하였습니다.')
+					this.showTimeTable = false
 				}
 			}
+			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+		},
+		reserve: function () {
+			// for exact time query send.
+			let xhr = new XMLHttpRequest()
+			// xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.onreadystatechange = function () {
+				let result = JSON.parse(xhr.responseText)
+				this.TimeTable = []
+				if (result.hasOwnProperty('data')) {
+					for (data of result['data']) {
+						this.TimeTable.push(data)
+					}
+					this.showTimeTable = true
+				}
+				else {
+					alert('조회에 실패하였습니다.')
+					this.showTimeTable = false
+				}
+			}
+			// xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+		},
+		showTimeline: function () {
+			this.retTimeList
 		}
 	},
 	computed: {
@@ -106,10 +134,7 @@ export default {
 			for (i = offset; i < last.getDate() + offset; i++) this.calendar[parseInt(i / 7)][i % 7] = [i + 1 - offset, true]
 			for (i = last.getDate() + offset; i < 42; i++) this.calendar[parseInt(i / 7)][i % 7] = [i - last.getDate() - offset + 1, false]
 		},
-		showTimeline: function () {
-			this.retTimeList
-			
-		}
+		
 	}
 }
 </script>

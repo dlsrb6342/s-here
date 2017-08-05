@@ -6,7 +6,8 @@
 
 <script>
 export default {
-  name: 'lostpw'
+  name: 'lostpw',
+  props: ['skey']
 }
 </script>
 

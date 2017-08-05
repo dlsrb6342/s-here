@@ -17,9 +17,6 @@
   export default {
     name: 'app-nav',
     props: ['user'],
-    methods: {
-      goPage: function (goMessage) { this.$emit('change', goMessage) }
-    },
   }
 </script>
 <style>

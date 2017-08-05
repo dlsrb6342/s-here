@@ -1,10 +1,6 @@
 <template>
 	<div class="about">
     <p>This is About.</p>
-		<!--
-		<p>{{ msg }}</p>
-  	<input v-model="msg">
-		-->
 	</div>
 </template>
 
