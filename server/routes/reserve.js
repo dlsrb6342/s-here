@@ -15,32 +15,58 @@ router.use((req, res, next) => {
 
 router.post('/', (req, res) => {
   let { start, end, itemId, date, people } = req.body;
-  start = date * 100 + start; end = date * 100 + end;
-  Item.findById(itemId, (err, item) => {
-    if (err) throw err;
-    let occupied = item.occupied.filter((value) => {
-      return (value >= date * 100 && value < (date + 1) * 100);
+  let today = new Date();
+  if (date < today.toJSON().slice(0,10).split('-').join('')) { 
+    return res.status(400).json({
+      error: "INVALID_TIME",
+      code: 0
     });
-    for(i = start; i <= end; i++) {
-      if(occupied.includes(i)) {
-        return res.status(400).json({
-          error: "ALREADY_OCCUPIED",
-          code: 0
-        });
-      };
-      occupied.push(i);
-    };
-    
-    let reservation = new Reservation({start, end});
-    reservation.item = itemId;
-    reservation.people = people;
-    reservation.user = req.session.userInfo._id;
-    reservation.save((err) => {
+  };
+  if (end - start > 12 || end - start <= 0) {
+    return res.status(400).json({
+      error: "INVALID_TIME",
+      code: 0
+    });
+  };
+  start = date * 100 + start; end = date * 100 + end;
+  User.findById(req.session.userInfo._id, (err, user) => {
+    if (err) throw err;
+    if (user.reservations.includes(date)) {
+      return res.status(400).json({
+        error: "ALREADY_RESERVED",
+        code: 1
+      });
+    }
+    user.reservations.push(date);
+    user.save(err => {
       if (err) throw err;
-      item.occupied = occupied;
-      item.save((err) => {
+      Item.findById(itemId, (err, item) => {
         if (err) throw err;
-        return res.json({ success: true });
+        let occupied = item.occupied.filter((value) => {
+          return (value >= date * 100 && value < (date + 1) * 100);
+        });
+        for(i = start; i <= end; i++) {
+          if(occupied.includes(i)) {
+            return res.status(400).json({
+              error: "ALREADY_OCCUPIED",
+              code: 2
+            });
+          };
+          occupied.push(i);
+        };
+        
+        let reservation = new Reservation({ start, end });
+        reservation.item = itemId;
+        reservation.people = people;
+        reservation.user = user._id;
+        reservation.save((err) => {
+          if (err) throw err;
+          item.occupied = occupied;
+          item.save((err) => {
+            if (err) throw err;
+            return res.json({ success: true });
+          });
+        });
       });
     });
   });
@@ -50,7 +76,7 @@ router.delete('/:_id', (req, res) => {
   let _id = req.params._id;
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({
-      error: "INVALID ID",
+      error: "INVALID_ID",
       code: 0
     });
   };

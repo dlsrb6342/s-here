@@ -12,7 +12,9 @@ Reserve API
       return value :
         요청에 성공했을 때 : { success: true }
         실패했을 때 : { error : , code : }
-            code == 0 : 예약이 되어있는 시간에 예약했을 때
+            code == 0 : 올바르지 않은 시간이 입력되었을 때
+            code == 1 : 로그인한 회원이 이미 예약한 날짜일 때
+            code == 2 : 이미 예약된 시간일 때 
 
 
     •   예약 취소 ( /api/reserve/:_id DELETE )
@@ -21,4 +23,4 @@ Reserve API
         실패했을 때 : { error : , code : }
             code == 0 : _id가 올바르지 않을 때 
             code == 1 : 존재하지 않는 예약일 때
-            code == 2 : 예약을 한 회원가 요청한 회원일 다를 때
+            code == 2 : 예약을 한 회원과 요청한 회원이 다를 때

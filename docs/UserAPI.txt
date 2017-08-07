@@ -66,7 +66,7 @@ User API
         {
             studentId :  ,
             password :  ,
-            email:
+            email :
         }
 
       return value : 
@@ -74,4 +74,33 @@ User API
         실패했을 때 : { error : , code : }
             code == 0 : 비밀번호가 틀렸거나 학번이 틀렸을 때
             code == 1 : 스마트카 트랙 이수 학생이지만 회원가입을 안했을 때
+
+
+    •   비밀번호 재발급 ( /api/user/lostpw POST )
+      content type : application/json
+        {
+            studentId :  ,
+            email :
+        }
+
+      return value : 
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : { error : , code : }
+            code == 0 : 입력한 이메일이 등록된 이메일과 다를 때 
+            code == 1 : 회원가입되어있지 않을 때
+
+
+    •   비밀번호 변경 ( /api/user/changepw POST )
+      content type : application/json
+        {
+            newPassword :  ,
+            oldPassword :
+        }
+
+      return value : 
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : { error : , code : }
+            code == 0 : 로그인되어있지 않을 때 
+            code == 1 : 비밀번호가 틀렸을 때
+            code == 2 : 비밀번호가 형식에 맞지 않을 때
 

@@ -1,0 +1,7 @@
+User API
+    •   Open ( /api/open GET )
+      return value :
+        요청에 성공했을 때 : { success: true }
+        실패했을 때 : { error : , code : }
+            code == 0 : 해당 시간에 허용된 사용자가 아닐 때
+            code == 1 : 하드웨어와 연결이 안되어있을 때
