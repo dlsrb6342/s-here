@@ -70,10 +70,9 @@ export default new Router({
       component: LostPW
     },
     {
-      path: '/resetpw/:skey',
-      name: 'ResetPW',
+      path: '/resetpw',
+      name: 'ResetPW',  
       component: LostPW,
-      props: true
     },
     {
       path: '/login',
@@ -86,10 +85,9 @@ export default new Router({
       component: Signup
     },
     {
-      path: '/confirm/:skey',
+      path: '/confirm',
       name: 'Confirm',
       component: Confirm,
-      props: true
     },
   ]
 })
