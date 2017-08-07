@@ -89,5 +89,6 @@ export default new Router({
       name: 'Confirm',
       component: Confirm,
     },
-  ]
+  ],
+  mode: 'history'
 })
