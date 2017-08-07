@@ -171,13 +171,6 @@ router.post('/reconfirm', (req, res) => {
 });
 
 router.post('/lostpw', (req, res) => {
-  if (typeof req.session.userInfo === "undefined") {
-    return res.status(401).json({
-      error: "NO_INFO",
-      code: 0
-    });
-  };
-
   let { studentId, email } = req.body;
   let redisClient = req.app.get('redisClient');
   let smtpTransport = req.app.get('smtpTransport');
@@ -217,6 +210,13 @@ router.post('/lostpw', (req, res) => {
 });
 
 router.post('/changepw', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(401).json({
+      error: "NO_INFO",
+      code: 0
+    });
+  }; 
+  
   let { oldPassword, newPassword } = req.body;
   let passwordRegex = /^/;
   User.findById(req.session.userInfo._id, (err, user) => {
@@ -224,14 +224,14 @@ router.post('/changepw', (req, res) => {
     if (!user || !user.validateHash(password)) {
       return res.status(400).json({
         error: "AUTH_FAILED",
-        code: 0
+        code: 1
       });
     };
 
     if (newPassword.length < 8 || typeof newPassword !== "string" || !passwordRegex.test(newPassword)) {
       return res.status(400).json({
         error: "BAD_PASSWORD",
-        code: 1
+        code: 2
       });
     };
 
