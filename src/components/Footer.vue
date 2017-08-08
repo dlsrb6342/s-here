@@ -1,10 +1,10 @@
 <template>
-  <div id="app-footer" class="row vertical-center">
+  <v-footer id="app-footer" class="row vertical-center">
     <hr class="white-line">
     <div class="caption text-center">
-      Powered by S-Hero Project
+      Powered by S-Hero Project © {{ new Date().getFullYear() }}
     </div>
-  </div>
+  </v-footer>
 </template>
 
 <script>
@@ -21,11 +21,11 @@ export default {
   #app-footer {
     width: 100%;
     display: block;
-    position: fixed;
+    /*position: fixed;
     left:0;
     bottom: 0;
     height: auto;
-    max-height: 13vh;
+    max-height: 13vh;*/
     background-color: #1565c0;
     margin: 0;
     color: white;
