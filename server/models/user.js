@@ -11,7 +11,7 @@ const userSchema = new Schema({
   active: { type: Boolean, default: false },
   confirmed: { type: Boolean, default: false },
   penalty: { type: Number, default: 0 },
-  reservations: [{ type: Schema.Types.ObjectId, ref: 'Reservation' }]
+  reservations: [Number]
 });
 
 userSchema.methods.generateHash = function(password){

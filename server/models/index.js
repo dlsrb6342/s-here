@@ -1,5 +1,5 @@
 import User from './user';
 import Reservation from './reservation';
-import item from './item';
+import Item from './item';
 
-export { User, Reservation, item };
+export { User, Reservation, Item };

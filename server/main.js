@@ -54,6 +54,8 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+/* csrf 설정 */
 app.use(csrf());
 app.use((req, res, next) => {
   let csrfToken = req.csrfToken()

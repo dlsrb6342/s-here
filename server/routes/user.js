@@ -93,7 +93,7 @@ router.post('/login', (req, res) => {
       });
     } else {
       req.session.userInfo = {
-        id: user._id,
+        _id: user._id,
         studentId,
         name: user.name
       };
@@ -177,7 +177,7 @@ router.post('/lostpw', (req, res) => {
 
   User.findOne({student_id: studentId}, (err, user) => {
     if (err) throw err;
-    if (!user || user.email === email) {
+    if (!user || user.email !== email) {
       return res.status(400).json({
         error: "AUTH_FAILED",
         code: 0
@@ -190,7 +190,7 @@ router.post('/lostpw', (req, res) => {
         code: 1
       });
     };
-    newPassword = uuidV4();
+    let newPassword = uuidV4();
     user.password = user.generateHash(newPassword);
     let mailOptions = {
       from: config.mailer.from,
@@ -221,7 +221,7 @@ router.post('/changepw', (req, res) => {
   let passwordRegex = /^/;
   User.findById(req.session.userInfo._id, (err, user) => {
     if (err) throw err;
-    if (!user || !user.validateHash(password)) {
+    if (!user || !user.validateHash(oldPassword)) {
       return res.status(400).json({
         error: "AUTH_FAILED",
         code: 1
