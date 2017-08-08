@@ -20,10 +20,12 @@ export default {
 <style>
   #app-footer {
     width: 100%;
+    display: block;
     position: fixed;
     left:0;
     bottom: 0;
-    height: 13vh;
+    height: auto;
+    max-height: 13vh;
     background-color: #1565c0;
     margin: 0;
     color: white;
