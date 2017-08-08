@@ -143,8 +143,9 @@ div.caption-xs{
 img.img-center{
     display: inline;
 }
-
+/*
 footer{
+  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -156,7 +157,7 @@ footer{
 footer .caption{
     color: white;
 }
-
+*/
 hr.white-line{
     border: none;
     width: 50%;

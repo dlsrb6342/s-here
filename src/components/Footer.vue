@@ -1,5 +1,10 @@
 <template>
-
+  <div id="app-footer" class="row vertical-center">
+    <hr class="white-line">
+    <div class="caption text-center">
+      Powered by S-Hero Project
+    </div>
+  </div>
 </template>
 
 <script>
@@ -13,8 +18,7 @@ export default {
 }
 </script>
 <style>
-  /*
-  #app-footr {
+  #app-footer {
     width: 100%;
     display: inline-block;
     position: fixed;
@@ -23,10 +27,9 @@ export default {
     height: 13vh;
     background-color: #1565c0;
     margin: 0;
-    margin_bottom: 15vh;
     color: white;
-  }*/
-#app-footer .caption{
-  color: white;
-}
+  }
+  #app-footer .caption{
+    color: #fafafa;
+  }
 </style>
