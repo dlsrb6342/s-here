@@ -1,5 +1,6 @@
 import express from 'express';
-import { Reservation, Item } from '../models';
+import mongoose from 'mongoose';
+import { Reservation, Item, User } from '../models';
 
 const router = express.Router();
 
@@ -37,33 +38,33 @@ router.post('/', (req, res) => {
         code: 1
       });
     }
-    user.reservations.push(date);
-    user.save(err => {
+    Item.findById(itemId, (err, item) => {
       if (err) throw err;
-      Item.findById(itemId, (err, item) => {
-        if (err) throw err;
-        let occupied = item.occupied.filter((value) => {
-          return (value >= date * 100 && value < (date + 1) * 100);
-        });
-        for(i = start; i <= end; i++) {
-          if(occupied.includes(i)) {
-            return res.status(400).json({
-              error: "ALREADY_OCCUPIED",
-              code: 2
-            });
-          };
-          occupied.push(i);
+      let occupied = item.occupied.filter((value) => {
+        return (value >= date * 100 && value < (date + 1) * 100);
+      });
+      for(let i = start; i <= end; i++) {
+        if(occupied.includes(i)) {
+          return res.status(400).json({
+            error: "ALREADY_OCCUPIED",
+            code: 2
+          });
         };
-        
-        let reservation = new Reservation({ start, end });
-        reservation.item = itemId;
-        reservation.people = people;
-        reservation.user = user._id;
-        reservation.save((err) => {
+        occupied.push(i);
+      };
+      
+      let reservation = new Reservation({ start, end });
+      reservation.item = itemId;
+      reservation.people = people;
+      reservation.user = user._id;
+      reservation.save(err => {
+        if (err) throw err;
+        item.occupied = occupied;
+        item.save(err => {
           if (err) throw err;
-          item.occupied = occupied;
-          item.save((err) => {
-            if (err) throw err;
+          user.reservations.push(date);
+          user.save(err => {
+            if (err) throw erro;
             return res.json({ success: true });
           });
         });
@@ -74,7 +75,7 @@ router.post('/', (req, res) => {
 
 router.delete('/:_id', (req, res) => {
   let _id = req.params._id;
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
     return res.status(400).json({
       error: "INVALID_ID",
       code: 0
@@ -95,9 +96,32 @@ router.delete('/:_id', (req, res) => {
         code: 2
       });
     }
-    Reservation.remove({_id}, (err) => {
+    User.findById(reservation.user, (err, user) => {
       if (err) throw err;
-      return res.json({ success: true });
+      if (!user) {
+        return res.status(400).json({
+          error: "INVALID_USER",
+          code: 3
+        });
+      };
+      user.reservations.splice(user.reservations.indexOf(parseInt(reservation.start / 100)), 1);
+      user.save(err => {
+        if (err) throw err;
+        Item.findById(reservations.item, (err, item) => {
+          let occupied = item.occupied;
+          for(let i = reservation.start; i <= reservation.end; i++) {
+            occupied.splice(occpuied.indexOf(i), 1);
+          };
+          item.occupied = occupied;
+          item.save(err => {
+            if (err) throw err;
+            Reservation.remove({_id}, (err) => {
+              if (err) throw err;
+              return res.json({ success: true });
+            });
+          });
+        });
+      });
     });
   });
 });
