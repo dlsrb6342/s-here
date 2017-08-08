@@ -1,5 +1,8 @@
 <template>
-  <div class="mainpage container vertical-center elemnet">
+  <div class="view mainpage container vertical-center">
+    <!--<v-carousel>
+      <v-carousel-item v-for="(item,i) in itmes" v-bind:src="item.src" :key="i"></v-carousel-item>
+    </v-carousel>-->
     <div class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="item active">
@@ -19,11 +22,11 @@
         <a href="" class="icon hidden-xs">
           <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-3x"></i>
         </a>
-        <a href="" class="icon visible-xs"></a>
+        <a href="" class="icon visible-xs">
           <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+          메인 페이지
         </div>
         <div class="caption-xs visible-xs">
           xs viewport size, consectetur adipiscing elit.
@@ -38,7 +41,7 @@
           <i class="fa fa-calendar fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+          예약 하기
         </div>
         <div class="caption-xs visible-xs">
           xs viewport size, consectetur adipiscing elit.
@@ -52,7 +55,7 @@
           <i class="fa fa-list fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur vestibulum purus, a placerat leo.
+          문의 사항
         </div>
         <div class="caption-xs visible-xs">
           xs viewport size, consectetur adipiscing elit.
@@ -87,9 +90,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  div{
-    margin-bottom: auto;
-  }
   a {
     color: #203050;
   }

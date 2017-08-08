@@ -20,7 +20,6 @@ export default {
 <style>
   #app-footer {
     width: 100%;
-    display: inline-block;
     position: fixed;
     left:0;
     bottom: 0;

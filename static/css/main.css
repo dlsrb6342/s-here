@@ -79,29 +79,15 @@ nav a{
     }
 }
 /* mainPage */
-#mainpage {
-    height: 70vh;
-}
 @media only screen and (max-width: 768px){
   #mainpage {
         height: 50vh;
     }
 }
 
-.element{
-    padding-top: 4%
+div.view{
+  height: 75vh;
 }
-#top{
-    background-color: #0074d6;
-    padding-bottom: 20px;
-}
-#menu{
-    background-color: white;
-}
-#menu a{
-    color: #0074d6;
-}
-
 div.vertical-center{
     margin-top: 2%;
     vertical-align: middle;

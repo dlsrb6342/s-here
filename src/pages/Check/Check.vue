@@ -1,5 +1,5 @@
 <template>
-	<div class="check">
+	<div class="check view">
 		예약 현황<br>
 		<div id="calendar">
 			<center>
@@ -134,7 +134,7 @@ export default {
 			for (i = offset; i < last.getDate() + offset; i++) this.calendar[parseInt(i / 7)][i % 7] = [i + 1 - offset, true]
 			for (i = last.getDate() + offset; i < 42; i++) this.calendar[parseInt(i / 7)][i % 7] = [i - last.getDate() - offset + 1, false]
 		},
-		
+
 	}
 }
 </script>
