@@ -35,11 +35,16 @@
 				</table>
 			</center>
 			<a class="btn" @click="showTimeline">{{ showFocus }} 일정 확인하기</a>
-			<div v-if="showTimeTable" min-height="3">
-				<center>
-				</center>
-				<a class="btn" @click="reserve">해당 시각 예약하기</a>
-			</div>
+			<img class="btn" v-if="!showTimeTable" src="../../assets/refresh/refresh.svg" width="24" height="24" style="padding: 3px 3px 3px 3px; margin: 3px 3px 3px 3px" @click="">
+			<!--
+			<transition>
+				<div v-if="showTimeTable">
+					<center>
+						<a class="btn" @click="reserve">해당 시각 예약하기</a>
+					</center>
+				</div>
+			</transition>
+			-->
 		</div>
 	</div>
 </template>
@@ -69,14 +74,17 @@ export default {
 	},
 	methods: {
 		changeToday: function () { this.focus = new Date() },
-		changeFocus: function (date) {
-			let res = new Date(this.focus.getFullYear(), this.focus.getMonth(), date[0], this.focus.getHours())
-			this.focus = res
-			if (date[1] === false) {
-				if (date[0] < 15) res.setMonth(this.focus.getMonth() + 1)
+		changeFocus: function (day) {
+			let res = new Date()
+			res.setFullYear(this.focus.getFullYear())
+			res.setMonth(this.focus.getMonth())
+			if (day[1] === false) {
+				if (day[0] < 15) res.setMonth(this.focus.getMonth() + 1)
 				else res.setMonth(this.focus.getMonth() - 1)
-				this.drawCalendar
 			}
+			res.setDate(day[0])
+			this.focus = res
+			this.drawCalendar
 		},
 		retTimeList: function () {
 			let xhr = new XMLHttpRequest()
@@ -99,25 +107,17 @@ export default {
 			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		reserve: function () {
-			// for exact time query send.
 			let xhr = new XMLHttpRequest()
-			// xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
+			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function () {
 				let result = JSON.parse(xhr.responseText)
 				this.TimeTable = []
-				if (result.hasOwnProperty('data')) {
-					for (data of result['data']) {
-						this.TimeTable.push(data)
-					}
-					this.showTimeTable = true
-				}
-				else {
-					alert('조회에 실패하였습니다.')
-					this.showTimeTable = false
-				}
+				if (result.hasOwnProperty('success')) alert('예약했습니다.')
+				else alert('다른 사람의 예약과 겹쳤습니다.\n다른 시간대를 선택해 주십시오.')
+				this.showTimeline
 			}
-			// xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		showTimeline: function () {
 			this.retTimeList
@@ -139,6 +139,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.muted {
+	color: #888888
+}
+.timetable {
+	height: 3px
+}
 </style>
