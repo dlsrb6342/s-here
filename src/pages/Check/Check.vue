@@ -8,9 +8,9 @@
 						<tr>
 							<th colspan="7">
 								<center>
-									<a class="btn"><i class="icon-chevron-left"></i></a>
+									<a class="btn" @click="changeMonth(-1)"><i class="icon-chevron-left"><</i></a>
 									<a class="btn">{{ showFocus }}</a>
-									<a class="btn"><i class="icon-chevron-right"></i></a>
+									<a class="btn" @click="changeMonth(1)"><i class="icon-chevron-right">></i></a>
 								</center>
 							</th>
 						</tr>
@@ -83,6 +83,14 @@ export default {
 				else res.setMonth(this.focus.getMonth() - 1)
 			}
 			res.setDate(day[0])
+			this.focus = res
+			this.drawCalendar
+		},
+		changeMonth (delta) {
+			let res = new Date()
+			res.setDate(this.focus.getDate())
+			res.setFullYear(this.focus.getFullYear())
+			res.setMonth(this.focus.getMonth() + delta)
 			this.focus = res
 			this.drawCalendar
 		},
