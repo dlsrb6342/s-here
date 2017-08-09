@@ -37,7 +37,7 @@ router.post('/', (req, res) => {
       userMap = {};
       userMap['name'] = user.name;
       userMap['email'] = user.email;
-      userMap['student_id'] = user.student_id;
+      userMap['studentId'] = user.student_id;
       userMap['_id'] = user._id;
       userList.push(userMap);
     });
