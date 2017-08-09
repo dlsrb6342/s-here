@@ -6,6 +6,17 @@ User API
             code == 0 : 로그인이 안되어있을 때
 
 
+    •   회원정보 검색 ( /api/user/ POST )
+      content type : application/json
+        {
+          q :  
+        }
+
+      return value :
+        요청에 성공했을 때 : [{ name: , studentId: , email: , _id : }]
+        실패했을 때 : { error : , code : }
+
+
     •   회원가입 ( /api/user/signup POST )
       content type : application/json
         {
