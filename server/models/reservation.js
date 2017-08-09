@@ -7,7 +7,7 @@ const reservationSchema = new Schema({
   item: { type: Schema.Types.ObjectId, ref: 'Item' },
   start: Number,
   end: Number,
-  people: Number
+  people: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 export default mongoose.model('Reservation', reservationSchema);

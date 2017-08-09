@@ -1,33 +1,31 @@
 import express from 'express';
+import fetch from 'node-fetch';
 import { Reservation } from '../models';
 
 const router = express.Router();
 
-router.use((req, res, next) => {
-  if (typeof req.session.userInfo === "undefined") {
-    return res.status(403).json({
-      error: "NOT_LOGGED_IN",
-      code: -3
-    })
-  };
-  next();
-});
-
-router.post('/', (req, res) => {
-  let { ip } = req.body;
+router.get('/receive', (req, res) => {
+  let ip = req.query.ip;
   let redisClient = req.app.get('redisClient');
   redisClient.set('ip', ip);
   return res.json({ success: true })
 });
 
 router.get('/', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(403).json({
+      error: "NOT_LOGGED_IN",
+      code: -3
+    })
+  };
+
   let student_id = req.session.userInfo._id;
   let redisClient = req.app.get('redisClient'); 
   let today = new Date();
-  toady = today.toJSON().slice(0,10).split('-').join('');
-  let now = today + (today.getHours() * 2 + (today.getMinutes() >= 30 ? 1 : 2))
+  let date = today.toJSON().slice(0,10).split('-').join('');
+  let now = date + (today.getHours() * 2 + (today.getMinutes() >= 30 ? 1 : 2))
   Reservation.find({ 
-    user: _id, 
+    user: student_id, 
     start: { $lte: now }, 
     end: { $gte: now }}, (err, exist) => {
     if (err) throw err;

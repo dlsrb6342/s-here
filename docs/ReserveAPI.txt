@@ -2,19 +2,21 @@ Reserve API
     •   예약하기 ( /api/reserve/ POST )
       content type : application/json
         {
-            start :  ,
-            end :  ,
-            itemId :  ,
-            date :  ,
-            people :  
+            start : Number,
+            end : Number,
+            itemId : ObjectId,
+            date : Number,
+            people : [ObjectId]
         }
 
       return value :
         요청에 성공했을 때 : { success: true }
         실패했을 때 : { error : , code : }
             code == 0 : 올바르지 않은 시간이 입력되었을 때
-            code == 1 : 로그인한 회원이 이미 예약한 날짜일 때
-            code == 2 : 이미 예약된 시간일 때 
+            code == 1 : 존재하지 않는 회원일 때
+            code == 2 : 로그인한 회원이 이미 예약한 날짜일 때
+            code == 3 : 입력된 회원이 회원가입을 하지 않았을 때
+            code == 4 : 이미 예약된 시간일 때 
 
 
     •   예약 취소 ( /api/reserve/:_id DELETE )

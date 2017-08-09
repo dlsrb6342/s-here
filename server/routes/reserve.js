@@ -30,14 +30,30 @@ router.post('/', (req, res) => {
     });
   };
   start = date * 100 + start; end = date * 100 + end;
-  User.findById(req.session.userInfo._id, (err, user) => {
+  let id_array = people.slice(0);
+  id_array.push(req.session.userInfo._id);
+  User.find({ '_id': { $in: id_array } }, (err, users) => {
     if (err) throw err;
-    if (user.reservations.includes(date)) {
+    if (users.length !== id_array.length) {
       return res.status(400).json({
-        error: "ALREADY_RESERVED",
+        error: "INVALID_ID",
         code: 1
       });
-    }
+    };
+    users.forEach((user) => {
+      if (user.reservations.includes(date)) {
+        return res.status(400).json({
+          error: "ALREADY_RESERVED",
+          code: 2
+        });
+      };
+      if (!user.active || !user.confirmed) {
+        return res.status(403).json({
+          error: "INVALID_USER",
+          code: 3
+        });
+      };
+    });
     Item.findById(itemId, (err, item) => {
       if (err) throw err;
       let occupied = item.occupied.filter((value) => {
@@ -47,7 +63,7 @@ router.post('/', (req, res) => {
         if(occupied.includes(i)) {
           return res.status(400).json({
             error: "ALREADY_OCCUPIED",
-            code: 2
+            code: 4
           });
         };
         occupied.push(i);
@@ -56,15 +72,14 @@ router.post('/', (req, res) => {
       let reservation = new Reservation({ start, end });
       reservation.item = itemId;
       reservation.people = people;
-      reservation.user = user._id;
+      reservation.user = req.session.userInfo._id;
       reservation.save(err => {
         if (err) throw err;
         item.occupied = occupied;
         item.save(err => {
           if (err) throw err;
-          user.reservations.push(date);
-          user.save(err => {
-            if (err) throw erro;
+          User.updateMany({ _id: { $in: id_array }}, { $push: { reservations: date }}, {multi: true}, err => {
+            if (err) throw err;
             return res.json({ success: true });
           });
         });
@@ -90,35 +105,30 @@ router.delete('/:_id', (req, res) => {
         code: 1
       });
     };
-    if (reservation.user === req.session.userInfo._id) {
+    if (reservation.user.toString() !== req.session.userInfo._id) {
       return res.status(403).json({
         error: "NOT_ALLOWED",
         code: 2
       });
     }
-    User.findById(reservation.user, (err, user) => {
+    let id_array = reservation.people.slice(0);
+    id_array.push(reservation.user)
+    User.update(
+      { '_id': { $in: id_array }}, 
+      { $pull: {reservations: parseInt(reservation.start / 100)}}, 
+      {multi: true}, (err) => {
       if (err) throw err;
-      if (!user) {
-        return res.status(400).json({
-          error: "INVALID_USER",
-          code: 3
-        });
-      };
-      user.reservations.splice(user.reservations.indexOf(parseInt(reservation.start / 100)), 1);
-      user.save(err => {
-        if (err) throw err;
-        Item.findById(reservations.item, (err, item) => {
-          let occupied = item.occupied;
-          for(let i = reservation.start; i <= reservation.end; i++) {
-            occupied.splice(occpuied.indexOf(i), 1);
-          };
-          item.occupied = occupied;
-          item.save(err => {
+      Item.findById(reservation.item, (err, item) => {
+        let occupied = item.occupied.slice(0);
+        for(let i = reservation.start; i <= reservation.end; i++) {
+          occupied.splice(occupied.indexOf(i), 1);
+        };
+        item.occupied = occupied;
+        item.save(err => {
+          if (err) throw err;
+          Reservation.remove({_id}, (err) => {
             if (err) throw err;
-            Reservation.remove({_id}, (err) => {
-              if (err) throw err;
-              return res.json({ success: true });
-            });
+            return res.json({ success: true });
           });
         });
       });

@@ -24,8 +24,8 @@ router.get('/:date', (req, res) => {
   }
   Item.find({}, (err, items) => {
     if (err) throw err;
-    itemList = [];
-    items.foreach(item => {
+    let itemList = [], itemMap = {};
+    items.forEach(item => {
       if (item.active) {
         itemMap = {};
         itemMap['name'] = item.name;

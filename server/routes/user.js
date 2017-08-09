@@ -8,13 +8,40 @@ const router = express.Router();
 router.get('/', (req, res) => {
   if (typeof req.session.userInfo === "undefined") {
     return res.status(401).json({
-      error: "NO_INFO",
-      code: 0
+      error: "NOT_LOGGED_IN",
+      code: -3
     });
   };
   return res.json({ 
     name: req.session.userInfo.name,
     studentId: req.session.userInfo.studentId
+  });
+});
+
+router.post('/', (req, res) => {
+  if (typeof req.session.userInfo === "undefined") {
+    return res.status(401).json({
+      error: "NOT_LOGGED_IN",
+      code: -3
+    });
+  };
+  let { q } = req.body;
+  User.find({ $or: [
+    { "name": { "$regex": ".*"+q+".*", "$options": "i" } },
+    { "email": { "$regex": ".*"+q+".*", "$options": "i" } } ],
+    "active": true, "confirmed": true
+  }, (err, users) => {
+    if (err) throw err;
+    let userMap = {}, userList = []; 
+    users.forEach(user => {
+      userMap = {};
+      userMap['name'] = user.name;
+      userMap['email'] = user.email;
+      userMap['student_id'] = user.student_id;
+      userMap['_id'] = user._id;
+      userList.push(userMap);
+    });
+    return res.json({ data: userList });
   });
 });
 
@@ -199,12 +226,12 @@ router.post('/lostpw', (req, res) => {
       text: `새로운 비밀번호입니다. ${newPassword}`
     }
 
-    smtpTransport.sendMail(mailOptions, (err, info) => {
+    smtpTransport.sendMail(mailOptions, (err) => {
       if (err) throw err;
-      user.save(err => {
-        if (err) throw err;
-        return res.json({ success: true });
-      });
+    });
+    user.save(err => {
+      if (err) throw err;
+      return res.json({ success: true });
     });
   });
 });
