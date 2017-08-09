@@ -33,13 +33,26 @@
 						</tr>
 					</tbody>
 				</table>
+				<a class="btn" @click="showTimeline">{{ showFocus }} 일정 확인하기</a>
+				<a class="btn" @click="showTimeline" style="padding: 6px 6px 6px 6px;"><img src="../../assets/refresh/refresh.svg" width=18 height=18></a>
+				<transition name="fade">
+						<div v-if="showTimeTable" min-height="3">
+							<table class="table-condensed table-bordered table-striped">
+								<thead>
+									<tr>
+										<th style="font-size: 12px;" v-for="(item, index) in this.retData" :key="index">{{ this.item.name }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(i1, index1) in Array(48)" :key="index1">
+										<td v-for="(i2, index2) in Array(7)" :key="index2"></td>
+									</tr>
+								</tbody>
+							</table>
+							<a class="btn" @click="reserve">해당 시각 예약하기</a>
+						</div>
+					</transition>
 			</center>
-			<a class="btn" @click="showTimeline">{{ showFocus }} 일정 확인하기</a>
-			<div v-if="showTimeTable" min-height="3">
-				<center>
-				</center>
-				<a class="btn" @click="reserve">해당 시각 예약하기</a>
-			</div>
 		</div>
 	</div>
 </template>
@@ -47,7 +60,7 @@
 <script>
 export default {
 	name: 'check',
-	props: ['date'],
+	props: ['date', 'user'],
 	data () {
 		return {
 			calendar: [[[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
@@ -58,6 +71,7 @@ export default {
 								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],],
 			focus: new Date(),
 			showTimeTable: false,
+			retData: [],
 			TimeTable: [],
 		}
 	},
@@ -78,7 +92,7 @@ export default {
 				this.drawCalendar
 			}
 		},
-		changeMonth (delta) {
+		changeMonth: function (delta) {
 			let res = new Date()
 			res.setDate(this.focus.getDate())
 			res.setFullYear(this.focus.getFullYear())
@@ -92,43 +106,60 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function () {
 				let result = JSON.parse(xhr.responseText)
-				this.TimeTable = []
+				
 				if (result.hasOwnProperty('data')) {
-					for (data of result['data']) {
-						this.TimeTable.push(data)
-					}
+					this.retData = result.data
 					this.showTimeTable = true
+					/*
+					for (data of result['data']) {
+						this.retData.push(data)
+					}
+					*/
 				}
 				else {
 					alert('조회에 실패하였습니다.')
+					this.retData = []
 					this.showTimeTable = false
 				}
 			}
 			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		reserve: function () {
-			// for exact time query send.
 			let xhr = new XMLHttpRequest()
-			// xhr.open('GET', '/api/item/'+this.focus.toJSON().slice(0,10).replace(/-/g,""))
+			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function () {
 				let result = JSON.parse(xhr.responseText)
-				this.TimeTable = []
-				if (result.hasOwnProperty('data')) {
-					for (data of result['data']) {
-						this.TimeTable.push(data)
-					}
-					this.showTimeTable = true
-				}
+				if (result.hasOwnProperty('success')) alert('예약되었습니다.')
 				else {
-					alert('조회에 실패하였습니다.')
-					this.showTimeTable = false
+					switch (result.code) {
+						case 0:
+						alert('잘못된 시간값을 입력하셨습니다.')
+						break
+						case 1:
+						alert('이미 예약한 시간대입니다.')
+						break
+						case 2:
+						alert('다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.')
+						break
+						default:
+						alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+					}
 				}
+				this.showTimeline
 			}
-			// xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+			xhr.send('{"start":"'+ this.start +
+							 '","end":"' + this.end +
+							 '","itemId":"' + this.user[0] + // TODO: itemID에 들어갈 값
+							 '","date":"' + this.focus +
+							 '","people":"' + this.user[0] + // TODO: people에 들어갈 값
+							 '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		showTimeline: function () {
 			this.retTimeList
+			for (item of this.retData) {
+
+			}
 		}
 	},
 	computed: {

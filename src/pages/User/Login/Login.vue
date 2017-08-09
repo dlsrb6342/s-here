@@ -17,6 +17,7 @@
         </v-container>
       </v-card-text>
     </v-card>
+		<!--
     <p>This is Login</p>
 		사용자 학번: <input type="text" v-model="studentId"><br>
 		Password: <input type="password" v-model="Password"><br>
@@ -24,14 +25,12 @@
     <a class="btn"  @click="goPage('signup')">회원가입</a>
 		<br>
 		<a class="btn" @click="goPage('lostpw')">비밀번호를 잊으셨나요?</a>
+		-->
 	</div>
 </template>
 
 <script>
-import VTextField from "vuetify/src/components/text-fields/VTextField";
-
 export default {
-  components: {VTextField},
   name: 'login',
 	data () {
 		return {
