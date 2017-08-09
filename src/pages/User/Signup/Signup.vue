@@ -1,5 +1,5 @@
 <template>
-  <div class="signup">
+  <div class="view signup">
 		<p>This is Signup page</p>
     Email 주소: <input type="text" v-model="Email">@skku.edu<br>
     사용자 이름: <input type="text" v-model="userName"><br>

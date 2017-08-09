@@ -23,6 +23,7 @@
     "morgan": "^1.8.1",
     "nodemailer": "^4.0.1",
     "redis": "^2.7.1",
+    "style-loader": "^0.18.2",
     "uuid": "^3.1.0",
     "vue": "^2.3.3",
     "vue-router": "^2.7.0",

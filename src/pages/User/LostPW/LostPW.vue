@@ -1,5 +1,5 @@
 <template>
-	<div class="lostpw">
+	<div class="view lostpw">
     <p>Lost Password?</p>
 	</div>
 </template>
