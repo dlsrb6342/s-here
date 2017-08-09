@@ -1,5 +1,22 @@
 <template>
-	<div class="login">
+	<div class="view login">
+    <v-card>
+      <v-card-text>
+        <v-container fluid>
+          <v-layout row>
+            <v-flex xs4>
+              <v-subheader>사용자 학번</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+              <v-text-field
+                name="input_ID"
+                label="학번"
+                id="input_id"></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card-text>
+    </v-card>
     <p>This is Login</p>
 		사용자 학번: <input type="text" v-model="studentId"><br>
 		Password: <input type="password" v-model="Password"><br>
@@ -11,7 +28,10 @@
 </template>
 
 <script>
+import VTextField from "vuetify/src/components/text-fields/VTextField";
+
 export default {
+  components: {VTextField},
   name: 'login',
 	data () {
 		return {

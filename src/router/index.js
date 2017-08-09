@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuetify from 'vuetify'
 import Router from 'vue-router'
 
 import MainPage from '@/pages/MainPage'
@@ -19,7 +20,7 @@ import Signup from '@/pages/User/Signup/Signup'
 import Confirm from '@/pages/User/Signup/Confirm'
 
 Vue.use(Router)
-
+Vue.use(Vuetify)
 export default new Router({
   routes: [
     {
@@ -71,7 +72,7 @@ export default new Router({
     },
     {
       path: '/resetpw',
-      name: 'ResetPW',  
+      name: 'ResetPW',
       component: LostPW,
     },
     {
