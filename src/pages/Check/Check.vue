@@ -1,59 +1,73 @@
 <template>
-	<div class="check view">
-    <h4>예약현황</h4>
+  <div class="check view">
+    <h2>예약 현황</h2>
     <hr>
-    <div class="container vertical-center-flex">
-      <div class="row align-center">
-        <div v-bind:class="{ 'col-md-5':showTimeTable, 'col-md-12':!showTimeTable }" class="col-xs-12" id="calendar">
+    <div class="container view">
+      <div class="row middle-box">
+        <div v-bind:class="{ 'col-md-6':showTimeTable, 'col-md-12':!showTimeTable }" class="col-xs-12" id="calendar">
           <table class="table-condensed table-bordered table-striped align-center">
             <thead>
-              <tr>
-                <th colspan="7">
-                    <a class="btn" @click="changeMonth(-1)"><i class="icon-chevron-left"><</i></a>
-                    <a class="btn">{{ showFocus }}</a>
-                    <a class="btn" @click="changeMonth(1)"><i class="icon-chevron-right">></i></a>
-                </th>
-              </tr>
-              <tr>
-                <th>일</th>
-                <th>월</th>
-                <th>화</th>
-                <th>수</th>
-                <th>목</th>
-                <th>금</th>
-                <th>토</th>
-              </tr>
+            <tr>
+              <th colspan="7">
+                <a class="btn" @click="changeMonth(-1)"><i class="icon-chevron-left"><</i></a>
+                <a class="btn" @click="changeToday()">{{ showFocus }}</a>
+                <a class="btn" @click="changeMonth(1)"><i class="icon-chevron-right">></i></a>
+              </th>
+            </tr>
+            <tr>
+              <th v-for="(t, index) in ['일', '월', '화', '수', '목', '금', '토']" :key="index">{{ t }}</th>
+            </tr>
             </thead>
             <tbody>
-              <tr v-for="(week, index) in calendar" :key="index">
-                <td v-for="(day, index2) in week" :key="index2" :title="day">
-                  <a class="btn" v-show="day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
-                  <a class="btn muted" v-show="!day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
-                </td>
-              </tr>
+            <tr v-for="(week, index) in calendar" :key="index">
+              <td v-for="(day, index2) in week" :key="index2" :title="day">
+                <a class="btn" v-show="day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
+                <a class="btn muted" v-show="!day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
+              </td>
+            </tr>
             </tbody>
           </table>
-          <a class="btn" @click="showTimeline">{{ showFocus }} 일정 확인하기</a>
+          <a class="btn" @click="showTimeline">일정 확인하기</a>
           <a class="btn" @click="showTimeline" style="padding: 6px 6px 6px 6px;"><i class="fa fa-refresh"></i></a>
         </div>
-        <div v-if="showTimeTable" class="col-md-5 col-xs-12">
-          <transition name="fade">
-              <div min-height="3">
+        <div class="col-md-6">
+          <transition v-if="showTimeTable" name="fade">
+            <div class="row vertical-center-flex"  min-height="3">
+              <div class="col-sm-4">
                 <table class="table-condensed table-bordered table-striped align-center">
-                  <thead>
-                    <tr>
-                      <th style="font-size: 12px;" v-for="(item, index) in this.retData" :key="index">{{ this.item.name }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(i1, index1) in Array(48)" :key="index1">
-                      <td v-for="(i2, index2) in Array(7)" :key="index2"></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <a class="btn" @click="reserve">해당 시각 예약하기</a>
+                <thead>
+                <tr>
+                  <th style="font-size: 12px;" v-for="(item, index) in this.retData" :key="index">{{ this.item.name }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(i1, index1) in Array(48)" :key="index1">
+                  <td v-for="(i2, index2) in Array(7)" :key="index2"></td>
+                </tr>
+                </tbody>
+              </table>
               </div>
-            </transition>
+              <div class="col-sm-8">
+                <select v-model="fromTime">
+                  <option disabled :value="-1">시작 시각</option>
+                  <option v-for="(t, index) in Array(48)"
+                          :key="index"
+                          :value="index">
+                    {{ parseInt((index) / 24) ? "오후 " : "오전 " }} {{ parseInt(index / 2) % 12 ? parseInt(index / 2) % 12 : 12 }}시 {{ index % 2 ? "30분" : "00분" }}
+                  </option>
+                </select>
+                에서
+                <select v-if="fromTime !== -1" v-model="toTime">
+                  <option disabled :value="-1">종료 시각</option>
+                  <option v-for="(t, index) in Array(48).slice(fromTime, 48)" :key="index" :value="(index + fromTime)">
+                    {{ parseInt((index + fromTime) / 24) ? "오후 " : "오전 " }} {{ parseInt((index + fromTime) / 2) % 12 ? parseInt((index + fromTime) / 2) % 12 : 12 }}시 {{ (index + fromTime) % 2 ? "30분" : "00분" }}
+                  </option>
+                </select>
+                {{ fromTime !== -1 ? "까지" : "" }}
+                <a class="btn" v-if="toTime !== -1" @click="reserve">해당 시각 예약하기</a>
+              </div>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -62,7 +76,7 @@
 
 <script>
 export default {
-	name: 'check',
+  name: 'check',
 	props: ['date', 'user'],
 	data () {
 		return {
@@ -185,6 +199,10 @@ export default {
   div.vertical-center-flex{
     display: flex;
     align-items: center;
+  }
+  div .middle-box{
+    margin-bottom: 20em;
+    font-family: 'Roboto', sans-serif;;
   }
   .align-center{
     margin: 0 auto;
