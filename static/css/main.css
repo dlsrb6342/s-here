@@ -11,8 +11,11 @@ color-profile {
   light_menu: #0074d6;
   background_menu: #1565c0;
 }
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 body{
+  font-family: 'Lato', sans-serif;
   max-width: 100%;
   margin: 0 auto;
   height: 100%;
@@ -88,21 +91,18 @@ nav a{
 div.view{
   min-height: 100vh;
 }
-div.vertical-center{
-    margin-top: 2%;
-    vertical-align: middle;
-}
+
 div.menu-box{
     margin: auto 0;
 }
 div.white-box{
-    border-radius: 10px;
+  border-radius: 10px;
 	max-width: 85%;
 	background-color: white;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	font-size: 2.2em;
 	margin: 0 auto;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 	padding: 10px 10px;
 }
 
@@ -119,6 +119,8 @@ div.caption{
     margin: 20px 10px;
     font-size: 1.2em;
     color: #757575;
+  font-family: 'Noto Sans KR';
+  font-weight: 600;
 }
 div.caption-xs{
     margin: 10px 5px;

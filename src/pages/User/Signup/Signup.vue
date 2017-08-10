@@ -1,13 +1,52 @@
 <template>
-  <div class="view signup">
-		<p>This is Signup page</p>
+  <div class="view signup vertical-center-flex">
+    <div class="container middle-box signup-box">
+      <h2 class="signup-head">SMART CAR FACTORY</h2>
+      <hr>
+      <div class="text-left">
+        <form>
+          <div class="form-group">
+            <label for="E-mail">E-mail</label>
+            <input class="form-control" type="email" placeholder="@skku.edu" v-model="Email">
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label for="Student ID">Student ID</label>
+            <input class="form-control" type="text" placeholder="Student ID" v-model="studentId">
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label for="Name">Name</label>
+            <input class="form-control" type="text" placeholder="Name" v-model="userName">
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label for="Password">Password</label>
+            <input class="form-control" type="password" placeholder="Password" v-model="Password">
+          </div>
+        </form>
+        <form>
+          <div class="form-group">
+            <label for="Verify">Verify</label>
+            <input class="form-control" type="password"placeholder="Password Again" v-model="Verify">
+          </div>
+        </form>
+      </div>
+      <div class="row justify-content-center">
+        <button class="btn bg-white" @click="submit">Submit</button>
+      </div>
+    </div>
+		<!--<p>This is Signup page</p>
     Email 주소: <input type="text" v-model="Email">@skku.edu<br>
     사용자 이름: <input type="text" v-model="userName"><br>
     사용자 학번: <input type="text" v-model="studentId"><br>
     Password: <input type="password" v-model="Password"><br>
     Verify: <input type="password" v-model="Verify"><br>
     <button @click="submit">제출</button>
-    <button @click="cancel">취소</button>
+    <button @click="cancel">취소</button>-->
 	</div>
 </template>
 
@@ -70,7 +109,7 @@ export default {
         xhr.send('{"studentId": "' + this.studentId +
           '","password": "' + this.Password +
           '","name": "' + this.userName +
-          '","email": "' + this.Email + '@skku.edu' +
+          '","email": "' + this.Email +
           '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
       }
     },
@@ -87,5 +126,34 @@ export default {
 </script>
 
 <style>
+  div.signup{
+    height: 100%;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+  div.middle-box{
+    margin-bottom: 20em;
+    font-family: 'Roboto', sans-serif;;
+  }
+  div.signup-box{
+    max-width: 50%;
+  }
+  div .vertical-center-flex{
+    display: flex;
+    align-items: center;
+  }
+  label, .signup-head{
+    color: #203050;
+  }
+  .bg-white{
+    font-size: 1.2em;
+    background: #fafafa;
+    color: #0074d6;
+    transition: 0.2s;
+  }
+  .bg-white:hover{
+    background: #1565c0;
+    color: #fafafa;
+  }
 
 </style>
