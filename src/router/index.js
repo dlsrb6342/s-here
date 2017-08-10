@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import VueCalendar from 'vue-bootstrap-datetimepicker'
+
 import MainPage from '@/pages/MainPage'
 
 import Admin from '@/pages/Admin/Admin'
@@ -19,6 +21,8 @@ import Signup from '@/pages/User/Signup/Signup'
 import Confirm from '@/pages/User/Signup/Confirm'
 
 Vue.use(Router)
+Vue.use(VueCalendar)
+
 export default new Router({
   routes: [
     {
@@ -88,6 +92,12 @@ export default new Router({
       name: 'Confirm',
       component: Confirm,
     },
+    {
+      path: '*',
+      redirect: {
+        name: 'MainPage'
+      }
+    }
   ],
   mode: 'history'
 })

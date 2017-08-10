@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <app-nav
     v-if="!isAdmin"
     :user="currentUser"></app-nav>
@@ -7,7 +7,7 @@
       <router-view :user="currentUser"></router-view>
     </transition>
     <app-footer v-if="!isAdmin"></app-footer>
-  </div>
+  </v-app>
 </template>
 
 <script>

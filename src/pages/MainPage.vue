@@ -1,8 +1,9 @@
 <template>
   <div class="view mainpage container vertical-center">
-    <!--<v-carousel>
-      <v-carousel-item v-for="(item,i) in itmes" v-bind:src="item.src" :key="i"></v-carousel-item>
-    </v-carousel>-->
+    <v-carousel>
+      <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
+    </v-carousel>
+    <!--
     <div class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="item active">
@@ -16,13 +17,14 @@
         </div>
       </div>
     </div>
+    -->
     <div class="menu-box row">
       <hr class="prime-line">
       <div class="col-md-4 col-xs-4 text-center">
-        <a href="" class="icon hidden-xs">
+        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('mainpage')">
           <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-3x"></i>
         </a>
-        <a href="" class="icon visible-xs">
+        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('mainpage')">
           <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
@@ -31,13 +33,12 @@
         <div class="caption-xs visible-xs">
           xs viewport size, consectetur adipiscing elit.
         </div>
-
       </div>
       <div class="col-md-4 col-xs-4 text-center">
-        <a class="icon hidden-xs" href="check">
+        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('check')">
           <i class="fa fa-calendar fa-icon-eff fa-3x"></i>
         </a>
-        <a class="icon visible-xs" href="check">
+        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('check')">
           <i class="fa fa-calendar fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
@@ -48,10 +49,10 @@
         </div>
       </div>
       <div class="col-md-4 col-xs-4 text-center">
-        <a href="contact" class="icon hidden-xs">
+        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('contact')">
           <i class="fa fa-list fa-icon-eff fa-3x"></i>
         </a>
-        <a href="contact" class="icon visible-xs">
+        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('contact')">
           <i class="fa fa-list fa-icon-eff fa-2x"></i>
         </a>
         <div class="caption hidden-xs">
@@ -85,6 +86,9 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+  methods: {
+    goPage: function (goMessage) { this.$router.push(goMessage) }
+  }
 }
 </script>
 

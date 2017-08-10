@@ -95,10 +95,11 @@ export default {
 		}
 	},
 	created () {
-		if (typeof(this.date) === 'string') this.focus = new Date(this.date.slice(0, 4),
-																															this.date.slice(4, 6) - 1,
-																															this.date.slice(6, 8),
-																															new Date().getHours())
+		if (typeof(this.date) === 'string')
+		  this.focus = new Date(this.date.slice(0, 4),
+														this.date.slice(4, 6) - 1,
+														this.date.slice(6, 8),
+														new Date().getHours())
 		this.drawCalendar
 	},
 	methods: {
@@ -129,17 +130,10 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function () {
 				let result = JSON.parse(xhr.responseText)
-
 				if (result.hasOwnProperty('data')) {
 					this.retData = result.data
 					this.showTimeTable = true
-					/*
-					for (data of result['data']) {
-						this.retData.push(data)
-					}
-					*/
-				}
-				else {
+				} else {
 					this.retData = []
 					alert('조회에 실패하였습니다.')
 				}
