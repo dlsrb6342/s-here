@@ -1,25 +1,25 @@
 <template>
-	<div class="view login align-center">
-    <div class="container">
+	<div class="view login-box align-center vertical-center-flex">
+    <div class="container middle-box">
       <div class="row">
         <div class="input-group input-group-lg col-md-6 align-center">
-          <span class="input-group-addon">ID</span>
-          <input v-model="studentId" class="form-control" placeholder="학번">
+          <span class="input-group-addon bg-blue">ID</span>
+          <input v-model="studentId" class="form-control" placeholder="Student ID">
         </div>
       </div>
       <div class="row">
         <div class="input-group input-group-lg col-md-6 align-center">
-          <span class="input-group-addon">PW</span>
-          <input type="password" v-model="Password" class="form-control" placeholder="비밀번호">
+          <span class="input-group-addon bg-blue">PW</span>
+          <input type="password" v-model="Password" class="form-control" placeholder="Password">
         </div>
       </div>
       <div class="row">
-        <div class="align-center">
-          <button class="btn" @click="submit">Log In</button>
-          <button class="btn" @click="goPage('signup')">Sign In</button>
+        <div class="align-center justify-content-around">
+          <button class="btn bg-white" @click="submit">Log In</button>
+          <button class="btn bg-white" @click="goPage('signup')">Sign In</button>
+          <button class="btn bg-white" @click="goPage('lostpw')">비밀번호를 잊으셨나요?</button>
         </div>
       </div>
-        <button class="btn" @click="goPage('lostpw')">비밀번호를 잊으셨나요?</button>
     </div>
       <!--
     <p>This is Login</p>
@@ -84,13 +84,42 @@ export default {
 </script>
 
 <style>
-  div .login{
+  div .login-box{
     max-width: 70%;
+    margin: auto 0;
   }
-  div .row{
-    margin: 20px;
+  div .vertical-center-flex{
+    display: flex;
+    align-items: center;
+  }
+  div .middle-box{
+    margin-bottom: 20em;
+    font-family: 'Roboto', sans-serif;;
+  }
+  div .row {
+    margin: 25px;
   }
   div .align-center{
-    margin: 0 auto;
+     margin: 0 auto;
+   }
+  .btn{
+    width: auto;
+  }
+  .input-group-addon{
+    width: 4em;
+  }
+  .bg-blue{
+    background: #0074d6;
+    color: #fafafa;
+  }
+  .bg-white{
+    font-size: 1.2em;
+    background: #fafafa;
+    color: #0074d6;
+    transition: 0.2s;
+  }
+  .bg-white:hover{
+    background: #1565c0;
+    color: #fafafa;
   }
 </style>

@@ -31,6 +31,12 @@ export default {
 }
 </script>
 <style>
+  .navbar{
+    font-family: 'Roboto', sans-serif;
+  }
+  .navbar-brand{
+    font-family: 'Comfortaa', cursive;
+  }
   a:hover {
     text-decoration: none;
   }

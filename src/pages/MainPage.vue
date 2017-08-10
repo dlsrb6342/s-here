@@ -90,6 +90,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  div.vertical-center{
+    display: block;
+    margin-top: 2%;
+    vertical-align: middle;
+  }
   a {
     color: #203050;
   }
