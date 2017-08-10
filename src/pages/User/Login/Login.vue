@@ -1,23 +1,27 @@
 <template>
-	<div class="view login">
-    <v-card>
-      <v-card-text>
-        <v-container fluid>
-          <v-layout row>
-            <v-flex xs4>
-              <v-subheader>사용자 학번</v-subheader>
-            </v-flex>
-            <v-flex xs8>
-              <v-text-field
-                name="input_ID"
-                label="학번"
-                id="input_id"></v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-    </v-card>
-		<!--
+	<div class="view login align-center">
+    <div class="container">
+      <div class="row">
+        <div class="input-group input-group-lg col-md-6 align-center">
+          <span class="input-group-addon">ID</span>
+          <input v-model="studentId" class="form-control" placeholder="학번">
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-group input-group-lg col-md-6 align-center">
+          <span class="input-group-addon">PW</span>
+          <input type="password" v-model="Password" class="form-control" placeholder="비밀번호">
+        </div>
+      </div>
+      <div class="row">
+        <div class="align-center">
+          <button class="btn" @click="submit">Log In</button>
+          <button class="btn" @click="goPage('signup')">Sign In</button>
+        </div>
+      </div>
+        <button class="btn" @click="goPage('lostpw')">비밀번호를 잊으셨나요?</button>
+    </div>
+      <!--
     <p>This is Login</p>
 		사용자 학번: <input type="text" v-model="studentId"><br>
 		Password: <input type="password" v-model="Password"><br>
@@ -80,5 +84,13 @@ export default {
 </script>
 
 <style>
-
+  div .login{
+    max-width: 70%;
+  }
+  div .row{
+    margin: 20px;
+  }
+  div .align-center{
+    margin: 0 auto;
+  }
 </style>
