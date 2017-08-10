@@ -155,7 +155,10 @@ export default {
 			for (item of this.retData) {
 				// TODO: 받아온 데이터(retData)를 TimeTable로 변환하기
 			}
-		},
+		}
+	},
+	computed: {
+		showFocus: function () { return this.focus.toJSON().slice(0, 10) },
 		drawCalendar: function () {
 			let prev = new Date(this.focus.getFullYear(), this.focus.getMonth(), 0).getDate()
 			let first = new Date(this.focus.getFullYear(), this.focus.getMonth(), 1).getDay()
@@ -165,9 +168,6 @@ export default {
 			for (i = first; i < last + first; i++) this.calendar[parseInt(i / 7)][i % 7] = [i + 1 - first, true]
 			for (i = last + first; i < 42; i++) this.calendar[parseInt(i / 7)][i % 7] = [i - last - first + 1, false]
 		}
-	},
-	computed: {
-		showFocus: function () { return this.focus.toJSON().slice(0, 10) }
 	}
 }
 </script>
