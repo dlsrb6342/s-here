@@ -82,19 +82,9 @@
 </template>
 
 <script>
-import Nav from './Navbar'
-import Footer from './Footer'
-import VueRouter from 'vue-router'
-import router from '@/router'
-
 export default {
   name: 'app',
-  /*
-  components: {
-    'app-nav': Nav,
-    'app-footer': Footer,
-  },
-  */
+
   data () {
     return {
       currentUser: [null, null],

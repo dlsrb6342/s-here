@@ -3,21 +3,6 @@
     <v-carousel>
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
-    <!--
-    <div class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="item active">
-          <img class="img-fluid" src="static/img/bg1.JPG" alt="First slide">
-        </div>
-        <div class="item">
-          <img class="img-fluid" src="static/img/bg2.JPG" alt="Second slide">
-        </div>
-        <div class="item">
-          <img class="img-fluid" src="static/img/bg3.JPG" alt="Third slide">
-        </div>
-      </div>
-    </div>
-    -->
     <div class="menu-box row">
       <hr class="prime-line">
       <div class="col-md-4 col-xs-4 text-center">
