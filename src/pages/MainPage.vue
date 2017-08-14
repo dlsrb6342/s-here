@@ -3,7 +3,7 @@
     <v-carousel>
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
-    <v-container fluid class="text-left">
+    <v-container fluid class="non-padding text-left">
       <v-layout row justify-space-around>
         <v-flex xs12 lg4>
           <v-card>
@@ -16,9 +16,7 @@
                 </div>
               </div>
             </v-card-title>
-            <v-card-action>
-                <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
-            </v-card-action>
+            <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
             <v-card-media
               src="http://lorempixel.com/300/130/cats/"
               height="180px"
@@ -56,9 +54,7 @@
                 </div>
               </div>
             </v-card-title>
-            <v-card-action>
-              <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
-            </v-card-action>
+            <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
             <v-card-media
               src="http://lorempixel.com/340/130/cats/"
               height="180px"
@@ -100,6 +96,9 @@ export default {
 <style scoped>
   div.test{
     display: inline-flex;
+  }
+  div.non-padding{
+    padding: 0;
   }
   div.carousel {
     height: 50vh;
