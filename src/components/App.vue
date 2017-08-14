@@ -1,7 +1,7 @@
 <template>
   <v-app id="app" standalone>
     <v-navigation-drawer
-      persistent
+      temporary
       v-model="drawer"
       light
       enable-resize-watcher
@@ -9,6 +9,9 @@
       absolute
       v-if="!isAdmin">
       <v-list dense>
+        <v-list-tile>
+          <v-list-tile-title>{{ this.currentUser[0] }}</v-list-tile-title>
+        </v-list-tile>
         <v-list-tile @click.native="goPage('mainpage')">
           <v-list-tile-action>
             <v-icon large>dashboard</v-icon>
@@ -97,9 +100,9 @@ export default {
   */
   data () {
     return {
-      currentUser: [null, null],
+      currentUser: ['testNmae', null],
       isAdmin: false,
-      drawer: true,
+      drawer: null,
     }
   },
   methods: {
