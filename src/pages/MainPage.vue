@@ -1,77 +1,52 @@
 <template>
   <div class="view mainpage container vertical-center">
-    <v-carousel
-      height="300px">
+    <v-carousel>
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
-    <!--
-    <div class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        <div class="item active">
-          <img class="img-fluid" src="static/img/bg1.JPG" alt="First slide">
-        </div>
-        <div class="item">
-          <img class="img-fluid" src="static/img/bg2.JPG" alt="Second slide">
-        </div>
-        <div class="item">
-          <img class="img-fluid" src="static/img/bg3.JPG" alt="Third slide">
-        </div>
-      </div>
-    </div>
-    -->
     <v-container fluid class="text-left">
       <v-layout row justify-space-around>
         <v-flex xs12 lg4>
           <v-card>
-            <v-card-media
-              src="http://lorempixel.com/300/130/cats/"
-              height="140px"
-            >
-              <v-container fill-height fluid>
-                <v-layout fill-height>
-                  <v-flex xs12 align-end flexbox>
-                    <span class="indigo--text text--darken-3 headline">이용 안내</span>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-media>
             <v-card-title>
               <div>
-                오픈 할 수 있을까<br>
-                인건비를 줄이자
+                <h3 class="headline mb-0">이용 안내</h3>
+                <div>
+                  오픈 할 수 있을까<br>
+                  인건비를 줄이자
+                </div>
               </div>
             </v-card-title>
             <v-card-action>
                 <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
             </v-card-action>
+            <v-card-media
+              src="http://lorempixel.com/300/130/cats/"
+              height="180px"
+            >
+            </v-card-media>
           </v-card>
         </v-flex>
         <v-flex xs12 lg4>
           <v-card>
+            <v-card-title>
+              <div>
+                <h3 class="headline mb-0">공간 예약</h3>
+                <div>
+                  09:00 ~ 23:00<br>
+                  테이블 2 | 프린터 5 | 공구함 5
+                </div>
+              </div>
+            </v-card-title>
+            <v-btn flat class="blue--text" @click="goPage('check')">Book</v-btn>
             <v-card-media
               src="http://lorempixel.com/320/130/cats/"
-              height="140px"
+              height="180px"
             >
             </v-card-media>
-              <v-card-title>
-                <div>
-                  <h3 class="headline mb-0">공간 예약</h3>
-                  <div>
-                    09:00 ~ 23:00<br>
-                    테이블 2 | 프린터 5 | 공구함 5
-                  </div>
-                </div>
-              </v-card-title>
-              <v-btn flat class="blue--text" @click="goPage('check')">Book</v-btn>
           </v-card>
         </v-flex>
         <v-flex xs12 lg4>
           <v-card>
-            <v-card-media
-              src="http://lorempixel.com/340/130/cats/"
-              height="140px"
-            >
-            </v-card-media>
             <v-card-title>
               <div>
                 <h3 class="headline mb-0">문의사항</h3>
@@ -84,58 +59,15 @@
             <v-card-action>
               <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
             </v-card-action>
+            <v-card-media
+              src="http://lorempixel.com/340/130/cats/"
+              height="180px"
+            >
+            </v-card-media>
           </v-card>
         </v-flex>
       </v-layout>
     </v-container>
-    <!--
-    <div class="menu-box row">
-      <hr class="prime-line">
-      <div class="col-md-4 col-xs-4 text-center">
-        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('mainpage')">
-          <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-3x"></i>
-        </a>
-        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('mainpage')">
-          <i class="fa fa-cog fa-spin-hover fa-icon-eff fa-2x"></i>
-        </a>
-        <div class="caption hidden-xs">
-          메인 페이지
-        </div>
-        <div class="caption-xs visible-xs">
-          xs viewport size, consectetur adipiscing elit.
-        </div>
-      </div>
-      <div class="col-md-4 col-xs-4 text-center">
-        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('check')">
-          <i class="fa fa-calendar fa-icon-eff fa-3x"></i>
-        </a>
-        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('check')">
-          <i class="fa fa-calendar fa-icon-eff fa-2x"></i>
-        </a>
-        <div class="caption hidden-xs">
-          예약 하기
-        </div>
-        <div class="caption-xs visible-xs">
-          xs viewport size, consectetur adipiscing elit.
-        </div>
-      </div>
-      <div class="col-md-4 col-xs-4 text-center">
-        <a class="icon hidden-xs" href="javascript:void(0)" @click="goPage('contact')">
-          <i class="fa fa-list fa-icon-eff fa-3x"></i>
-        </a>
-        <a class="icon visible-xs" href="javascript:void(0)" @click="goPage('contact')">
-          <i class="fa fa-list fa-icon-eff fa-2x"></i>
-        </a>
-        <div class="caption hidden-xs">
-          문의 사항
-        </div>
-        <div class="caption-xs visible-xs">
-          xs viewport size, consectetur adipiscing elit.
-        </div>
-      </div>
-      <hr class="prime-line">
-    </div>
-    -->
   </div>
 </template>
 
