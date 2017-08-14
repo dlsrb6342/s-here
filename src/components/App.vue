@@ -1,7 +1,7 @@
 <template>
   <v-app id="app" standalone>
     <v-navigation-drawer
-      persistent
+      temporary
       v-model="drawer"
       light
       enable-resize-watcher
@@ -9,6 +9,9 @@
       absolute
       v-if="!isAdmin">
       <v-list dense>
+        <v-list-tile>
+          <v-list-tile-title>{{ this.currentUser[0] }}</v-list-tile-title>
+        </v-list-tile>
         <v-list-tile @click.native="goPage('mainpage')">
           <v-list-tile-action>
             <v-icon large>dashboard</v-icon>
@@ -77,7 +80,12 @@
         <router-view :user="currentUser"></router-view>
       </v-container>
     </main>
-    <v-footer></v-footer>
+    <v-footer id="app-footer" class="row vertical-center">
+      <div class="caption text-center">
+        <hr><br>
+        Powered by S-Hero Project © {{ new Date().getFullYear() }}
+      </div>
+    </v-footer>
   </v-app>
 </template>
 
@@ -87,9 +95,9 @@ export default {
 
   data () {
     return {
-      currentUser: [null, null],
+      currentUser: ['testNmae', null],
       isAdmin: false,
-      drawer: true,
+      drawer: null,
     }
   },
   methods: {
@@ -109,6 +117,25 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  #app-footer {
+    width: 100%;
+    height:10vh;
+    display: block;
+    /*position: fixed;
+    left:0;
+    bottom: 0;
+    height: auto;
+    max-height: 13vh;*/
+    background-color: #1565c0;
+    margin: 0;
+    color: white;
+  }
+  #app-footer hr{
+    width: 80%;
+    margin: 0 auto;
+  }
+  #app-footer .caption{
+    color: #fafafa;
+  }
 </style>
