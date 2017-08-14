@@ -82,6 +82,7 @@
     </main>
     <v-footer id="app-footer" class="row vertical-center">
       <div class="caption text-center">
+        <hr><br>
         Powered by S-Hero Project © {{ new Date().getFullYear() }}
       </div>
     </v-footer>
@@ -129,6 +130,7 @@ export default {
 <style scoped>
   #app-footer {
     width: 100%;
+    height:10vh;
     display: block;
     /*position: fixed;
     left:0;
@@ -138,6 +140,10 @@ export default {
     background-color: #1565c0;
     margin: 0;
     color: white;
+  }
+  #app-footer hr{
+    width: 80%;
+    margin: 0 auto;
   }
   #app-footer .caption{
     color: #fafafa;

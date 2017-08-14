@@ -41,8 +41,8 @@
                 인건비를 줄이자
               </div>
             </v-card-title>
-            <v-card-action @click="goPage('about')">
-                <v-btn flat class="blue--text">About</v-btn>
+            <v-card-action>
+                <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
             </v-card-action>
           </v-card>
         </v-flex>
@@ -53,18 +53,16 @@
               height="140px"
             >
             </v-card-media>
-            <v-card-title>
-              <div>
-                <h3 class="headline mb-0">공간 예약</h3>
+              <v-card-title>
                 <div>
-                  09:00 ~ 23:00<br>
-                  테이블 2 | 프린터 5 | 공구함 5
+                  <h3 class="headline mb-0">공간 예약</h3>
+                  <div>
+                    09:00 ~ 23:00<br>
+                    테이블 2 | 프린터 5 | 공구함 5
+                  </div>
                 </div>
-              </div>
-            </v-card-title>
-            <v-card-action @click="goPage('check')">
-              <v-btn flat class="blue--text">Book</v-btn>
-            </v-card-action>
+              </v-card-title>
+              <v-btn flat class="blue--text" @click="goPage('check')">Book</v-btn>
           </v-card>
         </v-flex>
         <v-flex xs12 lg4>
@@ -83,8 +81,8 @@
                 </div>
               </div>
             </v-card-title>
-            <v-card-action @click="goPage('contact')">
-              <v-btn flat class="blue--text">Contact</v-btn>
+            <v-card-action>
+              <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
             </v-card-action>
           </v-card>
         </v-flex>
@@ -168,6 +166,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  div.test{
+    display: inline-flex;
+  }
+  div.carousel {
+    height: 50vh;
+  }
   div.vertical-center{
     display: block;
     vertical-align: middle;
