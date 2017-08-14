@@ -1,6 +1,7 @@
 <template>
   <div class="view mainpage container vertical-center">
-    <v-carousel>
+    <v-carousel
+      height="300px">
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
     <!--
@@ -26,14 +27,18 @@
               src="http://lorempixel.com/300/130/cats/"
               height="140px"
             >
+              <v-container fill-height fluid>
+                <v-layout fill-height>
+                  <v-flex xs12 align-end flexbox>
+                    <span class="indigo--text text--darken-3 headline">이용 안내</span>
+                  </v-flex>
+                </v-layout>
+              </v-container>
             </v-card-media>
             <v-card-title>
               <div>
-                <h3 class="headline mb-0">이용 안내</h3>
-                <div>
-                  오픈 할 수 있을까<br>
-                  인건비를 줄이자
-                </div>
+                오픈 할 수 있을까<br>
+                인건비를 줄이자
               </div>
             </v-card-title>
             <v-card-action @click="goPage('about')">
@@ -85,6 +90,7 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <!--
     <div class="menu-box row">
       <hr class="prime-line">
       <div class="col-md-4 col-xs-4 text-center">
@@ -131,6 +137,7 @@
       </div>
       <hr class="prime-line">
     </div>
+    -->
   </div>
 </template>
 
@@ -141,13 +148,13 @@ export default {
     return {
       items: [
         {
-          src: '/static/img/bg1.jpg'
+          src: 'http://lorempixel.com/700/500/cats/'
         },
         {
-          src: '/static/img/bg2.jpg'
+          src: 'http://lorempixel.com/700/540/cats/'
         },
         {
-          src: '/static/img/bg3.jpg'
+          src: 'http://lorempixel.com/700/520/cats/'
         }
       ],
       msg: 'Welcome to Your Vue.js App'

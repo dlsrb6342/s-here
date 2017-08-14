@@ -80,7 +80,11 @@
         <router-view :user="currentUser"></router-view>
       </v-container>
     </main>
-    <v-footer></v-footer>
+    <v-footer id="app-footer" class="row vertical-center">
+      <div class="caption text-center">
+        Powered by S-Hero Project © {{ new Date().getFullYear() }}
+      </div>
+    </v-footer>
   </v-app>
 </template>
 
@@ -122,6 +126,20 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  #app-footer {
+    width: 100%;
+    display: block;
+    /*position: fixed;
+    left:0;
+    bottom: 0;
+    height: auto;
+    max-height: 13vh;*/
+    background-color: #1565c0;
+    margin: 0;
+    color: white;
+  }
+  #app-footer .caption{
+    color: #fafafa;
+  }
 </style>
