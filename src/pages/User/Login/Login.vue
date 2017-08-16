@@ -1,25 +1,39 @@
 <template>
 	<div class="view login-box align-center vertical-center-flex">
     <div class="container middle-box">
-      <div class="row">
-        <div class="input-group input-group-lg col-md-6 align-center">
-          <span class="input-group-addon bg-blue">ID</span>
-          <input v-model="studentId" class="form-control" placeholder="Student ID">
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-group input-group-lg col-md-6 align-center">
-          <span class="input-group-addon bg-blue">PW</span>
-          <input type="password" v-model="Password" class="form-control" placeholder="Password">
-        </div>
-      </div>
-      <div class="row">
-        <div class="align-center justify-content-around">
-          <button class="btn bg-white" @click="submit">Log In</button>
-          <button class="btn bg-white" @click="goPage('signup')">Sign In</button>
-          <button class="btn bg-white" @click="goPage('lostpw')">비밀번호를 잊으셨나요?</button>
-        </div>
-      </div>
+      <v-container fluid>
+        <v-layout row>
+          <v-flex lg12 xs12>
+            <v-text-field
+              v-model="studentId"
+              name="id"
+              label="Student ID"
+              id="stdent_id"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex lg12 xs12>
+            <v-text-field
+              v-model="password"
+              name="pw"
+              label="Password"
+              id="password"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row justify-space-around>
+          <v-flex lg4 xs4>
+            <button class="btn bg-white" @click="submit">Log In</button>
+          </v-flex>
+          <v-flex lg4 xs4>
+            <button class="btn bg-white" @click="goPage('signup')">Sign up</button>
+          </v-flex>
+          <v-flex lg4 xs4>
+            <button class="btn bg-white" @click="goPage('lostpw')">Lost password?</button>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </div>
       <!--
     <p>This is Login</p>
@@ -83,9 +97,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   div .login-box{
-    max-width: 70%;
+    max-width: 50%;
     margin: auto 0;
   }
   div .vertical-center-flex{
@@ -95,6 +109,9 @@ export default {
   div .middle-box{
     margin-bottom: 20em;
     font-family: 'Roboto', sans-serif;;
+  }
+  div .non-flex{
+    display: -webkit-inline-box;
   }
   div .row {
     margin: 25px;
@@ -112,14 +129,14 @@ export default {
     background: #0074d6;
     color: #fafafa;
   }
-  .bg-white{
+  button.bg-white{
     font-size: 1.2em;
-    background: #fafafa;
+    background-color: #fafafa;
     color: #0074d6;
     transition: 0.2s;
   }
-  .bg-white:hover{
-    background: #1565c0;
+  button.bg-white:hover{
+    background-color: #1565c0 !important;
     color: #fafafa;
   }
 </style>

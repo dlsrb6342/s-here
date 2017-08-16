@@ -125,7 +125,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   div.signup{
     height: 100%;
     max-width: 70%;
@@ -134,9 +134,10 @@ export default {
   div.middle-box{
     margin-bottom: 20em;
     font-family: 'Roboto', sans-serif;;
+    text-align: center;
   }
   div.signup-box{
-    max-width: 50%;
+    max-width: 80%;
   }
   div .vertical-center-flex{
     display: flex;
@@ -152,7 +153,7 @@ export default {
     transition: 0.2s;
   }
   .bg-white:hover{
-    background: #1565c0;
+    background: #1565c0 !important;
     color: #fafafa;
   }
 

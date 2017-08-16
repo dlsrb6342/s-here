@@ -45,7 +45,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-spacer></v-spacer>
-        <v-list-tile v-if="!this.currentUser[0]" @click.native="goPage('login')">
+        <v-list-tile v-if="this.currentUser[0]" @click.native="goPage('login')">
           <v-list-tile-action>
             <v-icon large>input</v-icon>
           </v-list-tile-action>
@@ -53,7 +53,7 @@
             <v-list-tile-title>Sign in</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="!this.currentUser[0]" @click.native="goPage('signup')">
+        <v-list-tile v-if="this.currentUser[0]" @click.native="goPage('signup')">
           <v-list-tile-action>
             <v-icon large>assignment</v-icon>
           </v-list-tile-action>
