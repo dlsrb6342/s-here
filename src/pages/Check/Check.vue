@@ -1,97 +1,72 @@
 <template>
   <div class="check view">
-    <h2>예약 현황</h2>
-    <hr>
-    <div class="container view">
-      <div class="row middle-box">
-        <div v-bind:class="{ 'col-md-6':showTimeTable, 'col-md-12':!showTimeTable }" class="col-xs-12" id="calendar">
-          <table class="table-condensed table-bordered table-striped align-center">
-            <thead>
-            <tr>
-              <th colspan="7">
-                <a class="btn" @click="changeMonth(-1)"><i class="icon-chevron-left"><</i></a>
-                <a class="btn" @click="changeToday()">{{ showFocus }}</a>
-                <a class="btn" @click="changeMonth(1)"><i class="icon-chevron-right">></i></a>
-              </th>
-            </tr>
-            <tr>
-              <th v-for="(t, index) in ['일', '월', '화', '수', '목', '금', '토']" :key="index">{{ t }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(week, index) in calendar" :key="index">
-              <td v-for="(day, index2) in week" :key="index2" :title="day">
-                <a class="btn" v-show="day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
-                <a class="btn muted" v-show="!day[1]" @click="changeFocus(day)">{{ day[0] }}</a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <a class="btn" @click="showTimeline">일정 확인하기</a>
-          <a class="btn" @click="showTimeline" style="padding: 6px 6px 6px 6px;"><i class="fa fa-refresh"></i></a>
-        </div>
-        <div class="col-md-6">
-          <transition v-if="showTimeTable" name="fade">
-            <div class="row vertical-center-flex"  min-height="3">
-              <div class="col-sm-4">
-                <table class="table-condensed table-bordered table-striped align-center">
-                <thead>
-                <tr>
-                  <th style="font-size: 12px;" v-for="(item, index) in this.retData" :key="index">{{ this.item.name }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(i1, index1) in Array(48)" :key="index1">
-                  <td v-for="(i2, index2) in Array(7)" :key="index2"></td>
-                </tr>
-                </tbody>
-              </table>
-              </div>
-              <div class="col-sm-8">
-                <select v-model="fromTime">
-                  <option disabled :value="-1">시작 시각</option>
-                  <option v-for="(t, index) in Array(48)"
-                          :key="index"
-                          :value="index">
-                    {{ parseInt((index) / 24) ? "오후 " : "오전 " }} {{ parseInt(index / 2) % 12 ? parseInt(index / 2) % 12 : 12 }}시 {{ index % 2 ? "30분" : "00분" }}
-                  </option>
-                </select>
-                에서
-                <select v-if="fromTime !== -1" v-model="toTime">
-                  <option disabled :value="-1">종료 시각</option>
-                  <option v-for="(t, index) in Array(48).slice(fromTime, 48)" :key="index" :value="(index + fromTime)">
-                    {{ parseInt((index + fromTime) / 24) ? "오후 " : "오전 " }} {{ parseInt((index + fromTime) / 2) % 12 ? parseInt((index + fromTime) / 2) % 12 : 12 }}시 {{ (index + fromTime) % 2 ? "30분" : "00분" }}
-                  </option>
-                </select>
-                {{ fromTime !== -1 ? "까지" : "" }}
-                <a class="btn" v-if="toTime !== -1" @click="reserve">해당 시각 예약하기</a>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-    </div>
+		<v-container fluid grid-list-xl>
+			<v-layout justify-center>
+				<v-flex>
+					<h2>예약 현황</h2>
+				</v-flex>
+			</v-layout>
+			<v-layout align-center>
+				<v-flex>
+					<v-date-picker
+						landscape
+						v-model="focus"
+						locale="ko-KR"
+						scrollable="true"
+					></v-date-picker>
+				</v-flex>
+			</v-layout>
+			<v-layout row wrap v-if="showTimeTable">
+				<v-flex v-for="i in 48" :key="i" xs1 class="pa-0 ma-0">
+					<v-card v-for="j in productId.length" :key="j" class="px-1 py-1">
+						<v-card-text class="pa-0">1</v-card-text>
+					</v-card>
+				</v-flex>
+				<v-flex xs1 class="pa-0 ma-0">
+					<v-card v-for="(item, j) in productId" :key="j" class="px-1 py-1">
+						<v-card-text class="pa-0">{{ item }}</v-card-text>
+					</v-card>
+				</v-flex>
+			</v-layout>
+			<br><br>
+			<v-layout align-center>
+				<v-flex>
+					<v-time-picker
+						landscape
+						v-model="fromTime"
+						scrollable="true"
+						:allowed-minutes="grid"
+					></v-time-picker>
+				</v-flex>
+				<v-flex>
+					<v-time-picker
+						landscape
+						v-model="toTime"
+						scrollable="true"
+						:allowed-minutes="grid"
+					></v-time-picker>
+				</v-flex>
+			</v-layout>
+		</v-container>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'check',
+	name: 'check',
 	props: ['date', 'user'],
 	data () {
 		return {
-			calendar: [[[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
-								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
-								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
-								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
-								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],
-								 [[null, true], [null, true], [null, true], [null, true], [null, true], [null, true], [null, true]],],
-			focus: new Date(),
-			showTimeTable: false, // true for debugging
+			focus: null,
+			showTimeTable: true,
 			retData: [],
 			TimeTable: [],
-			fromTime: -1,
-			toTime: -1,
+			fromTime: null,
+			toTime: null,
+			grid: function (value) {
+				return value % 30 === 0
+			},
+			productId: ["프린터 1", "프린터 2", "프린터 3", "프린터 4", "프린터 5"],
 		}
 	},
 	created () {
@@ -100,30 +75,8 @@ export default {
 														this.date.slice(4, 6) - 1,
 														this.date.slice(6, 8),
 														new Date().getHours())
-		this.drawCalendar
 	},
 	methods: {
-		changeToday: function () {
-			this.focus = new Date()
-			this.drawCalendar
-		},
-		changeFocus: function (date) {
-			let res = new Date(this.focus.getFullYear(), this.focus.getMonth(), date[0], this.focus.getHours())
-			this.focus = res
-			if (date[1] === false) {
-				if (date[0] < 15) res.setMonth(this.focus.getMonth() + 1)
-				else res.setMonth(this.focus.getMonth() - 1)
-				this.drawCalendar
-			}
-		},
-		changeMonth: function (delta) {
-			let res = new Date()
-			res.setDate(this.focus.getDate())
-			res.setFullYear(this.focus.getFullYear())
-			res.setMonth(this.focus.getMonth() + delta)
-			this.focus = res
-			this.drawCalendar
-		},
 		retTimeList: function () {
 			let xhr = new XMLHttpRequest()
 			xhr.open('GET', '/api/item/' + this.focus.toJSON().slice(0, 10).replace(/-/g, ""))
@@ -168,33 +121,10 @@ export default {
 		}
 	},
 	computed: {
-		showFocus: function () { return this.focus.toJSON().slice(0, 10) },
-		drawCalendar: function () {
-			let prev = new Date(this.focus.getFullYear(), this.focus.getMonth(), 0).getDate()
-			let first = new Date(this.focus.getFullYear(), this.focus.getMonth(), 1).getDay()
-			let last = new Date(this.focus.getFullYear(), this.focus.getMonth() + 1, 0).getDate()
-			let i, count = 1
-			for (i = 0; i < first; i++) this.calendar[0][i] = [1 + prev - first + i, false]
-			for (i = first; i < last + first; i++) this.calendar[parseInt(i / 7)][i % 7] = [i + 1 - first, true]
-			for (i = last + first; i < 42; i++) this.calendar[parseInt(i / 7)][i % 7] = [i - last - first + 1, false]
-		}
 	}
 }
 </script>
 
 <style>
-  div.vertical-center-flex{
-    display: flex;
-    align-items: center;
-  }
-  div .middle-box{
-    margin-bottom: 20em;
-    font-family: 'Roboto', sans-serif;;
-  }
-  .align-center{
-    margin: 0 auto;
-  }
-  th{
-    text-align: center;
-  }
+
 </style>

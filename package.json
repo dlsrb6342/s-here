@@ -17,7 +17,6 @@
     "bootstrap": "^3.3.7",
     "connect-redis": "^3.3.0",
     "csurf": "^1.9.0",
-    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "helmet": "^3.8.1",
@@ -31,7 +30,6 @@
     "style-loader": "^0.18.2",
     "uuid": "^3.1.0",
     "vue": "^2.3.3",
-    "vue-bootstrap-datetimepicker": "^3.0.0",
     "vue-router": "^2.7.0",
     "vuetify": "^0.14.8"
   },

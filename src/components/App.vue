@@ -76,9 +76,8 @@
       <v-toolbar-title @click="goPage('mainpage')">SMART CAR FACTORY</v-toolbar-title>
     </v-toolbar>
     <main>
-      <v-container fluid>
-        <router-view :user="currentUser"></router-view>
-      </v-container>
+      <router-view :user="currentUser"></router-view>
+      
     </main>
     <v-footer id="app-footer" class="row vertical-center">
       <div class="caption text-center">

@@ -1,19 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import VueCalendar from 'vue-bootstrap-datetimepicker'
-
 import MainPage from '@/pages/MainPage'
-
 import Admin from '@/pages/Admin/Admin'
-
 import About from '@/pages/About/About'
 import Contact from '@/pages/About/Contact'
-
 import Check from '@/pages/Check/Check'
-
 import Open from '@/pages/Open/Open'
-
 import User from '@/pages/User/User'
 import Login from '@/pages/User/Login/Login'
 import LostPW from '@/pages/User/LostPW/LostPW'
@@ -21,7 +14,6 @@ import Signup from '@/pages/User/Signup/Signup'
 import Confirm from '@/pages/User/Signup/Confirm'
 
 Vue.use(Router)
-Vue.use(VueCalendar)
 
 export default new Router({
   routes: [
