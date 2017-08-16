@@ -8,17 +8,15 @@
               v-model="studentId"
               name="id"
               label="Student ID"
-              id="stdent_id"
             ></v-text-field>
           </v-flex>
         </v-layout>
         <v-layout row>
           <v-flex lg12 xs12>
             <v-text-field
-              v-model="password"
+              v-model="Password"
               name="pw"
               label="Password"
-              id="password"
             ></v-text-field>
           </v-flex>
         </v-layout>

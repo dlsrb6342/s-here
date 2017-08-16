@@ -3,38 +3,56 @@
     <div class="container middle-box signup-box">
       <h2 class="signup-head">SMART CAR FACTORY</h2>
       <hr>
-      <div class="text-left">
-        <form>
-          <div class="form-group">
-            <label for="E-mail">E-mail</label>
-            <input class="form-control" type="email" placeholder="@skku.edu" v-model="Email">
-          </div>
-        </form>
-        <form>
-          <div class="form-group">
-            <label for="Student ID">Student ID</label>
-            <input class="form-control" type="text" placeholder="Student ID" v-model="studentId">
-          </div>
-        </form>
-        <form>
-          <div class="form-group">
-            <label for="Name">Name</label>
-            <input class="form-control" type="text" placeholder="Name" v-model="userName">
-          </div>
-        </form>
-        <form>
-          <div class="form-group">
-            <label for="Password">Password</label>
-            <input class="form-control" type="password" placeholder="Password" v-model="Password">
-          </div>
-        </form>
-        <form>
-          <div class="form-group">
-            <label for="Verify">Verify</label>
-            <input class="form-control" type="password"placeholder="Password Again" v-model="Verify">
-          </div>
-        </form>
-      </div>
+      <v-container fluid>
+        <v-layout row>
+          <v-flex xs12>
+            <v-text-field
+              v-model="Email"
+              name="E-mail"
+              label="E-mail address"
+              suffix="@skku.edu"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex xs12>
+            <v-text-field
+              v-model="studentId"
+              name="student_id"
+              label="Student ID"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex xs12>
+            <v-text-field
+              v-model="userName"
+              name="user_Name"
+              label="Name"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex xs12>
+            <v-text-field
+              v-model="Password"
+              name="password"
+              label="Password"
+              type="password"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout row>
+          <v-flex xs12>
+            <v-text-field
+              v-model="Verify"
+              name="verify"
+              label="Password Again"
+              type="password"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-container>
       <div class="row justify-content-center">
         <button class="btn bg-white" @click="submit">Submit</button>
       </div>
