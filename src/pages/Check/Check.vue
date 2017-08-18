@@ -6,47 +6,59 @@
 					<h2>예약 현황</h2>
 				</v-flex>
 			</v-layout>
-			<v-layout align-center>
-				<v-flex>
-					<v-date-picker
-						landscape
-						v-model="focus"
-						locale="ko-KR"
-						scrollable="true"
-					></v-date-picker>
-				</v-flex>
+			<v-layout 
+				row
+				class="pa-0 my-1">
+				<v-date-picker
+					v-model="focus"
+					locale="ko-KR"
+				></v-date-picker>
 			</v-layout>
-			<v-layout row wrap v-if="showTimeTable">
-				<v-flex v-for="i in 48" :key="i" xs1 class="pa-0 ma-0">
-					<v-card v-for="j in productId.length" :key="j" class="px-1 py-1">
-						<v-card-text class="pa-0">1</v-card-text>
+			<div v-if="showTimeTable">
+				<v-layout
+					row
+					child-flex
+					v-for="i in 48"
+					:key="i"
+					class="pa-0 my-0">
+					<v-card
+						v-for="j in productId.length"
+						:key="j"
+						class="pa-1 mx-0 ">
+						<v-card-text
+							class="caption pa-0"> </v-card-text>
 					</v-card>
-				</v-flex>
-				<v-flex xs1 class="pa-0 ma-0">
-					<v-card v-for="(item, j) in productId" :key="j" class="px-1 py-1">
+				</v-layout>
+				<v-layout
+					row
+					child-flex
+					class="pa-0 my-1">
+					<v-card
+						v-for="(item, j) in productId"
+						:key="j"
+						class="pa-1 my-1 mx-0">
 						<v-card-text class="pa-0">{{ item }}</v-card-text>
 					</v-card>
-				</v-flex>
-			</v-layout>
-			<br><br>
-			<v-layout align-center>
-				<v-flex>
+				</v-layout>
+				<v-layout
+					row
+					child-flex
+					class="pa-0 my-1">
 					<v-time-picker
 						landscape
 						v-model="fromTime"
-						scrollable="true"
+						:scrollable="true"
 						:allowed-minutes="grid"
+						class="pa-0 mx-1"
 					></v-time-picker>
-				</v-flex>
-				<v-flex>
 					<v-time-picker
 						landscape
 						v-model="toTime"
-						scrollable="true"
+						:scrollable="true"
 						:allowed-minutes="grid"
 					></v-time-picker>
-				</v-flex>
-			</v-layout>
+				</v-layout>
+			</div>
 		</v-container>
   </div>
 </template>
@@ -126,5 +138,7 @@ export default {
 </script>
 
 <style>
-
+.card__text {
+	text-align: center;
+}
 </style>
