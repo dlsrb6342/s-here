@@ -1,7 +1,7 @@
 <template>
   <div class="view signup vertical-center-flex">
     <div class="container middle-box signup-box">
-      <h2 class="signup-head">SMART CAR FACTORY</h2>
+      <h2 class="font-exo">Sign Up</h2>
       <hr>
       <v-container fluid>
         <v-layout row>

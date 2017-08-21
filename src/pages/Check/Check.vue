@@ -1,18 +1,21 @@
 <template>
-  <div class="check view">
+  <div class="check view container text-center">
 		<v-container fluid grid-list-xl>
-			<v-layout justify-center>
+			<v-layout>
 				<v-flex>
 					<h2>예약 현황</h2>
 				</v-flex>
 			</v-layout>
-			<v-layout 
+			<v-layout
 				row
 				class="pa-0 my-1">
-				<v-date-picker
-					v-model="focus"
-					locale="ko-KR"
-				></v-date-picker>
+        <v-flex>
+            <v-date-picker
+              v-model="focus"
+              locale="ko-KR"
+              landscape
+            ></v-date-picker>
+        </v-flex>
 			</v-layout>
 			<div v-if="showTimeTable">
 				<v-layout
@@ -41,23 +44,26 @@
 					</v-card>
 				</v-layout>
 				<v-layout
-					row
+					row-md
+          column
 					child-flex
 					class="pa-0 my-1">
 					<v-time-picker
-						landscape
+            landscape
 						v-model="fromTime"
 						:scrollable="true"
 						:allowed-minutes="grid"
-						class="pa-0 mx-1"
 					></v-time-picker>
 					<v-time-picker
-						landscape
+            landscape
 						v-model="toTime"
 						:scrollable="true"
 						:allowed-minutes="grid"
 					></v-time-picker>
 				</v-layout>
+        <div class="row justify-content-center">
+          <button class="btn bg-white" @click="reserve">Reseve</button>
+        </div>
 			</div>
 		</v-container>
   </div>
@@ -137,8 +143,9 @@ export default {
 }
 </script>
 
-<style>
-.card__text {
-	text-align: center;
-}
+<style scoped>
+  div .picker{
+    margin: 0 auto;
+
+  }
 </style>

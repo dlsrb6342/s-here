@@ -77,12 +77,14 @@
     </v-toolbar>
     <main>
       <router-view :user="currentUser"></router-view>
-      
+
     </main>
     <v-footer id="app-footer" class="row vertical-center">
       <div class="caption text-center">
         <hr><br>
-        Powered by S-Hero Project © {{ new Date().getFullYear() }}
+        COPYRIGHT © {{ new Date().getFullYear() }} SMART CAR FACTORY<br>
+        (440-746) 경기도 수원시 장안구 서부로 2066 자연과학캠퍼스 산학협력센터 85155호<br>
+        Powered by S-Hero Project
       </div>
     </v-footer>
   </v-app>
@@ -119,7 +121,7 @@ export default {
 <style scoped>
   #app-footer {
     width: 100%;
-    height:10vh;
+    height:12vh;
     display: block;
     /*position: fixed;
     left:0;

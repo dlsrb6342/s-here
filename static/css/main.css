@@ -13,9 +13,10 @@ color-profile {
 }
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url('https://fonts.googleapis.com/css?family=Exo');
 
 body{
-  font-family: 'Lato', sans-serif;
+  font-family: 'nanumgothiccoding' !important;
   max-width: 100%;
   margin: 0 auto;
   height: 100%;
@@ -87,11 +88,9 @@ nav a{
         height: 50vh;
     }
 }
-
 div.view{
-  min-height: 100vh;
+  min-height: 90vh;
 }
-
 div.menu-box{
     margin: auto 0;
 }
@@ -106,7 +105,6 @@ div.white-box{
 	padding: 10px 10px;
 }
 
-
 div a.icon{
     font-size: 2.5em;
 }
@@ -116,9 +114,9 @@ div a.icon{
     }
 }
 div.caption{
-    margin: 20px 10px;
-    font-size: 1.2em;
-    color: #757575;
+  margin: 20px 10px;
+  font-size: 1.2em;
+  color: #757575;
   font-family: 'Noto Sans KR';
   font-weight: 600;
 }
@@ -194,6 +192,20 @@ hr.prime-line{
     min-height: 95%;
 }
 /* effect */
+.font-exo{
+  font-family: 'Exo';
+  font-weight: 800;
+}
+.bg-white{
+  font-size: 1.2em;
+  background: #fafafa;
+  color: #0074d6;
+  transition: 0.2s;
+}
+.bg-white:hover{
+  background: #1565c0 !important;
+  color: #fafafa !important;
+}
 .fa-spin-hover:hover {
    -webkit-animation: fa-spin 2s infinite linear;
    -moz-animation: fa-spin 2s infinite linear;

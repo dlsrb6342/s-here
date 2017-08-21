@@ -1,6 +1,7 @@
 <template>
 	<div class="view login-box align-center vertical-center-flex">
     <div class="container middle-box">
+      <h2 class="text-center font-exo">Sign In</h2>
       <v-container fluid>
         <v-layout row>
           <v-flex lg12 xs12>
