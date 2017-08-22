@@ -1,6 +1,6 @@
 <template>
-  <div class="view mainpage container vertical-center">
-    <v-carousel class="elevation-15">
+  <div class="view container vertical-center">
+    <v-carousel class="hidden-sm-and-down elevation-15">
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
     <hr class="mt-5 mb-5">
@@ -92,9 +92,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  div.test{
-    display: inline-flex;
-  }
   div.non-padding{
     padding: 0;
   }
@@ -105,11 +102,5 @@ export default {
   div.vertical-center{
     display: block;
     vertical-align: middle;
-  }
-  a {
-    color: #203050;
-  }
-  .mainpage{
-    margin-bottom: 20px;
   }
 </style>

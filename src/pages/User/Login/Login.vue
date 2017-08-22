@@ -3,35 +3,37 @@
     <div class="container middle-box">
       <h2 class="text-center font-exo">Sign In</h2>
       <v-container fluid>
-        <v-layout row>
-          <v-flex lg12 xs12>
-            <v-text-field
-              v-model="studentId"
-              name="id"
-              label="Student ID"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex lg12 xs12>
-            <v-text-field
-              v-model="Password"
-              name="pw"
-              label="Password"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row justify-space-around>
-          <v-flex lg4 xs4>
-            <button class="btn bg-white" @click="submit">Log In</button>
-          </v-flex>
-          <v-flex lg4 xs4>
-            <button class="btn bg-white" @click="goPage('signup')">Sign up</button>
-          </v-flex>
-          <v-flex lg4 xs4>
-            <button class="btn bg-white" @click="goPage('lostpw')">Lost password?</button>
-          </v-flex>
-        </v-layout>
+        <v-card class="evelation-5 SFcontent-box align-center">
+          <v-layout row>
+            <v-flex lg12 xs12>
+              <v-text-field
+                v-model="studentId"
+                name="id"
+                label="Student ID"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex lg12 xs12>
+              <v-text-field
+                v-model="Password"
+                name="pw"
+                label="Password"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout row justify-space-around>
+            <v-btn flat @click="submit">
+              Log In
+            </v-btn>
+            <v-btn flat @click="goPage('signup')">
+              Sign up
+            </v-btn>
+            <v-btn flat @click="goPage('lostpw')">
+              Lost PW?
+            </v-btn>
+          </v-layout>
+        </v-card>
       </v-container>
     </div>
       <!--
@@ -113,17 +115,11 @@ export default {
     display: -webkit-inline-box;
   }
   div .row {
-    margin: 25px;
+    margin: 15px;
   }
   div .align-center{
      margin: 0 auto;
    }
-  .btn{
-    width: auto;
-  }
-  .input-group-addon{
-    width: 4em;
-  }
   .bg-blue{
     background: #0074d6;
     color: #fafafa;

@@ -32,33 +32,6 @@ body{
   font-weight: 800;
 }
 
-/**  navBar
-.navbar {
-  width: 100%;
-  background-color: #fafafa;
-  margin-bottom: 0px;
-  position: absolute;
-  left: 0; top: 0;
-}
-nav a{
-    color: #203050;
-}
-@media only screen and (max-width: 768px){
-  nav .navbar-hover{
-      margin: 8px 15px 8px 0px;
-  }
-  nav .nav-header a{
-      margin: 8px 15px 8px 0px;
-  }
-}
-@media only screen and (min-width: 768px){
-  nav .navbar-hover:hover{
-      color: #0074d6;
-      background-color: white;
-      transition: 0.5s;
-  }
-}
-}**/
 /* mainPage */
 div.view{
   min-height: 90vh;
@@ -76,7 +49,10 @@ div.white-box{
   margin-bottom: 20px;
 	padding: 10px 10px;
 }
-
+div.SFcontent-box{
+  width: 60%;
+  padding: 20px 40px;
+}
 div a.icon{
     font-size: 2.5em;
 }
@@ -101,21 +77,6 @@ div.caption-xs{
 img.img-center{
     display: inline;
 }
-/*
-footer{
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 15vh;
-  background-color: #1565c0;
-  color: white;
-  margin-top: 20px;
-}
-footer .caption{
-    color: white;
-}
-*/
 hr.white-line{
     border: none;
     width: 50%;
@@ -132,36 +93,7 @@ hr.prime-line{
     margin-bottom: 2.5%;
     margin-top: 2.5%;
 }
-/* Carousel
-.carousel {
-  max-height: 100%;
-  margin: 0 auto;
-}
-.carousel-caption{
-    z-index: 10;
-}
-.carousel-indicators{
-    top: 95%
-}
-.carousel .item{
-  height: 40vh;
-  background-color: #0074d6;
-  margin: 0 auto;
-}
-@media only screen and (max-width: 768px){
-    .carousel .item{
-        height: 40vh;
-        background-color: #0074d6;
-    }
-}
-.carousel-inner > .item > img{
-    position: absolute;
-    top: 0;
-    left: 0;
-    min-width: 100%;
-    max-height: 100%;
-    min-height: 95%;
-}*/
+
 /* effect */
 .font-exo{
   font-family: 'Exo';
