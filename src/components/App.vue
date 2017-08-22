@@ -8,10 +8,7 @@
       overflow
       absolute
       v-if="!isAdmin">
-      <v-list dense>
-        <v-list-tile>
-          <v-list-tile-title>{{ this.currentUser[0] }}</v-list-tile-title>
-        </v-list-tile>
+      <v-list>
         <v-list-tile @click.native="goPage('mainpage')">
           <v-list-tile-action>
             <v-icon large>dashboard</v-icon>
@@ -71,15 +68,38 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar class="weupnav">
-      <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title @click="goPage('mainpage')">SMART CAR FACTORY</v-toolbar-title>
+    <!--<nav class="SFnav navbar navbar-toggleable-sm">
+
+      aiejofi
+    </nav>-->
+    <v-toolbar fixed class="SFnav elevation-2">
+      <v-toolbar-title class="ml-5" @click="goPage('mainpage')">
+        <a href="javascript:void(0)"><img src="../../static/img/menu-logo.svg"></a>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="SFnav-btn hidden-sm-and-down mr-5">
+        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('about')">
+          소개
+        </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('check')">
+          공간예약
+        </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('contact')">
+          문의사항
+        </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('login')">
+          로그인
+        </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" v-if="this.currentUser[0]" @click.native="goPage('mainpage')">
+          로그아웃
+        </v-btn>
+      </v-toolbar-items>
+      <v-toolbar-side-icon class="hidden-md-and-up" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
     </v-toolbar>
     <main>
       <router-view :user="currentUser"></router-view>
-
     </main>
-    <v-footer id="app-footer" class="row vertical-center">
+    <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
         <hr><br>
         COPYRIGHT © {{ new Date().getFullYear() }} SMART CAR FACTORY<br>
@@ -96,7 +116,7 @@ export default {
 
   data () {
     return {
-      currentUser: ['testNmae', null],
+      currentUser: [null, null],
       isAdmin: false,
       drawer: null,
     }
@@ -119,28 +139,34 @@ export default {
 </script>
 
 <style scoped>
+  main{
+    background-image: url("../../static/img/content-bg-1-uai-2064x2064.jpg");
+  }
   #app-footer {
     width: 100%;
-    height:12vh;
+    height: 100%;
     display: block;
-    /*position: fixed;
-    left:0;
-    bottom: 0;
-    height: auto;
-    max-height: 13vh;*/
+    padding: 32px;
+    font-size: 10px;
     background-color: #1565c0;
-    margin: 0;
     color: white;
   }
   #app-footer hr{
     width: 80%;
     margin: 0 auto;
   }
-  #app-footer .caption{
-    color: #fafafa;
+  .SFbtn{
+    width: 110px;
+    color: #203050 !important;
+    transition: 10ms;
   }
-  nav.weupnav {
-    background-color: #1565c0;
-    color: white;
+  .SFbtn:hover{
+    color: #1565c0 !important;
   }
+  .SFnav {
+    height: 100px;
+    background-color: white;
+    color: #1565c0;
+  }
+
 </style>

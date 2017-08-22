@@ -1,22 +1,22 @@
 <template>
   <div class="view mainpage container vertical-center">
-    <v-carousel>
+    <v-carousel class="elevation-15">
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
-    <v-container fluid class="non-padding text-left">
+    <hr class="mt-5 mb-5">
+    <v-container fluid class="non-padding text-left mb-5">
       <v-layout row-md column>
         <v-flex>
-          <v-card>
+          <v-card class="elevation-10">
             <v-card-title>
               <div>
                 <h3 class="headline mb-0">이용 안내</h3>
                 <div class="caption">
-                  Smart car factory<br>
-                  소개 및 이용 안내
+                  09:00 ~ 23:00<br>
+                  테이블 2 | 프린터 5 | 공구함 5
                 </div>
               </div>
             </v-card-title>
-            <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
             <v-card-media
               src="../../static/img/bg1.jpg"
               height="180px"
@@ -25,17 +25,16 @@
           </v-card>
         </v-flex>
         <v-flex>
-          <v-card>
+          <v-card class="elevation-10">
             <v-card-title>
               <div>
-                <h3 class="headline mb-0">공간 예약</h3>
+                <h3 class="headline mb-0">Notice</h3>
                 <div class="caption">
                   09:00 ~ 23:00<br>
                   테이블 2 | 프린터 5 | 공구함 5
                 </div>
               </div>
             </v-card-title>
-            <v-btn flat class="blue--text" @click="goPage('check')">Book</v-btn>
             <v-card-media
               src="../../static/img/bg2.jpg"
               height="180px"
@@ -44,7 +43,7 @@
           </v-card>
         </v-flex>
         <v-flex>
-          <v-card>
+          <v-card class="elevation-10">
             <v-card-title>
               <div>
                 <h3 class="headline mb-0">문의사항</h3>
@@ -54,7 +53,6 @@
                 </div>
               </div>
             </v-card-title>
-            <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
             <v-card-media
               src="../../static/img/bg3.jpg"
               height="180px"
@@ -101,7 +99,8 @@ export default {
     padding: 0;
   }
   div.carousel {
-    height: 50vh;
+    height: 70vh;
+    margin: 40px 0;
   }
   div.vertical-center{
     display: block;
