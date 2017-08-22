@@ -71,7 +71,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar class="indigo" dark>
+    <v-toolbar class="weupnav">
       <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title @click="goPage('mainpage')">SMART CAR FACTORY</v-toolbar-title>
     </v-toolbar>
@@ -80,7 +80,7 @@
 
     </main>
     <v-footer id="app-footer" class="row vertical-center">
-      <div class="caption text-center">
+      <div class="text-center">
         <hr><br>
         COPYRIGHT © {{ new Date().getFullYear() }} SMART CAR FACTORY<br>
         (440-746) 경기도 수원시 장안구 서부로 2066 자연과학캠퍼스 산학협력센터 85155호<br>
@@ -138,5 +138,9 @@ export default {
   }
   #app-footer .caption{
     color: #fafafa;
+  }
+  nav.weupnav {
+    background-color: #1565c0;
+    color: white;
   }
 </style>

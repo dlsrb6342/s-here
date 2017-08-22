@@ -74,13 +74,13 @@ export default {
     return {
       items: [
         {
-          src: 'http://lorempixel.com/700/500/cats/'
+          src: '../../static/img/bg1.jpg'
         },
         {
-          src: 'http://lorempixel.com/700/540/cats/'
+          src: '../../static/img/bg2.jpg'
         },
         {
-          src: 'http://lorempixel.com/700/520/cats/'
+          src: '../../static/img/bg3.jpg'
         }
       ],
       msg: 'Welcome to Your Vue.js App'
@@ -101,7 +101,7 @@ export default {
     padding: 0;
   }
   div.carousel {
-    height: 40vh;
+    height: 50vh;
   }
   div.vertical-center{
     display: block;
