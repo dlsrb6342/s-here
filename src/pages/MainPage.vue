@@ -11,14 +11,14 @@
               <div>
                 <h3 class="headline mb-0">이용 안내</h3>
                 <div class="caption">
-                  오픈 할 수 있을까<br>
-                  인건비를 줄이자
+                  Smart car factory<br>
+                  소개 및 이용 안내
                 </div>
               </div>
             </v-card-title>
             <v-btn flat class="blue--text" @click="goPage('about')">About</v-btn>
             <v-card-media
-              src="http://lorempixel.com/300/130/cats/"
+              src="../../static/img/bg1.jpg"
               height="180px"
             >
             </v-card-media>
@@ -37,7 +37,7 @@
             </v-card-title>
             <v-btn flat class="blue--text" @click="goPage('check')">Book</v-btn>
             <v-card-media
-              src="http://lorempixel.com/320/130/cats/"
+              src="../../static/img/bg2.jpg"
               height="180px"
             >
             </v-card-media>
@@ -49,14 +49,14 @@
               <div>
                 <h3 class="headline mb-0">문의사항</h3>
                 <div class="caption">
-                  이거 관리하는 사람 누구야<br>
-                  담당자 나오라 그래
+                  Learning factory 운영진<br>
+                  WE UP 사업단
                 </div>
               </div>
             </v-card-title>
             <v-btn flat class="blue--text" @click="goPage('contact')">Contact</v-btn>
             <v-card-media
-              src="http://lorempixel.com/340/130/cats/"
+              src="../../static/img/bg3.jpg"
               height="180px"
             >
             </v-card-media>
