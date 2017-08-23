@@ -84,7 +84,7 @@
         <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('login')">
           로그인
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" v-if="this.currentUser[0]" @click.native="goPage('mainpage')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('mainpage')">
           로그아웃
         </v-btn>
       </v-toolbar-items>
