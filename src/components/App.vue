@@ -3,10 +3,8 @@
     <v-navigation-drawer
       temporary
       v-model="drawer"
-      light
       enable-resize-watcher
       overflow
-      absolute
       v-if="!isAdmin">
       <v-list>
         <v-list-tile @click.native="goPage('mainpage')">
@@ -42,7 +40,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-spacer></v-spacer>
-        <v-list-tile v-if="this.currentUser[0]" @click.native="goPage('login')">
+        <v-list-tile v-if="!this.currentUser[0]" @click.native="goPage('login')">
           <v-list-tile-action>
             <v-icon large>input</v-icon>
           </v-list-tile-action>
@@ -50,7 +48,7 @@
             <v-list-tile-title>Sign in</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="this.currentUser[0]" @click.native="goPage('signup')">
+        <v-list-tile v-if="!this.currentUser[0]" @click.native="goPage('signup')">
           <v-list-tile-action>
             <v-icon large>assignment</v-icon>
           </v-list-tile-action>
@@ -68,10 +66,6 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <!--<nav class="SFnav navbar navbar-toggleable-sm">
-
-      aiejofi
-    </nav>-->
     <v-toolbar fixed class="SFnav elevation-2">
       <v-toolbar-title class="ml-5" @click="goPage('mainpage')">
         <a href="javascript:void(0)"><img src="../../static/img/menu-logo.svg"></a>

@@ -1,9 +1,10 @@
 <template>
-	<div class="view login-box align-center vertical-center-flex">
-    <div class="container middle-box">
+	<div class="view align-center vertical-center-flex">
+    <v-container>
       <h2 class="text-center font-exo">Sign In</h2>
-      <v-container fluid>
-        <v-card class="evelation-5 SFcontent-box align-center">
+      <v-layout row>
+        <v-container fluid class="mb-5">
+        <v-card class="elevation-5 SFcontent-box SFalign-center">
           <v-layout row>
             <v-flex lg12 xs12>
               <v-text-field
@@ -35,7 +36,8 @@
           </v-layout>
         </v-card>
       </v-container>
-    </div>
+      </v-layout>
+    </v-container>
       <!--
     <p>This is Login</p>
 		사용자 학번: <input type="text" v-model="studentId"><br>
@@ -103,10 +105,7 @@ export default {
     max-width: 50%;
     margin: auto 0;
   }
-  div .vertical-center-flex{
-    display: flex;
-    align-items: center;
-  }
+
   div .middle-box{
     margin-bottom: 20em;
     font-family: 'Roboto', sans-serif;;
@@ -117,9 +116,7 @@ export default {
   div .row {
     margin: 15px;
   }
-  div .align-center{
-     margin: 0 auto;
-   }
+
   .bg-blue{
     background: #0074d6;
     color: #fafafa;

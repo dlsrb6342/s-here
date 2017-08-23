@@ -1,62 +1,65 @@
 <template>
-  <div class="view signup vertical-center-flex">
-    <div class="container middle-box signup-box">
-      <h2 class="font-exo">Sign Up</h2>
-      <hr>
-      <v-container fluid>
-        <v-layout row>
-          <v-flex xs12>
-            <v-text-field
-              v-model="Email"
-              name="E-mail"
-              label="E-mail address"
-              suffix="@skku.edu"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs12>
-            <v-text-field
-              v-model="studentId"
-              name="student_id"
-              label="Student ID"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs12>
-            <v-text-field
-              v-model="userName"
-              name="user_Name"
-              label="Name"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs12>
-            <v-text-field
-              v-model="Password"
-              name="password"
-              label="Password"
-              type="password"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-        <v-layout row>
-          <v-flex xs12>
-            <v-text-field
-              v-model="Verify"
-              name="verify"
-              label="Password Again"
-              type="password"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <div class="row justify-content-center">
-        <button class="btn bg-white" @click="submit">Submit</button>
-      </div>
-    </div>
+  <div class="view align-center vertical-center-flex">
+    <v-container>
+      <h2 class="text-center font-exo">Sign Up</h2>
+      <v-layout row>
+        <v-container fluid class="mb-5">
+          <v-card class="elevation-5 SFcontent-box SFalign-center">
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="Email"
+                  name="E-mail"
+                  label="E-mail address"
+                  suffix="@skku.edu"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="studentId"
+                  name="student_id"
+                  label="Student ID"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="userName"
+                  name="user_Name"
+                  label="Name"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="Password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field
+                  v-model="Verify"
+                  name="verify"
+                  label="Password Again"
+                  type="password"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row justify-space-around>
+              <v-btn flat @click="submit">Submit</v-btn>
+            </v-layout>
+          </v-card>
+        </v-container>
+      </v-layout>
+    </v-container>
 		<!--<p>This is Signup page</p>
     Email 주소: <input type="text" v-model="Email">@skku.edu<br>
     사용자 이름: <input type="text" v-model="userName"><br>

@@ -49,9 +49,17 @@ div.white-box{
   margin-bottom: 20px;
 	padding: 10px 10px;
 }
+div .vertical-center-flex{
+  display: flex;
+  align-items: center;
+}
+div .SFalign-center{
+  margin: 0 auto;
+}
 div.SFcontent-box{
-  width: 60%;
-  padding: 20px 40px;
+  width: 50%;
+  max-width: 500px;
+  padding: 30px 50px;
 }
 div a.icon{
     font-size: 2.5em;
