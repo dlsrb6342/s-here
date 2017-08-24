@@ -4,38 +4,38 @@
       <h2 class="text-center font-exo">Sign In</h2>
       <v-layout row>
         <v-container fluid class="mb-5">
-        <v-card class="elevation-5 SFcontent-box SFalign-center">
-          <v-layout row>
-            <v-flex lg12 xs12>
-              <v-text-field
-                v-model="studentId"
-                name="id"
-                label="Student ID"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row>
-            <v-flex lg12 xs12>
-              <v-text-field
-                v-model="Password"
-                name="pw"
-                label="Password"
-              ></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row justify-space-around>
-            <v-btn flat @click="submit">
-              Log In
-            </v-btn>
-            <v-btn flat @click="goPage('signup')">
-              Sign up
-            </v-btn>
-            <v-btn flat @click="goPage('lostpw')">
-              Lost PW?
-            </v-btn>
-          </v-layout>
-        </v-card>
-      </v-container>
+          <v-card class="elevation-5 SFcontent-box SFalign-center">
+            <v-layout row>
+              <v-flex lg12 xs12>
+                <v-text-field
+                  v-model="studentId"
+                  name="id"
+                  label="Student ID"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex lg12 xs12>
+                <v-text-field
+                  v-model="Password"
+                  name="pw"
+                  label="Password"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+            <v-layout row justify-space-around>
+              <v-btn flat @click="submit">
+                Log In
+              </v-btn>
+              <v-btn flat @click="goPage('signup')">
+                Sign up
+              </v-btn>
+              <v-btn flat @click="goPage('lostpw')">
+                Lost PW?
+              </v-btn>
+            </v-layout>
+          </v-card>
+        </v-container>
       </v-layout>
     </v-container>
       <!--

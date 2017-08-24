@@ -1,71 +1,52 @@
 <template>
-  <div class="check view container text-center">
-		<v-container fluid grid-list-xl>
-			<v-layout>
-				<v-flex>
-					<h2>예약 현황</h2>
-				</v-flex>
-			</v-layout>
-			<v-layout
-				row
-				class="pa-0 my-1">
-        <v-flex>
-            <v-date-picker
-              v-model="focus"
-              locale="ko-KR"
-              landscape
-            ></v-date-picker>
-        </v-flex>
-			</v-layout>
-			<div v-if="showTimeTable">
-				<v-layout
-					row
-					child-flex
-					v-for="i in 48"
-					:key="i"
-					class="pa-0 my-0">
-					<v-card
-						v-for="j in productId.length"
-						:key="j"
-						class="pa-1 mx-0 ">
-						<v-card-text
-							class="caption pa-0"> </v-card-text>
-					</v-card>
-				</v-layout>
-				<v-layout
-					row
-					child-flex
-					class="pa-0 my-1">
-					<v-card
-						v-for="(item, j) in productId"
-						:key="j"
-						class="pa-1 my-1 mx-0">
-						<v-card-text class="pa-0">{{ item }}</v-card-text>
-					</v-card>
-				</v-layout>
-				<v-layout
-					row-md
-          column
-					child-flex
-					class="pa-0 my-1">
-					<v-time-picker
-            landscape
-						v-model="fromTime"
-						:scrollable="true"
-						:allowed-minutes="grid"
-					></v-time-picker>
-					<v-time-picker
-            landscape
-						v-model="toTime"
-						:scrollable="true"
-						:allowed-minutes="grid"
-					></v-time-picker>
-				</v-layout>
-        <div class="row justify-content-center">
-          <button class="btn bg-white" @click="reserve">Reseve</button>
-        </div>
-			</div>
-		</v-container>
+  <div class="check view text-center">
+    <v-container>
+        <h2 class="text-center font-exo">Reservation</h2>
+      <v-container>
+        <v-layout row-md column>
+            <v-flex md4 sm12>
+              <v-date-picker
+                v-model="focus"
+                locale="ko-KR"
+              ></v-date-picker>
+            </v-flex>
+            <v-flex md8 sm12 v-if="showTimeTable">
+              <v-layout row>
+                <v-flex md6>
+                  <v-layout row child-flex class="pa-0 my-1">
+                    <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
+                      <v-card-text class="pa-0">{{ item }}</v-card-text>
+                    </v-card>
+                  </v-layout>
+                  <v-layout row child-flex class="pa-0 my-0"
+                    v-for="i in 48" :key="i">
+                    <v-card v-for="j in productId.length" :key="j" class="pa-1 mx-0 ">
+                      <v-card-text class="caption pa-0"> </v-card-text>
+                    </v-card>
+                  </v-layout>
+                </v-flex>
+                <v-flex md6>
+                  <v-layout column>
+                    <v-flex>
+                      <v-time-picker landscape v-model="fromTime"
+                                     :scrollable="true" :allowed-minutes="grid">
+                      </v-time-picker>
+                    </v-flex>
+                    <v-flex>
+                      <v-time-picker landscape v-model="toTime"
+                                     :scrollable="true" :allowed-minutes="grid">
+                      </v-time-picker>
+                    </v-flex>
+                    <v-flex>
+                      <v-btn lg flat @click="reserve">Submit</v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+      </v-container>
+    </v-container>
   </div>
 </template>
 
