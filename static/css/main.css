@@ -31,6 +31,10 @@ body{
   font-size: 20px;
   font-weight: 600;
 }
+.SFtable{
+  max-height: 70vh;
+  overflow: auto;
+}
 
 /* mainPage */
 div.view{
