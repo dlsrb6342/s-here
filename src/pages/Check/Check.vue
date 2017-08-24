@@ -1,6 +1,7 @@
 <template>
-  <div class="check view container text-center">
-		<v-container fluid grid-list-xl>
+  <div class="check view container vertical-center">
+		<v-container fluid grid-list hidden-sm-and-up>
+			<!--
 			<v-layout>
 				<v-flex>
 					<h2>예약 현황</h2>
@@ -65,6 +66,30 @@
           <button class="btn bg-white" @click="reserve">Reseve</button>
         </div>
 			</div>
+			-->
+			휴대폰용 UI 부분
+		</v-container>
+		<v-container fluid grid-list hidden-xs-only hidden-md-and-up>
+			패블릿용 UI 부분
+		</v-container>
+		<v-container fluid hidden-sm-and-down>
+			데스크톱용 UI 부분
+			<v-date-picker
+				v-model="focus"
+				locale="ko-KR"></v-date-picker>
+			<v-layout hidden-sm-and-down row>
+				<v-flex>
+					<v-card>
+						<v-card-title>help</v-card-title>
+					</v-card>
+					<v-card>
+						<v-card-title>help</v-card-title>
+					</v-card>
+					<v-card>
+						<v-card-title>help</v-card-title>
+					</v-card>
+				</v-flex>
+			</v-layout>
 		</v-container>
   </div>
 </template>
@@ -77,22 +102,22 @@ export default {
 		return {
 			focus: null,
 			showTimeTable: true,
+			dialog: true,
 			retData: [],
 			TimeTable: [],
 			fromTime: null,
 			toTime: null,
-			grid: function (value) {
-				return value % 30 === 0
-			},
 			productId: ["프린터 1", "프린터 2", "프린터 3", "프린터 4", "프린터 5"],
 		}
 	},
 	created () {
-		if (typeof(this.date) === 'string')
+		if (typeof(this.date) === 'string') {
 		  this.focus = new Date(this.date.slice(0, 4),
 														this.date.slice(4, 6) - 1,
 														this.date.slice(6, 8),
 														new Date().getHours())
+			this.retTimeList
+		}
 	},
 	methods: {
 		retTimeList: function () {
@@ -135,6 +160,11 @@ export default {
 			this.retTimeList
 			for (item of this.retData) {
 				// TODO: 받아온 데이터(retData)를 TimeTable로 변환하기
+			}
+		},
+		changeFocus: function () {
+			if (this.focus === null) {
+				this.focus = this.dp
 			}
 		}
 	},

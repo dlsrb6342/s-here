@@ -4,6 +4,7 @@
       temporary
       v-model="drawer"
       enable-resize-watcher
+      right
       overflow
       v-if="!isAdmin">
       <v-list>
@@ -66,7 +67,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed class="SFnav elevation-2">
+    <v-toolbar class="SFnav elevation-2">
       <v-toolbar-title class="ml-5" @click="goPage('mainpage')">
         <a href="javascript:void(0)"><img src="../../static/img/menu-logo.svg"></a>
       </v-toolbar-title>
