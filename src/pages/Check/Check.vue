@@ -12,7 +12,7 @@
             </v-flex>
             <v-flex md8 sm12 v-if="showTimeTable">
               <v-layout row>
-                <v-flex md6>
+                <v-flex md6 class="SFtable">
                   <v-layout row child-flex class="pa-0 my-1">
                     <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
                       <v-card-text class="pa-0">{{ item }}</v-card-text>
