@@ -10,7 +10,7 @@
                 locale="ko-KR"
               ></v-date-picker>
 							<v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
-							<v-btn @click.native="this.productId = ['10', '20']">add item</v-btn>
+							<v-btn @click.native="productId = ['10', '20']">add item</v-btn>
             </v-flex>
             <v-flex md8 sm12 v-if="showTimeTable">
               <v-layout row-md column>
@@ -67,8 +67,8 @@ export default {
 			fromTime: null,
 			toTime: null,
 			touching: false,
-			productId: ['print 1', 'print 	2', 'print 3'],
-			productName:  ['print 1', 'print 	2', 'print 3'],
+			productId: ['print 1', 'print 2', 'print 3'],
+			productName:  ['print 1', 'print 2', 'print 3'],
 		}
 	},
 	created() {
@@ -202,7 +202,7 @@ div .picker {
 .slide-fade-enter,
 .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */
-	
+
 {
 	transform: translateX(20px);
 	opacity: 0;
