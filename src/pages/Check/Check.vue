@@ -9,10 +9,12 @@
                 v-model="focus"
                 locale="ko-KR"
               ></v-date-picker>
+							<v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
+							<v-btn @click.native="this.productId = ['10', '20']">add item</v-btn>
             </v-flex>
             <v-flex md8 sm12 v-if="showTimeTable">
               <v-layout row-md column>
-                <v-flex md6 class="SFtable">
+                <v-flex md6 class="SFtable">	<!-- 버그? -->
                   <v-layout row child-flex class="pa-0 my-1">
                     <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
                       <v-card-text class="pa-0">{{ item }}</v-card-text>
@@ -61,9 +63,12 @@ export default {
 			dialog: true,
 			retData: [],
 			TimeTable: [],
+			selectItem: null,
 			fromTime: null,
 			toTime: null,
-			productId: ["프린터 1", "프린터 2", "프린터 3", "프린터 4", "프린터 5"],
+			touching: false,
+			productId: ['print 1', 'print 	2', 'print 3'],
+			productName:  ['print 1', 'print 	2', 'print 3'],
 		}
 	},
 	created () {
@@ -112,19 +117,60 @@ export default {
 							 ', "people": "' + 0 + // TODO: people에 들어갈 값
 							 '", "_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
-		showTimeline: function () {
+		showTimeline: function() {
 			this.retTimeList
+			this.TimeTable = []
+			for (let i = 0; i < 48; i++) {
+				let tmpArray = []
+				for (let j = 0; j < productId.length; j++) {
+					tmpArray.push([
+						''
+					])
+				}
+				this.TimeTable.push(tmpArray)
+			}
 			for (item of this.retData) {
-				// TODO: 받아온 데이터(retData)를 TimeTable로 변환하기
+				this.productId.push(item._id)
+				this.productName.push(item.name)
+				for (time of item.occupied) {
+					this.TimeTable[time][item._id][0] = 'grey darken-1'
+				}
 			}
 		},
 		changeFocus: function () {
 			if (this.focus === null) {
 				this.focus = this.dp
 			}
+		},
+		detectFocus: function() {
+			if (this.focus !== null) this.showTimeline
+		},
+		setFromTime: function(i, j) {
+			this.selectItem = j
+			this.fromTime = i
+			this.dialog = true
+		},
+		touchDetect: function(i, j) {
+			if (this.touching) {
+				this.toTime = i
+			} else {
+				this.selectItem = j
+				this.fromTime = i
+				alert('yes')
+			}
+			this.touching = !this.touching
 		}
 	},
 	computed: {
+		classInfo: function (i, j) {
+
+		},
+		fromTimeItems: function () {
+			return []
+		},
+		toTimeItems: function () {
+			return []
+		}
 	}
 }
 </script>
