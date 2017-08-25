@@ -35,6 +35,9 @@ body{
   max-height: 70vh;
   overflow: auto;
 }
+.SFwide{
+  width: 100%;
+}
 
 /* mainPage */
 div.view{

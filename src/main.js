@@ -2,10 +2,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuetify from 'vuetify'
+import VueTimepicker from 'vue2-timepicker'
 import App from './components/App'
 import router from './router'
 
 Vue.use(Vuetify)
+Vue.use(VueTimepicker)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

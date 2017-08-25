@@ -1,10 +1,9 @@
 <template>
   <div class="check view text-center">
-    <v-container>
+    <v-container class="SFwide">
         <h2 class="text-center font-exo">Reservation</h2>
-      <v-container>
         <v-layout row-md column>
-            <v-flex md4 sm12>
+            <v-flex md3 sm12>
               <v-date-picker
                 v-model="focus"
                 locale="ko-KR"
@@ -12,9 +11,10 @@
 							<v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
 							<v-btn @click.native="productId = ['10', '20']">add item</v-btn>
             </v-flex>
-            <v-flex md8 sm12 v-if="showTimeTable">
+          <transition name="slide-fade">
+            <v-flex md9 sm12 v-if="showTimeTable">
               <v-layout row-md column>
-                <v-flex md6 class="SFtable">	<!-- 버그? -->
+                <v-flex md8 class="SFtable">
                   <v-layout row child-flex class="pa-0 my-1">
                     <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
                       <v-card-text class="pa-0">{{ item }}</v-card-text>
@@ -27,34 +27,38 @@
                     </v-card>
                   </v-layout>
                 </v-flex>
-                <v-flex md6>
+                <v-flex md2 offset-md1 >
                   <v-layout column>
-                    <v-flex>
-                      <v-time-picker landscape v-model="fromTime"
-                                     :scrollable="true" :allowed-minutes="grid">
-                      </v-time-picker>
-                    </v-flex>
-                    <v-flex>
-                      <v-time-picker landscape v-model="toTime"
-                                     :scrollable="true" :allowed-minutes="grid">
-                      </v-time-picker>
-                    </v-flex>
-                    <v-flex>
-                      <v-btn lg flat @click="reserve">Submit</v-btn>
-                    </v-flex>
+                    <v-card class="elevation-5">
+                      <v-flex class="pa-3 SFtimepicker">
+                        시작시간
+                        <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
+                                        v-model="defaultStartTime"></vue-timepicker>
+                      </v-flex>
+                      <v-flex class="pa-3">
+                        종료시간
+                        <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
+                                        v-model="defaultEndTime"></vue-timepicker>
+                      </v-flex>
+                      <v-flex>
+                          <v-btn flat @click="reserve">Submit</v-btn>
+                      </v-flex>
+                    </v-card>
                   </v-layout>
                 </v-flex>
               </v-layout>
             </v-flex>
-          </v-layout>
-      </v-container>
+          </transition>
+        </v-layout>
     </v-container>
   </div>
 </template>
 
 <script>
+  import VueTimepicker from 'vue2-timepicker'
 export default {
 	name: 'check',
+  components: {VueTimepicker},
 	props: ['date', 'user'],
 	data() {
 		return {
@@ -69,6 +73,14 @@ export default {
 			touching: false,
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName:  ['print 1', 'print 2', 'print 3'],
+      defaultStartTime: {
+        HH: '09',
+        mm: '00',
+      },defaultEndTime: {
+        HH: '11',
+        mm: '00',
+      },
+      myFormat: 'HH:mm',
 		}
 	},
 	created() {
