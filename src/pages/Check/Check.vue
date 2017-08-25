@@ -56,10 +56,10 @@
 export default {
 	name: 'check',
 	props: ['date', 'user'],
-	data () {
+	data() {
 		return {
 			focus: null,
-			showTimeTable: true,
+			showTimeTable: false,
 			dialog: true,
 			retData: [],
 			TimeTable: [],
@@ -71,25 +71,26 @@ export default {
 			productName:  ['print 1', 'print 	2', 'print 3'],
 		}
 	},
-	created () {
-		if (typeof(this.date) === 'string') {
-		  this.focus = new Date(this.date.slice(0, 4),
-														this.date.slice(4, 6) - 1,
-														this.date.slice(6, 8),
-														new Date().getHours())
+	created() {
+		if (typeof (this.date) === 'string') {
+			this.focus = new Date(this.date.slice(0, 4),
+				this.date.slice(4, 6) - 1,
+				this.date.slice(6, 8),
+				new Date().getHours())
 			this.retTimeList
 		}
 	},
 	methods: {
-		retTimeList: function () {
+    goPage: function (goMessage) { this.$router.push(goMessage) },
+		retTimeList: function() {
+			this.showTimeTable = true
 			let xhr = new XMLHttpRequest()
 			xhr.open('GET', '/api/item/' + this.focus.toJSON().slice(0, 10).replace(/-/g, ""))
 			xhr.setRequestHeader("Content-type", "application/json")
-			xhr.onreadystatechange = function () {
+			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
 				if (result.hasOwnProperty('data')) {
 					this.retData = result.data
-					this.showTimeTable = true
 				} else {
 					this.retData = []
 					alert('조회에 실패하였습니다.')
@@ -97,11 +98,11 @@ export default {
 			}
 			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
-		reserve: function () {
+		reserve: function() {
 			let xhr = new XMLHttpRequest()
 			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
-			xhr.onreadystatechange = function () {
+			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
 				if (result.success) alert('예약되었습니다.')
 				else if (result.code === 0) alert('잘못된 시간값을 입력하셨습니다.')
@@ -110,12 +111,12 @@ export default {
 				else alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
 				this.showTimeline
 			}
-			xhr.send('{"start": '+ this.fromTime +
-							 ', "end": ' + this.toTime +
-							 ', "itemId": ' + 0 + // TODO: itemID에 들어갈 값
-							 ', "date": ' + this.showFocus.replace(/-/g, '') +
-							 ', "people": "' + 0 + // TODO: people에 들어갈 값
-							 '", "_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+			xhr.send('{"start": ' + this.fromTime +
+				', "end": ' + this.toTime +
+				', "itemId": ' + 0 + // TODO: itemID에 들어갈 값
+				', "date": ' + this.showFocus.replace(/-/g, '') +
+				', "people": "' + 0 + // TODO: people에 들어갈 값
+				'", "_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		showTimeline: function() {
 			this.retTimeList
@@ -137,9 +138,19 @@ export default {
 				}
 			}
 		},
-		changeFocus: function () {
-			if (this.focus === null) {
-				this.focus = this.dp
+		detectFocus: function() {
+			if (this.focus !== null) this.retTimeList
+		},
+		setFromTime: function (i, j) {
+			this.selectItem = j
+			this.fromTime = i
+		},
+		touchDetect: function (i, j) {
+			if (this.touching) {
+				this.toTime = i
+			} else {
+				this.selectItem = j
+				this.fromTime = i
 			}
 		},
 		detectFocus: function() {
@@ -176,8 +187,24 @@ export default {
 </script>
 
 <style scoped>
-  div .picker{
-    margin: 0 auto;
+div .picker {
+	margin: 0 auto;
+}
 
-  }
+.slide-fade-enter-active {
+	transition: all .2s ease;
+}
+
+.slide-fade-leave-active {
+	transition: all .2s cubic-bezier(.1, .9, .1, .9);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */
+	
+{
+	transform: translateX(20px);
+	opacity: 0;
+}
 </style>
