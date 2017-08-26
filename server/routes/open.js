@@ -1,17 +1,10 @@
 import express from 'express';
-import fetch from 'node-fetch';
+import WebSocket from 'ws';
 import { Reservation } from '../models';
 
 const router = express.Router();
 
-router.get('/receive', (req, res) => {
-  let ip = req.query.ip;
-  let redisClient = req.app.get('redisClient');
-  redisClient.set('ip', ip);
-  return res.json({ success: true })
-});
-
-router.get('/', (req, res) => {
+router.get('/:_id', (req, res) => {
   if (typeof req.session.userInfo === "undefined") {
     return res.status(403).json({
       error: "NOT_LOGGED_IN",
@@ -35,20 +28,9 @@ router.get('/', (req, res) => {
         code: 0
       });
     };
-    redisClient.get('ip', (err, ip) => {
-      if (err) throw err;
-      if (!ip) {
-        return res.status(400).json({
-          error: "NOT_CONNECTED",
-          code: 1
-        });
-      };
-      fetch(`http://${ip}:8080/api/move`).then(res => {
-        return res.json({ success: true });
-      }).catch((err) => {
-        throw err;
-      });
-    });
+    let ws = new WebSocket(`ws://125.130.66.85:3000/ws/${req.params._id}`);
+    ws.send('open');
+    ws.close();
   })
 });
 

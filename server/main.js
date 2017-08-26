@@ -1,4 +1,5 @@
 import express from 'express';
+import expressWs from 'express-ws';
 import path from 'path';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
@@ -12,9 +13,28 @@ import redis from 'redis';
 import config from './config';
 import api from './routes';
 
-const app = express();
 const port = 3000;
 const devPort = 4000;
+const wsInstant = expressWs(express());
+const app = wsInstant.app;
+const wsServer = wsInstant.getWss();
+const wsClient = {};
+
+/* websocket client connection */
+wsServer.on('connection', (ws) => {
+  let clientUrl = ws.upgradeReq.url.replace('.websocket', '');
+  if(!wsClient.hasOwnProperty(clientUrl)){
+    wsClient[clientUrl] = ws;
+  };
+});
+
+app.ws('/ws/:rasp', (ws, req, next) => {
+  ws.on('message', (msg) => {
+    let senderUrl = ws.upgradeReq.url.replace('.websocket', '');
+    wsClient[senderUrl].send(msg);
+  });
+  next();
+});
 
 /* mongodb connection */
 const db = mongoose.connection;
@@ -49,7 +69,7 @@ const smtpTransport = nodemailer.createTransport({
 
 app.set('smtpTransport', smtpTransport);
 app.set('redisClient', redisClient);
-app.use('/', express.static(path.resolve(__dirname, './../dist')));
+app.use('/', express.static(path.resolve(__dirname, './../dist/')));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -63,9 +83,10 @@ app.use((req, res, next) => {
   res.cookie('_csrf', csrfToken);
   return next();
 });
+
 app.use('/api', api);
 
-app.get('*', (req, res) => {
+app.get(/^.(?!ws).*$/, (req, res) => {
   res.sendFile(path.resolve(__dirname, './../dist/index.html'));
 });
 
