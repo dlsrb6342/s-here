@@ -3,7 +3,7 @@
     <v-container>
       <h2 class="text-center font-exo">Sign Up</h2>
       <v-layout row>
-        <v-container fluid class="mb-5">
+        <v-container fluid class="pa-2 mb-5">
           <v-card class="elevation-5 SFcontent-box SFalign-center">
             <v-layout row>
               <v-flex xs12>

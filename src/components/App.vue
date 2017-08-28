@@ -32,6 +32,14 @@
             <v-list-tile-title>Book</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile @click.native="goPage('remote')">
+          <v-list-tile-action>
+            <v-icon large>settings_remote</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Smart Key</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
         <v-list-tile @click.native="goPage('contact')">
           <v-list-tile-action>
             <v-icon large>call</v-icon>
