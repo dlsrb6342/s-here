@@ -6,7 +6,6 @@ import Admin from '@/pages/Admin/Admin'
 import About from '@/pages/About/About'
 import Contact from '@/pages/About/Contact'
 import Check from '@/pages/Check/Check'
-import Open from '@/pages/Open/Open'
 import User from '@/pages/User/User'
 import Login from '@/pages/User/Login/Login'
 import LostPW from '@/pages/User/LostPW/LostPW'
@@ -54,11 +53,6 @@ export default new Router({
       name: 'CheckDate',
       component: Check,
       props: true
-    },
-    {
-      path: '/open',
-      name: 'Open',
-      component: Open
     },
     {
       path: '/user',
