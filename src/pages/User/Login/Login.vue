@@ -1,6 +1,6 @@
 <template>
 	<div class="view align-center vertical-center-flex">
-    <v-container>
+    <v-container class="SFcontent-boxM">
       <h2 class="text-center font-exo">Sign In</h2>
       <v-layout row>
         <v-container fluid class="mb-5">
@@ -30,7 +30,7 @@
               <v-btn flat @click="goPage('signup')">
                 Sign up
               </v-btn>
-              <v-btn flat @click="goPage('lostpw')">
+              <v-btn class="hidden-sm-and-down" flat @click="goPage('lostpw')">
                 Lost PW?
               </v-btn>
             </v-layout>

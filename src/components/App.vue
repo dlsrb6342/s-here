@@ -89,7 +89,9 @@
           로그아웃
         </v-btn>
       </v-toolbar-items>
-      <v-toolbar-side-icon class="hidden-md-and-up" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-items class="hidden-md-and-up">
+        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      </v-toolbar-items>
     </v-toolbar>
     <main>
       <router-view :user="currentUser"></router-view>

@@ -39,6 +39,7 @@ body{
   width: 100%;
 }
 
+
 /* mainPage */
 div.view{
   min-height: 90vh;
@@ -63,10 +64,24 @@ div .vertical-center-flex{
 div .SFalign-center{
   margin: 0 auto;
 }
+
 div.SFcontent-box{
   width: 50%;
   max-width: 500px;
   padding: 30px 50px;
+}
+@media only screen and (max-width: 599px){
+  .subject{
+    font-size: 1.2em !important;
+  }
+  .SFcontent-boxM{
+    width: 100%;
+  }
+  div.SFcontent-box{
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 20px;
+  }
 }
 div a.icon{
     font-size: 2.5em;
