@@ -12,6 +12,7 @@ import Login from '@/pages/User/Login/Login'
 import LostPW from '@/pages/User/LostPW/LostPW'
 import Signup from '@/pages/User/Signup/Signup'
 import Confirm from '@/pages/User/Signup/Confirm'
+import Remote from '@/pages/Check/Remote'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/contact',
       name: 'Contact',
       component: Contact
+    },
+    {
+      path: '/remote',
+      name: 'Remote',
+      component: Remote
     },
     {
       path: '/check',

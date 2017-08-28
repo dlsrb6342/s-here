@@ -82,6 +82,9 @@
         <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('contact')">
           문의사항
         </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('remote')">
+          스마트키
+        </v-btn>
         <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('login')">
           로그인
         </v-btn>

@@ -38,6 +38,12 @@ body{
 .SFwide{
   width: 100%;
 }
+.SFtall{
+  height:100%;
+}
+.SFbtn-lg{
+  font-size: 150px;
+}
 
 
 /* mainPage */
@@ -71,6 +77,9 @@ div.SFcontent-box{
   padding: 30px 50px;
 }
 @media only screen and (max-width: 599px){
+  .btn-caption{
+    font-size: 1.5em;
+  }
   .subject{
     font-size: 1.2em !important;
   }
@@ -81,6 +90,11 @@ div.SFcontent-box{
     width: 100%;
     max-width: 500px;
     padding: 30px 20px;
+  }
+}
+@media only screen and (min-width: 768px){
+  div.SF-middle-box{
+    margin-top: 50px;
   }
 }
 div a.icon{
@@ -128,6 +142,10 @@ hr.prime-line{
 .font-exo{
   font-family: 'Exo';
   font-weight: 800;
+}
+.font-noto{
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
 }
 .bg-white{
   font-size: 1.2em;
