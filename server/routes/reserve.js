@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import { Reservation, Item, User } from '../models';
+import { getNow } from '../utils';
 
 const router = express.Router();
 
@@ -12,6 +13,21 @@ router.use((req, res, next) => {
     })
   };
   next();
+});
+
+router.get('/', (req, res) => {
+  let now = getNow();
+  Reservation.find({ 
+    $or : [
+      { user: req.session.userInfo._id },
+      { people: req.session.userInfo._id }
+    ], start: { $lte: now }}, (err, reservations) => {
+    if (err) throw err;
+    return res.json({
+      success: true,
+      data: reservations
+    });
+  });
 });
 
 router.post('/', (req, res) => {
@@ -110,7 +126,7 @@ router.delete('/:_id', (req, res) => {
         error: "NOT_ALLOWED",
         code: 2
       });
-    }
+    };
     let id_array = reservation.people.slice(0);
     id_array.push(reservation.user)
     User.update(

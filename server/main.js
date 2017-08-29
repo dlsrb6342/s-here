@@ -22,16 +22,14 @@ const wsClient = {};
 
 /* websocket client connection */
 wsServer.on('connection', (ws) => {
+  console.log('connection')
   let clientUrl = ws.upgradeReq.url.replace('.websocket', '');
-  if(!wsClient.hasOwnProperty(clientUrl)){
-    wsClient[clientUrl] = ws;
-  };
+  wsClient[clientUrl] = ws;
 });
 
 app.ws('/ws/:rasp', (ws, req, next) => {
-  ws.on('message', (msg) => {
-    let senderUrl = ws.upgradeReq.url.replace('.websocket', '');
-    wsClient[senderUrl].send(msg);
+  ws.on('close', () => {
+    delete wsClient[`/ws/${req.params.rasp}/`];
   });
   next();
 });
@@ -69,13 +67,15 @@ const smtpTransport = nodemailer.createTransport({
 
 app.set('smtpTransport', smtpTransport);
 app.set('redisClient', redisClient);
+app.set('wsClient', wsClient);
 app.use('/', express.static(path.resolve(__dirname, './../dist/')));
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api', api);
 
-/* csrf 설정 */
+/* csrf setting */
 app.use(csrf());
 app.use((req, res, next) => {
   let csrfToken = req.csrfToken()
@@ -84,7 +84,6 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/api', api);
 
 app.get(/^.(?!ws).*$/, (req, res) => {
   res.sendFile(path.resolve(__dirname, './../dist/index.html'));

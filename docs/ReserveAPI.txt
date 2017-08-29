@@ -1,4 +1,13 @@
 Reserve API
+    •   예약 취소 ( /api/reserve/:_id DELETE )
+      return value : 
+        요청에 성공했을 때 : { success : true }
+        실패했을 때 : { error : , code : }
+            code == 0 : _id가 올바르지 않을 때 
+            code == 1 : 존재하지 않는 예약일 때
+            code == 2 : 예약을 한 회원과 요청한 회원이 다를 때
+
+
     •   예약하기 ( /api/reserve/ POST )
       content type : application/json
         {
@@ -10,7 +19,7 @@ Reserve API
         }
 
       return value :
-        요청에 성공했을 때 : { success: true }
+        요청에 성공했을 때 : { success : true }
         실패했을 때 : { error : , code : }
             code == 0 : 올바르지 않은 시간이 입력되었을 때
             code == 1 : 존재하지 않는 회원일 때
@@ -19,10 +28,12 @@ Reserve API
             code == 4 : 이미 예약된 시간일 때 
 
 
-    •   예약 취소 ( /api/reserve/:_id DELETE )
+    •   예약 목록 ( /api/reserve/ GET )
       return value : 
-        요청에 성공했을 때 : { success: true }
-        실패했을 때 : { error : , code : }
-            code == 0 : _id가 올바르지 않을 때 
-            code == 1 : 존재하지 않는 예약일 때
-            code == 2 : 예약을 한 회원과 요청한 회원이 다를 때
+        요청에 성공했을 때 : { 
+          success : true,
+          data : [
+            reservation,
+            ...
+          ]
+        }
