@@ -22,7 +22,7 @@
                   </v-layout>
                   <v-layout row child-flex class="pa-0 my-0"
                     v-for="i in 48" :key="i">
-                    <v-card v-for="j in productId.length" :key="j" class="pa-1 mx-0 ">
+                    <v-card v-for="j in productId.length" :key="j" @mousedown="setFromTime" class="pa-1 mx-0 ">
                       <v-card-text class="caption pa-0"> </v-card-text>
                     </v-card>
                   </v-layout>
@@ -55,16 +55,16 @@
 </template>
 
 <script>
-  import VueTimepicker from 'vue2-timepicker'
+import VueTimepicker from 'vue2-timepicker'
 export default {
 	name: 'check',
-  components: {VueTimepicker},
+	components: { VueTimepicker },
 	props: ['date', 'user'],
 	data() {
 		return {
 			focus: null,
 			showTimeTable: false,
-			dialog: true,
+			dialog: false,
 			retData: [],
 			TimeTable: [],
 			selectItem: null,
@@ -72,15 +72,16 @@ export default {
 			toTime: null,
 			touching: false,
 			productId: ['print 1', 'print 2', 'print 3'],
-			productName:  ['print 1', 'print 2', 'print 3'],
-      defaultStartTime: {
-        HH: '09',
-        mm: '00',
-      },defaultEndTime: {
-        HH: '11',
-        mm: '00',
-      },
-      myFormat: 'HH:mm',
+			productName: ['print 1', 'print 2', 'print 3'],
+			defaultStartTime: {
+				HH: '09',
+				mm: '00',
+			},
+			defaultEndTime: {
+				HH: '11',
+				mm: '00',
+			},
+			myFormat: 'HH:mm',
 		}
 	},
 	created() {
@@ -93,7 +94,7 @@ export default {
 		}
 	},
 	methods: {
-    goPage: function (goMessage) { this.$router.push(goMessage) },
+		goPage: function(goMessage) { this.$router.push(goMessage) },
 		retTimeList: function() {
 			this.showTimeTable = true
 			let xhr = new XMLHttpRequest()
@@ -118,7 +119,7 @@ export default {
 				let result = JSON.parse(xhr.responseText)
 				if (result.success) alert('예약되었습니다.')
 				else if (result.code === 0) alert('잘못된 시간값을 입력하셨습니다.')
-				else if (result.code === 1) alert('해당 시간대를 이미 예약하셨습니다.')
+				else if (result.code === 1) alert('해당 시간대에 다른 프린터를 이미 예약하셨습니다.')
 				else if (result.code === 2) alert('다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.')
 				else alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
 				this.showTimeline
@@ -127,7 +128,7 @@ export default {
 				', "end": ' + this.toTime +
 				', "itemId": ' + 0 + // TODO: itemID에 들어갈 값
 				', "date": ' + this.showFocus.replace(/-/g, '') +
-				', "people": "' + 0 + // TODO: people에 들어갈 값
+				//', "people": "' + 0 +  TODO: people에 들어갈 값
 				'", "_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		showTimeline: function() {
@@ -136,9 +137,10 @@ export default {
 			for (let i = 0; i < 48; i++) {
 				let tmpArray = []
 				for (let j = 0; j < productId.length; j++) {
-					tmpArray.push([
-						''
-					])
+					tmpArray.push({
+						'grey': false,
+						'red': false,
+					})
 				}
 				this.TimeTable.push(tmpArray)
 			}
@@ -146,23 +148,8 @@ export default {
 				this.productId.push(item._id)
 				this.productName.push(item.name)
 				for (time of item.occupied) {
-					this.TimeTable[time][item._id][0] = 'grey darken-1'
+					this.TimeTable[time][item._id]['grey'] = true
 				}
-			}
-		},
-		detectFocus: function() {
-			if (this.focus !== null) this.retTimeList
-		},
-		setFromTime: function (i, j) {
-			this.selectItem = j
-			this.fromTime = i
-		},
-		touchDetect: function (i, j) {
-			if (this.touching) {
-				this.toTime = i
-			} else {
-				this.selectItem = j
-				this.fromTime = i
 			}
 		},
 		detectFocus: function() {
@@ -171,7 +158,14 @@ export default {
 		setFromTime: function(i, j) {
 			this.selectItem = j
 			this.fromTime = i
-			this.dialog = true
+			this.TimeTable[i][j]['red'] = true
+		},
+		setToTime: function(i) {
+			this.toTime = i
+			for (let c = this.fromTime; c <= this.toTime; c++) this.TimeTable[c][this.selectItem]['red'] = true
+		},
+		drag: function(i, j) {
+			this.TimeTable[i][j]['red'] = !this.TimeTable[i][j]['red'] 
 		},
 		touchDetect: function(i, j) {
 			if (this.touching) {
@@ -188,10 +182,10 @@ export default {
 		classInfo: function (i, j) {
 
 		},
-		fromTimeItems: function () {
+		fromTimeItems: function() {
 			return []
 		},
-		toTimeItems: function () {
+		toTimeItems: function() {
 			return []
 		}
 	}
