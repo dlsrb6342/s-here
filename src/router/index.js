@@ -6,9 +6,7 @@ import Admin from '@/pages/Admin/Admin'
 import About from '@/pages/About/About'
 import Contact from '@/pages/About/Contact'
 import Check from '@/pages/Check/Check'
-import User from '@/pages/User/User'
 import Login from '@/pages/User/Login/Login'
-import LostPW from '@/pages/User/LostPW/LostPW'
 import Signup from '@/pages/User/Signup/Signup'
 import Confirm from '@/pages/User/Signup/Confirm'
 import Remote from '@/pages/Check/Remote'
@@ -53,21 +51,6 @@ export default new Router({
       name: 'CheckDate',
       component: Check,
       props: true
-    },
-    {
-      path: '/user',
-      name: 'User',
-      component: User
-    },
-    {
-      path: '/lostpw',
-      name: 'lostpw',
-      component: LostPW
-    },
-    {
-      path: '/resetpw',
-      name: 'ResetPW',
-      component: LostPW,
     },
     {
       path: '/login',

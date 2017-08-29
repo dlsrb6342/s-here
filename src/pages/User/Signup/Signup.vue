@@ -60,14 +60,6 @@
         </v-container>
       </v-layout>
     </v-container>
-		<!--<p>This is Signup page</p>
-    Email 주소: <input type="text" v-model="Email">@skku.edu<br>
-    사용자 이름: <input type="text" v-model="userName"><br>
-    사용자 학번: <input type="text" v-model="studentId"><br>
-    Password: <input type="password" v-model="Password"><br>
-    Verify: <input type="password" v-model="Verify"><br>
-    <button @click="submit">제출</button>
-    <button @click="cancel">취소</button>-->
 	</div>
 </template>
 

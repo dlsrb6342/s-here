@@ -65,6 +65,7 @@ export default {
 			focus: null,
 			showTimeTable: false,
 			dialog: false,
+			errMessage: '',
 			retData: [],
 			TimeTable: [],
 			selectItem: null,
