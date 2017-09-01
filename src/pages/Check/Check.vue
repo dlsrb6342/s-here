@@ -3,7 +3,7 @@
     <v-container class="SFwide">
         <h2 class="text-center font-exo">Reservation</h2>
         <v-layout row-md column>
-            <v-flex lg4>
+            <v-flex>
               <v-flex xs12>
                 <v-btn fab flat small @click="getBefore_mon"><v-icon>keyboard_arrow_left</v-icon></v-btn>
                 <span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
