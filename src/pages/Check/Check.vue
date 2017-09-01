@@ -3,18 +3,32 @@
     <v-container class="SFwide">
         <h2 class="text-center font-exo">Reservation</h2>
         <v-layout row-md column>
-            <v-flex md3 sm12>
-              <v-date-picker
-                v-model="focus"
-                locale="ko-KR"
-              ></v-date-picker>
-							<v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
-							<v-btn @click.native="productId = ['10', '20']">add item</v-btn>
+            <v-flex lg4>
+              <v-flex xs12>
+                <v-btn fab flat small @click="getBefore_mon"><v-icon>keyboard_arrow_left</v-icon></v-btn>
+                <span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
+                <v-btn fab flat small @click="getNext_mon"><v-icon>keyboard_arrow_right</v-icon></v-btn>
+              </v-flex>
+              <v-flex xs12>
+                <v-btn fab flat small @click="getBefore_day"><v-icon>keyboard_arrow_left</v-icon></v-btn>
+                <v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index-1) }}</v-btn>
+                <v-btn fab large class="indigo darken-1 white--text headline">{{ today | day(date_index) }}</v-btn>
+                <v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index + 1) }}</v-btn>
+                <v-btn fab flat small @click="getNext_day"><v-icon>keyboard_arrow_right</v-icon></v-btn>
+              </v-flex>
+            <!--<v-date-picker
+              v-model="focus"
+              locale="ko-KR"
+            ></v-date-picker>-->
+              <v-flex xs12>
+                <v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
+                <v-btn @click.native="productId = ['10', '20']">add item</v-btn>
+              </v-flex>
             </v-flex>
           <transition name="slide-fade">
-            <v-flex md9 sm12 v-if="showTimeTable">
+            <v-flex lg8 v-if="showTimeTable">
               <v-layout row-md column>
-                <v-flex md8 class="SFtable">
+                <v-flex lg9 class="elevation-10 white px-2 SFtable">
                   <v-layout row child-flex class="pa-0 my-1">
                     <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
                       <v-card-text class="pa-0">{{ item }}</v-card-text>
@@ -27,24 +41,32 @@
                     </v-card>
                   </v-layout>
                 </v-flex>
-                <v-flex md2 offset-md1 >
-                  <v-layout column>
-                    <v-card class="elevation-5">
-                      <v-flex class="pa-3 SFtimepicker">
-                        시작시간
-                        <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
-                                        v-model="defaultStartTime"></vue-timepicker>
-                      </v-flex>
-                      <v-flex class="pa-3">
-                        종료시간
-                        <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
-                                        v-model="defaultEndTime"></vue-timepicker>
-                      </v-flex>
-                      <v-flex>
-                          <v-btn flat @click="reserve">Submit</v-btn>
-                      </v-flex>
+                <v-flex lg3>
+                  <v-btn primary dark @click.naive.stop="dialog = true">dialog</v-btn>
+                  <v-dialog v-model="dialog">
+                    <v-card class="">
+                      <v-card-text>
+                        <v-flex class="pa-3 SFtimepicker">
+                          시작시간
+                          <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
+                                          v-model="defaultStartTime"></vue-timepicker>
+                        </v-flex>
+                        <v-flex class="pa-3">
+                          종료시간
+                          <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
+                                          v-model="defaultEndTime"></vue-timepicker>
+                        </v-flex>
+                        <v-flex class="pa-3">
+                          대여인원
+                          <v-select v-bind:items="people" overflow label="1-6"></v-select>
+                        </v-flex>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn flat class="indigo--text" @click="reserve">Submit</v-btn>
+                      </v-card-actions>
                     </v-card>
-                  </v-layout>
+                  </v-dialog>
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -56,14 +78,27 @@
 
 <script>
 import VueTimepicker from 'vue2-timepicker'
+import moment from 'moment'
 export default {
 	name: 'check',
 	components: { VueTimepicker },
 	props: ['date', 'user'],
+  filters:{
+	  day: function(val, i){
+	    if(val){
+	      return moment(val).add(i, 'd').format('DD')
+      }
+    },
+    mon: function(val, i){
+      if(val){
+        return moment(val).add(i, 'M').format('MM')
+      }
+    }
+  },
 	data() {
 		return {
 			focus: null,
-			showTimeTable: false,
+			showTimeTable: true,
 			dialog: false,
 			errMessage: '',
 			retData: [],
@@ -74,7 +109,12 @@ export default {
 			touching: false,
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName: ['print 1', 'print 2', 'print 3'],
-			defaultStartTime: {
+      people: ['1', '2', '3', '4', '5', '6'],
+			today: new Date(),
+      date_index: 0,
+      month_index: 0,
+      Day: null,
+      defaultStartTime: {
 				HH: '09',
 				mm: '00',
 			},
@@ -166,7 +206,7 @@ export default {
 			for (let c = this.fromTime; c <= this.toTime; c++) this.TimeTable[c][this.selectItem]['red'] = true
 		},
 		drag: function(i, j) {
-			this.TimeTable[i][j]['red'] = !this.TimeTable[i][j]['red'] 
+			this.TimeTable[i][j]['red'] = !this.TimeTable[i][j]['red']
 		},
 		touchDetect: function(i, j) {
 			if (this.touching) {
@@ -177,7 +217,19 @@ export default {
 				alert('yes')
 			}
 			this.touching = !this.touching
-		}
+		},
+    getBefore_day: function() {
+      this.date_index -= 1
+    },
+    getNext_day: function() {
+      this.date_index += 1
+    },
+    getBefore_mon: function() {
+      this.month_index -= 1
+    },
+    getNext_mon: function() {
+      this.month_index += 1
+    }
 	},
 	computed: {
 		classInfo: function (i, j) {
