@@ -1,79 +1,85 @@
 <template>
-  <div class="check view text-center">
-    <v-container class="SFwide">
-        <h2 class="text-center font-exo">Reservation</h2>
-        <v-layout row-md column>
-            <v-flex>
-              <v-flex xs12>
-                <v-btn fab flat small @click="getBefore_mon"><v-icon>keyboard_arrow_left</v-icon></v-btn>
-                <span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
-                <v-btn fab flat small @click="getNext_mon"><v-icon>keyboard_arrow_right</v-icon></v-btn>
-              </v-flex>
-              <v-flex xs12>
-                <v-btn fab flat small @click="getBefore_day"><v-icon>keyboard_arrow_left</v-icon></v-btn>
-                <v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index-1) }}</v-btn>
-                <v-btn fab large class="indigo darken-1 white--text headline">{{ today | day(date_index) }}</v-btn>
-                <v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index + 1) }}</v-btn>
-                <v-btn fab flat small @click="getNext_day"><v-icon>keyboard_arrow_right</v-icon></v-btn>
-              </v-flex>
-            <!--<v-date-picker
-              v-model="focus"
-              locale="ko-KR"
-            ></v-date-picker>-->
-              <v-flex xs12>
-                <v-btn @click.native="showTimeTable = !showTimeTable">???</v-btn>
-                <v-btn @click.native="productId = ['10', '20']">add item</v-btn>
-              </v-flex>
-            </v-flex>
-          <transition name="slide-fade">
-            <v-flex lg8 v-if="showTimeTable">
-              <v-layout row-md column>
-                <v-flex lg9 class="elevation-10 white px-2 SFtable">
-                  <v-layout row child-flex class="pa-0 my-1">
-                    <v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
-                      <v-card-text class="pa-0">{{ item }}</v-card-text>
-                    </v-card>
-                  </v-layout>
-                  <v-layout row child-flex class="pa-0 my-0"
-                    v-for="i in 48" :key="i">
-                    <v-card v-for="j in productId.length" :key="j" @mousedown="setFromTime" class="pa-1 mx-0 ">
-                      <v-card-text class="caption pa-0"> </v-card-text>
-                    </v-card>
-                  </v-layout>
-                </v-flex>
-                <v-flex lg3>
-                  <v-btn primary dark @click.naive.stop="dialog = true">dialog</v-btn>
-                  <v-dialog v-model="dialog">
-                    <v-card class="">
-                      <v-card-text>
-                        <v-flex class="pa-3 SFtimepicker">
-                          시작시간
-                          <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
-                                          v-model="defaultStartTime"></vue-timepicker>
-                        </v-flex>
-                        <v-flex class="pa-3">
-                          종료시간
-                          <vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat"
-                                          v-model="defaultEndTime"></vue-timepicker>
-                        </v-flex>
-                        <v-flex class="pa-3">
-                          대여인원
-                          <v-select v-bind:items="people" overflow label="1-6"></v-select>
-                        </v-flex>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn flat class="indigo--text" @click="reserve">Submit</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-          </transition>
-        </v-layout>
-    </v-container>
-  </div>
+	<div class="check view text-center">
+		<v-container class="SFwide">
+			<h2 class="text-center font-exo">Reservation</h2>
+			<v-layout row-md column>
+				<v-flex>
+					<v-flex xs12>
+						<v-btn fab flat small @click="getBefore_mon">
+							<v-icon>keyboard_arrow_left</v-icon>
+						</v-btn>
+						<span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
+						<v-btn fab flat small @click="getNext_mon">
+							<v-icon>keyboard_arrow_right</v-icon>
+						</v-btn>
+					</v-flex>
+					<v-flex xs12>
+						<v-btn fab flat small @click="getBefore_day">
+							<v-icon>keyboard_arrow_left</v-icon>
+						</v-btn>
+						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index-1) }}</v-btn>
+						<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day(date_index) }}</v-btn>
+						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index + 1) }}</v-btn>
+						<v-btn fab flat small @click="getNext_day">
+							<v-icon>keyboard_arrow_right</v-icon>
+						</v-btn>
+					</v-flex>
+					<!--<v-date-picker
+	              v-model="focus"
+	              locale="ko-KR"
+	            ></v-date-picker>-->
+					<v-flex xs12>
+						<v-btn @click.native="showTimeTable = !showTimeTable">showTT</v-btn>
+						<v-btn @click.native="testDataset">testDS</v-btn>
+						<v-btn @click.native="debugSet = !debugSet">showInside</v-btn></v-btn>
+					</v-flex>
+				</v-flex>
+				<transition name="slide-fade">
+					<v-flex lg8 v-if="showTimeTable">
+						<v-layout row-md column>
+							<v-flex lg9 class="elevation-10 white px-2 SFtable">
+								<v-layout row child-flex class="pa-0 my-1">
+									<v-card v-for="(item, j) in productId" :key="j" class="pa-1 my-1 mx-0">
+										<v-card-text class="pa-0">{{ item }}</v-card-text>
+									</v-card>
+								</v-layout>
+								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
+									<v-card v-for="j in productId.length" :key="j" @mousedown="mouseDown(i, j)" @mouseup="mouseUp(i, j)" @mouseenter="mouseDrag(i, j)" @touchend="touchDetect(i, j)" class="pa-1 mx-0 " :class="TimeTable[(i-1) * productId.length + j - 1]">
+										<v-card-text class="caption pa-0">{{ debugSet ? TimeTable[(i-1) * productId.length + j - 1] : '' }}</v-card-text>
+									</v-card>
+								</v-layout>
+							</v-flex>
+							<v-flex lg3>
+								<v-btn primary dark @click.native.stop="dialog = true">dialog</v-btn>
+								<v-dialog v-model="dialog">
+									<v-card class="">
+										<v-card-text>
+											<v-flex class="pa-3 SFtimepicker">
+												시작시간
+												<vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat" v-model="defaultStartTime"></vue-timepicker>
+											</v-flex>
+											<v-flex class="pa-3">
+												종료시간
+												<vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat" v-model="defaultEndTime"></vue-timepicker>
+											</v-flex>
+											<v-flex class="pa-3">
+												대여인원
+												<v-select v-bind:items="people" overflow label="1-6"></v-select>
+											</v-flex>
+										</v-card-text>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn flat class="indigo--text" @click="reserve">Submit</v-btn>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+							</v-flex>
+						</v-layout>
+					</v-flex>
+				</transition>
+			</v-layout>
+		</v-container>
+	</div>
 </template>
 
 <script>
@@ -83,18 +89,18 @@ export default {
 	name: 'check',
 	components: { VueTimepicker },
 	props: ['date', 'user'],
-  filters:{
-	  day: function(val, i){
-	    if(val){
-	      return moment(val).add(i, 'd').format('DD')
-      }
-    },
-    mon: function(val, i){
-      if(val){
-        return moment(val).add(i, 'M').format('MM')
-      }
-    }
-  },
+	filters: {
+		day: function(val, i) {
+			if (val) {
+				return moment(val).add(i, 'd').format('DD')
+			}
+		},
+		mon: function(val, i) {
+			if (val) {
+				return moment(val).add(i, 'M').format('MM')
+			}
+		}
+	},
 	data() {
 		return {
 			focus: null,
@@ -105,16 +111,17 @@ export default {
 			TimeTable: [],
 			selectItem: null,
 			fromTime: null,
+			dragTime: null,
 			toTime: null,
 			touching: false,
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName: ['print 1', 'print 2', 'print 3'],
-      people: ['1', '2', '3', '4', '5', '6'],
+			people: ['1', '2', '3', '4', '5', '6'],
 			today: new Date(),
-      date_index: 0,
-      month_index: 0,
-      Day: null,
-      defaultStartTime: {
+			date_index: 0,
+			month_index: 0,
+			Day: null,
+			defaultStartTime: {
 				HH: '09',
 				mm: '00',
 			},
@@ -123,6 +130,7 @@ export default {
 				mm: '00',
 			},
 			myFormat: 'HH:mm',
+			debugSet: false,
 		}
 	},
 	created() {
@@ -175,72 +183,96 @@ export default {
 		showTimeline: function() {
 			this.retTimeList
 			this.TimeTable = []
-			for (let i = 0; i < 48; i++) {
-				let tmpArray = []
-				for (let j = 0; j < productId.length; j++) {
-					tmpArray.push({
-						'grey': false,
-						'red': false,
-					})
-				}
-				this.TimeTable.push(tmpArray)
+			for (let i = 0; i < 48 * this.productId.length; i++) {
+				this.TimeTable.push({
+					'grey': false,
+					'red': false,
+				})
 			}
+			/*
 			for (item of this.retData) {
 				this.productId.push(item._id)
 				this.productName.push(item.name)
 				for (time of item.occupied) {
-					this.TimeTable[time][item._id]['grey'] = true
+					this.TimeTable[time * productId.length + item._id].grey = true
 				}
-			}
+			}*/
+		},
+		testDataset: function() {
+			this.TimeTable = []
+			for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({})
 		},
 		detectFocus: function() {
 			if (this.focus !== null) this.showTimeline
 		},
-		setFromTime: function(i, j) {
-			this.selectItem = j
-			this.fromTime = i
-			this.TimeTable[i][j]['red'] = true
+		mouseDown: function(time, item) {
+			this.touching = true
+			this.fromTime = this.dragTime = time - 1
+			this.selectItem = item - 1
+			this.testDataset()
+			this.TimeTable[(time - 1) * this.productId.length + (item - 1)]['red lighten-2'] = true
+			console.log('mouseDown on ' + time + ', ' + item)
 		},
-		setToTime: function(i) {
-			this.toTime = i
-			for (let c = this.fromTime; c <= this.toTime; c++) this.TimeTable[c][this.selectItem]['red'] = true
-		},
-		drag: function(i, j) {
-			this.TimeTable[i][j]['red'] = !this.TimeTable[i][j]['red']
-		},
-		touchDetect: function(i, j) {
+		mouseDrag: function(time, item) {
 			if (this.touching) {
-				this.toTime = i
-			} else {
-				this.selectItem = j
-				this.fromTime = i
-				alert('yes')
+				if (this.dragTime < this.fromTime) { // up
+					if (this.dragTime < time) {
+						// mouse goes down, delete class
+						this.dragTime * this.productId.length
+						this.TimeTable[this.dragTime * this.productId.length + this.selectItem]['red lighten-4'] = false
+						console.log('mouseDrag on (' + time + ', ' + this.dragTime + ', ' + item + ') and is (up, down)')
+					} else {
+						// mouse goes up, add class
+						this.TimeTable[(time - 1) * this.productId.length + this.selectItem]['red lighten-4'] = true
+						console.log('mouseDrag on (' + time + ', ' + this.dragTime + ', ' + item + ') and is (up, up)')
+					}
+				} else if (this.dragTime > this.fromTime) { // down
+					if (this.dragTime < time) {
+						// mouse goes down, add class
+						this.TimeTable[(time - 1) * this.productId.length + this.selectItem]['red lighten-4'] = true
+						console.log('mouseDrag on (' + time + ', ' + this.dragTime + ', ' + item + ') and is (down, down)')
+					} else {
+						// mouse goes up, delete class
+						this.TimeTable[this.dragTime * this.productId.length + this.selectItem]['red lighten-4'] = false
+						console.log('mouseDrag on (' + time + ', ' + this.dragTime + ', ' + item + ') and is (down, up)')
+					}
+				} else {
+					this.TimeTable[(time - 1) * this.productId.length + this.selectItem]['red lighten-4'] = true
+					console.log('mouseDrag on (' + time + ', ' + this.dragTime + ', ' + item + ') and is (down, down)')
+				}
+				this.dragTime = time - 1
 			}
-			this.touching = !this.touching
 		},
-    getBefore_day: function() {
-      this.date_index -= 1
-    },
-    getNext_day: function() {
-      this.date_index += 1
-    },
-    getBefore_mon: function() {
-      this.month_index -= 1
-    },
-    getNext_mon: function() {
-      this.month_index += 1
-    }
+		mouseUp: function(time, item) {
+			this.touching = false
+			this.TimeTable[(time - 1) * this.productId.length + (item - 1)]['red lighten-2'] = false
+			this.TimeTable[(time - 1) * this.productId.length + (item - 1)]['green lighten-2'] = true
+			console.log('mouseUp on ' + time + ', ' + item)
+		},
+		touchDetect: function(time, item) {
+			// detect @touchend for touching such things
+			if (touching) {
+				touching = false
+				// TODO: touch mouseDown simulation
+			} else {
+				touching = true
+				// TODO: touch mouseUp simulation
+			}
+		},
+		getBefore_day: function() {
+			this.date_index -= 1
+		},
+		getNext_day: function() {
+			this.date_index += 1
+		},
+		getBefore_mon: function() {
+			this.month_index -= 1
+		},
+		getNext_mon: function() {
+			this.month_index += 1
+		}
 	},
 	computed: {
-		classInfo: function (i, j) {
-
-		},
-		fromTimeItems: function() {
-			return []
-		},
-		toTimeItems: function() {
-			return []
-		}
 	}
 }
 </script>
