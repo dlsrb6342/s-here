@@ -30,13 +30,26 @@
               <v-btn flat @click="goPage('signup')">
                 Sign up
               </v-btn>
-              <v-btn icon class="hidden-xs-only" flat @click="goPage('lostpw')">
+              <v-btn icon class="hidden-xs-only" flat @click.native="snackbar = true"> <!--go.page(lost)로 수정-->
                 <v-icon>account_circle</v-icon>
               </v-btn>
             </v-layout>
           </v-card>
         </v-container>
       </v-layout>
+      <v-snackbar :timeout="timeout"
+                  :top="true"
+                  :success="mode === 'success'"
+                  :info="mode === 'info'"
+                  :warning="mode === 'warning'"
+                  :error="mode === 'error'"
+                  :primary="mode === 'primary'"
+                  :secondary="mode === 'secondary'"
+                  v-model="snackbar" class="white--text ">
+        {{ msg }}
+        <v-btn flat v-show="!signup" class="grey--text text--lighten-3" @click.native="snackbar = false">Close</v-btn>
+        <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
+      </v-snackbar>
     </v-container>
 	</div>
 </template>
@@ -46,6 +59,11 @@ export default {
   name: 'login',
 	data () {
 		return {
+		  msg:'',
+      snackbar: false,
+      timeout: 5000,
+      mode: '',
+      signup: false,
 			studentId: '',
 			Password: ''
 		}
@@ -53,8 +71,16 @@ export default {
   methods: {
 		goPage: function (goMessage) { this.$router.push(goMessage) },
 		submit: function () {
-			if (this.studentId == '') alert('학번을 입력해 주세요')
-			else if (this.Password == '') alert('비밀번호를 입력해 주세요')
+			if (this.studentId == '') {
+        this.mode = 'warning'
+        this.msg='학번을 입력해 주세요'
+        this.snackbar = true
+      }
+			else if (this.Password == '') {
+        this.mode = 'warning'
+        this.msg='비밀번호를 입력해 주세요'
+        this.snackbar = true
+      }
 			else {
 				let xhr = new XMLHttpRequest()
 				xhr.open('POST', '/api/user/login')
@@ -65,20 +91,30 @@ export default {
 					this.Password = ''
 					if (result.hasOwnProperty('success')) {
 						if (result['success']) this.$emit('setUser', [result['studentId'], result['name']])
-						else alert('이메일 인증이 완료되지 않았습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
+						else {
+						  this.mode = 'warning'
+						  this.msg='이메일 인증이 완료되지 않았습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.'
+              this.snackbar = true
+            }
 						this.$router.push('mainpage')
 					}
 					else {
 						switch (result['code']) {
 							case 0:
-								alert('학번 또는 비밀번호가 틀렸습니다.')
+                this.mode = 'error'
+                this.msg='학번 또는 비밀번호가 틀렸습니다.'
+                this.snackbar = true
 								break
 							case 1:
-								alert('회원가입을 하셔야만 이용할 수 있는 서비스입니다.\n회원가입 페이지로 이동합니다.')
-								this.$router.push('signup')
+                this.mode = 'warning'
+                this.msg='회원가입을 하셔야만 이용할 수 있는 서비스입니다.\n회원가입 페이지로 이동합니다.'
+								this.signup = true
+                this.snackbar = true
 								break
 							default:
-								alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+                this.mode = 'info'
+                this.msg='알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
+                this.snackbar = true
 						}
 					}
 				}
@@ -92,34 +128,5 @@ export default {
 </script>
 
 <style scoped>
-  div .login-box{
-    max-width: 50%;
-    margin: auto 0;
-  }
 
-  div .middle-box{
-    margin-bottom: 20em;
-    font-family: 'Roboto', sans-serif;;
-  }
-  div .non-flex{
-    display: -webkit-inline-box;
-  }
-  div .row {
-    margin: 15px;
-  }
-
-  .bg-blue{
-    background: #0074d6;
-    color: #fafafa;
-  }
-  button.bg-white{
-    font-size: 1.2em;
-    background-color: #fafafa;
-    color: #0074d6;
-    transition: 0.2s;
-  }
-  button.bg-white:hover{
-    background-color: #1565c0 !important;
-    color: #fafafa;
-  }
 </style>

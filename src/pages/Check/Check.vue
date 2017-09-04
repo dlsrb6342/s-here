@@ -82,6 +82,15 @@
 				</transition>
 			</v-layout>
 		</v-container>
+    <v-snackbar :timeout="timeout"
+                :top="true"
+                :success="mode === 'success'"
+                :info="mode === 'info'"
+                :warning="mode === 'warning'"
+                v-model="snackbar" class="grey--text text--lighten-3">
+      {{ msg }}
+      <v-btn flat class="white--text" @click.native="snackbar = false">Close</v-btn>
+    </v-snackbar>
 	</div>
 </template>
 
@@ -106,6 +115,10 @@ export default {
 	},
 	data() {
 		return {
+      msg:'',
+      snackbar: false,
+      timeout: 5000,
+      mode: '',
 			focus: null,
 			showTimeTable: true,
 			dialog: false,
@@ -170,11 +183,31 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
-				if (result.success) alert('예약되었습니다.')
-				else if (result.code === 0) alert('잘못된 시간값을 입력하셨습니다.')
-				else if (result.code === 1) alert('해당 시간대에 다른 프린터를 이미 예약하셨습니다.')
-				else if (result.code === 2) alert('다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.')
-				else alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+				if (result.success) {
+				  this.mode = 'success'
+          this.msg ='예약되었습니다.'
+          this.snackbar = true
+        }
+				else if (result.code === 0) {
+				  this.mode = 'warning'
+          this.msg ='잘못된 시간값을 입력하셨습니다.'
+          this.snackbar = true
+        }
+				else if (result.code === 1) {
+				  this.mode = 'warning'
+          this.msg ='해당 시간대에 다른 프린터를 이미 예약하셨습니다.'
+          this.snackbar = true
+        }
+				else if (result.code === 2) {
+				  this.mode = 'warning'
+          this.msg ='다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.'
+          this.snackbar = true
+        }
+				else {
+				  this.mode = 'info'
+          this.msg = '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
+          this.snackbar = true
+        }
 				this.showTimeline()
 			}
 			xhr.send('{"start": ' + this.fromTime +

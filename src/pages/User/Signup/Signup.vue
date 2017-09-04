@@ -60,6 +60,15 @@
         </v-container>
       </v-layout>
     </v-container>
+    <v-snackbar :timeout="timeout"
+                :top="true"
+                :success="mode === 'success'"
+                :info="mode === 'info'"
+                :warning="mode === 'warning'"
+                v-model="snackbar" class="grey--text text--lighten-3">
+      {{ msg }}
+      <v-btn flat class="white--text" @click.native="snackbar = false">Close</v-btn>
+    </v-snackbar>
 	</div>
 </template>
 
@@ -68,6 +77,10 @@ export default {
   name: 'signup',
   data () {
     return {
+      msg:'',
+      snackbar: false,
+      timeout: 5000,
+      mode: '',
       Email: '',
       userName: '',
       studentId: '',
@@ -77,12 +90,30 @@ export default {
   },
   methods: {
     submit: function () {
-      if (this.Email == '') alert('킹고 포털 이메일 주소를 입력해 주세요.')
-      else if (this.userName == '') alert('이름을 정확히 입력해 주세요.')
-      else if (this.studentId == '') alert('학번을 정확히 입력해 주세요.')
-      else if (this.Password == '') alert('비밀번호를 입력해 주세요.')
+      if (this.Email == '') {
+        this.mode = 'warning'
+        this.msg='킹고 이메일 주소를 입력해 주세요.'
+        this.snackbar = true
+      }
+      else if (this.userName == '') {
+        this.mode = 'warning'
+        this.msg='이름을 정확히 입력해 주세요.'
+        this.snackbar = true
+      }
+      else if (this.studentId == '') {
+        this.mode = 'warning'
+        this.msg='학번을 정확히 입력해 주세요.'
+        this.snackbar = true
+      }
+      else if (this.Password == '') {
+        this.mode = 'warning'
+        this.msg='비밀번호를 입력해 주세요'
+        this.snackbar = true
+      }
       else if (this.Password !== this.Verify) {
-        alert('비밀번호가 일치하지 않습니다.')
+        this.mode = 'warning'
+        this.msg='비밀번호가 일치하지 않습니다.'
+        this.snackbar = true
         this.Verify = ''
       }
       else {
@@ -90,7 +121,9 @@ export default {
         xhr.onreadystatechange = function () {
           let result = JSON.parse(xhr.response)
           if (result.hasOwnProperty('success')) {
-            alert('회원가입이 완료되었습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.')
+            this.mode = 'success'
+            this.msg='회원가입이 완료되었습니다. 킹고 포털 메일함에서 인증 절차를 진행해 주세요.'
+            this.snackbar = true
             this.Email = ''
             this.studentId = ''
             this.userName = ''
@@ -101,19 +134,29 @@ export default {
           else {
             switch (result.code) {
               case 0:
-                alert('스마트카 트랙 이수 학생이 아닙니다.\n스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.')
+                this.mode = 'info'
+                this.msg='스마트카 트랙 이수 학생이 아닙니다. 스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.'
+                this.snackbar = true
                 break
               case 1:
-                alert('해당 학번이 존재합니다.')
+                this.mode = 'info'
+                this.msg='해당 학번이 존재합니다.'
+                this.snackbar = true
                 break
               case 2:
-                alert('비밀번호가 형식에 맞지 않습니다.')
+                this.mode = 'info'
+                this.msg='비밀번호가 형식에 맞지 않습니다.'
+                this.snackbar = true
                 break
               case 3:
-                alert('등록된 이름과 다른 이름을 입력하셨습니다.\n입력 내용을 확인하시고 이상이 없다면 관리자에게 문의해 주세요.')
+                this.mode = 'info'
+                this.msg='등록된 이름과 다른 이름을 입력하셨습니다.\n입력 내용을 확인하시고 이상이 없다면 관리자에게 문의해 주세요.'
+                this.snackbar = true
                 break
               default:
-                alert('알 수 없는 오류입니다.\n관리자에게 문의해 주세요.')
+                this.mode = 'info'
+                this.msg='알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
+                this.snackbar = true
             }
           }
         }
