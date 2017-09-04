@@ -30,8 +30,8 @@
               <v-btn flat @click="goPage('signup')">
                 Sign up
               </v-btn>
-              <v-btn class="hidden-sm-and-down" flat @click="goPage('lostpw')">
-                Lost PW?
+              <v-btn icon class="hidden-xs-only" flat @click="goPage('lostpw')">
+                <v-icon>account_circle</v-icon>
               </v-btn>
             </v-layout>
           </v-card>

@@ -4,34 +4,36 @@
 			<h2 class="text-center font-exo">Reservation</h2>
 			<v-layout row-md column>
 				<v-flex>
-					<v-flex xs12>
-						<v-btn fab flat small @click="getBefore_mon">
-							<v-icon>keyboard_arrow_left</v-icon>
-						</v-btn>
-						<span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
-						<v-btn fab flat small @click="getNext_mon">
-							<v-icon>keyboard_arrow_right</v-icon>
-						</v-btn>
-					</v-flex>
-					<v-flex xs12>
+          <v-flex class="hidden-sm-and-up">
+            <v-flex xs12>
+              <v-btn fab flat small @click="getBefore_mon">
+                <v-icon>keyboard_arrow_left</v-icon>
+              </v-btn>
+              <span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
+              <v-btn fab flat small @click="getNext_mon">
+                <v-icon>keyboard_arrow_right</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs12>
 						<v-btn fab flat small @click="getBefore_day">
 							<v-icon>keyboard_arrow_left</v-icon>
 						</v-btn>
-						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index-1) }}</v-btn>
-						<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day(date_index) }}</v-btn>
-						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(date_index + 1) }}</v-btn>
+						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(-1) }}</v-btn>
+						<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day }}</v-btn>
+						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(1) }}</v-btn>
 						<v-btn fab flat small @click="getNext_day">
 							<v-icon>keyboard_arrow_right</v-icon>
 						</v-btn>
 					</v-flex>
-					<!--<v-date-picker
+          </v-flex>
+					<v-date-picker
 	              v-model="focus"
-	              locale="ko-KR"
-	            ></v-date-picker>-->
+	              locale="ko-KR" class="hidden-xs-only">
+          </v-date-picker>
 					<v-flex xs12>
 						<v-btn @click.native="showTimeTable = !showTimeTable">showTT</v-btn>
 						<v-btn @click.native="testDataset">testDS</v-btn>
-						<v-btn @click.native="debugSet = !debugSet">showInside</v-btn></v-btn>
+						<v-btn @click.native="debugSet = !debugSet">showInside</v-btn>
 					</v-flex>
 				</v-flex>
 				<transition name="slide-fade">
@@ -260,16 +262,16 @@ export default {
 			}
 		},
 		getBefore_day: function() {
-			this.date_index -= 1
+			this.today = moment(this.today).subtract(1, 'd')
 		},
 		getNext_day: function() {
-			this.date_index += 1
+      this.today = moment(this.today).add(1, 'd')
 		},
 		getBefore_mon: function() {
-			this.month_index -= 1
+      this.today = moment(this.today).subtract(1, 'M')
 		},
 		getNext_mon: function() {
-			this.month_index += 1
+      this.today = moment(this.today).add(1, 'M')
 		}
 	},
 	computed: {

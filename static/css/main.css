@@ -38,11 +38,19 @@ body{
 .SFwide{
   width: 100%;
 }
+.SFhalf-W{
+  width: 50%;
+}
 .SFtall{
   height:100%;
 }
 .SFbtn-lg{
-  font-size: 150px;
+  font-size: 10em;
+}
+.SFborder{
+  border: solid;
+  border-width: 2px;
+  border-color: #1565c0;
 }
 
 
@@ -76,7 +84,16 @@ div.SFcontent-box{
   max-width: 500px;
   padding: 30px 50px;
 }
+div a.icon{
+  font-size: 2.5em;
+}
 @media only screen and (max-width: 599px){
+  .SFbtn-lg{
+    font-size: 6em;
+  }
+  .SFhalf-W{
+    width: 80%;
+  }
   .btn-caption{
     font-size: 1.5em;
   }
@@ -96,14 +113,9 @@ div.SFcontent-box{
   div.SF-middle-box{
     margin-top: 50px;
   }
-}
-div a.icon{
-    font-size: 2.5em;
-}
-@media only screen and (max-width: 768px){
-    div a.icon{
-        font-size: 2.8em;
-    }
+  div a.icon{
+    font-size: 2.8em;
+  }
 }
 div.caption{
   margin: 20px 10px;
