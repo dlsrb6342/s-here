@@ -5,16 +5,16 @@
 			<v-layout row-md column>
 				<v-flex>
           <v-flex class="hidden-sm-and-up">
-            <v-flex xs12>
-              <v-btn fab flat small @click="getBefore_mon">
-                <v-icon>keyboard_arrow_left</v-icon>
-              </v-btn>
-              <span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
-              <v-btn fab flat small @click="getNext_mon">
-                <v-icon>keyboard_arrow_right</v-icon>
-              </v-btn>
-            </v-flex>
-            <v-flex xs12>
+					<v-flex xs12>
+						<v-btn fab flat small @click="getBefore_mon">
+							<v-icon>keyboard_arrow_left</v-icon>
+						</v-btn>
+						<span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
+						<v-btn fab flat small @click="getNext_mon">
+							<v-icon>keyboard_arrow_right</v-icon>
+						</v-btn>
+					</v-flex>
+					<v-flex xs12>
 						<v-btn fab flat small @click="getBefore_day">
 							<v-icon>keyboard_arrow_left</v-icon>
 						</v-btn>
@@ -47,8 +47,8 @@
 									</v-card>
 								</v-layout>
 								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
-									<v-card v-for="j in productId.length" :key="j" @mousedown="mouseDown(i, j)" @mouseup="mouseUp(i, j)" @mouseenter="mouseDrag(i, j)" @touchend="touchDetect(i, j)" class="pa-1 mx-0 " :class="classInfo(i-1, j-1)"><!-- :class="TimeTable[(i-1) * productId.length + j - 1]">-->
-										<v-card-text class="caption pa-0" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">{{ debugSet ? TimeTable[(i-1) * productId.length + j - 1] : '' }}{{debugSet ? ' ' + ((i-1) * productId.length + j - 1) : ''}}</v-card-text>
+									<v-card v-for="j in productId.length" :key="j" @mousedown="mouseDown(i, j)" @mouseup="mouseUp(i, j)" @mouseenter="mouseDrag(i, j)" @touchstart="touchDetect(i, j)" class="pa-1 mx-0 " :class="classInfo(i-1, j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
+										<v-card-text class="caption pa-0">{{ debugSet ? TimeTable[(i-1) * productId.length + j - 1] : '' }}{{debugSet ? ' ' + ((i-1) * productId.length + j - 1) : ''}}</v-card-text>
 									</v-card>
 								</v-layout>
 							</v-flex>
@@ -127,7 +127,6 @@ export default {
 			TimeTable: [],
 			selectItem: null,
 			fromTime: null,
-			dragTime: null,
 			toTime: null,
 			touching: false,
 			productId: ['print 1', 'print 2', 'print 3'],
@@ -214,24 +213,18 @@ export default {
 				', "end": ' + this.toTime +
 				', "itemId": ' + 0 + // TODO: itemID에 들어갈 값
 				', "date": ' + this.showFocus.replace(/-/g, '') +
-				//', "people": "' + 0 +  TODO: people에 들어갈 값
+				', "people": "' + [] + // TODO: people에 들어갈 값
 				'", "_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		showTimeline: function() {
-			this.retTimeList
-			this.TimeTable = []
-			for (let i = 0; i < 48 * this.productId.length; i++) {
-				this.TimeTable.push({
-					'grey': false,
-					'red': false,
-				})
-			}
+			this.retTimeList()
+			this.testDataset()
 			/*
 			for (item of this.retData) {
 				this.productId.push(item._id)
 				this.productName.push(item.name)
 				for (time of item.occupied) {
-					this.TimeTable[time * productId.length + item._id].grey = true
+					this.TimeTable[time * productId.length + item._id].state = 'occupied'
 				}
 			}
 			*/
@@ -242,36 +235,38 @@ export default {
 		},
 		mouseDown: function(time, item) {
 			this.touching = true
-			this.fromTime = this.dragTime = time - 1
+			this.fromTime = time - 1
 			this.selectItem = item - 1
 			this.testDataset()
 			this.TimeTable[(time - 1) * this.productId.length + (item - 1)].state = 'clickFrom'
 		},
 		mouseDrag: function(time, item) {
 			if (this.touching) {
-				if (this.dragTime < this.fromTime) {
-					if (this.dragTime < time) this.TimeTable[this.dragTime * this.productId.length + this.selectItem].state = 'empty'
-					else this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickDrag'
-				} else if (this.dragTime > this.fromTime) {
-					if (this.dragTime < time) this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickDrag'
-					else this.TimeTable[this.dragTime * this.productId.length + this.selectItem].state = 'empty'
-				} else this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickDrag'
-				this.dragTime = time - 1
+				for (let i in [...Array(this.productId.length * 48).keys()]) { if (this.TimeTable[i].state === 'clickDrag') this.TimeTable[i].state = 'empty' }
+				if (this.fromTime < time - 1) { for (let i = this.fromTime + 1; i < time; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				else if (this.fromTime > time - 1) { for (let i = this.fromTime - 1; i > time - 2; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
 			}
 		},
 		mouseUp: function(time, item) {
 			this.touching = false
-			this.TimeTable[(time - 1) * this.productId.length + (item - 1)].state = 'clickTo'
+			this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickTo'
 		},
 		touchDetect: function(time, item) {
-			if (touching) {
-				touching = false
-				// TODO: touch mouseDown simulation
+			console.log(time)
+			if (this.touching) {
+				this.touching = false
+				if (this.fromTime < time - 1) { for (let i = this.fromTime + 1; i < time - 1; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				else if (this.fromTime > time - 1) { for (let i = this.fromTime - 1; i > time - 1; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickTo'
 			} else {
-				touching = true
-				// TODO: touch mouseUp simulation
+				this.touching = true
+				this.fromTime = time - 1
+				this.selectItem = item - 1
+				for (let i in [...Array(this.productId.length * 48).keys()]) { this.TimeTable[i].state = 'empty' }
+				this.TimeTable[(time - 1) * this.productId.length + (item - 1)].state = 'clickFrom'
 			}
 		},
+		donothing: function () {},
 		classInfo: function (i, j) {
 			switch (this.TimeTable[i * this.productId.length + j].state) {
 				case 'occupied':
@@ -286,18 +281,10 @@ export default {
 				return {}
 			}
 		},
-		getBefore_day: function() {
-			this.today = moment(this.today).subtract(1, 'd')
-		},
-		getNext_day: function() {
-      this.today = moment(this.today).add(1, 'd')
-		},
-		getBefore_mon: function() {
-      this.today = moment(this.today).subtract(1, 'M')
-		},
-		getNext_mon: function() {
-      this.today = moment(this.today).add(1, 'M')
-		}
+		getBefore_day: function() { this.today = moment(this.today).subtract(1, 'd') },
+		getNext_day: function() { this.today = moment(this.today).add(1, 'd') },
+		getBefore_mon: function() { this.today = moment(this.today).subtract(1, 'M') },
+		getNext_mon: function() { this.today = moment(this.today).add(1, 'M') }
 	},
 	computed: {
 	}
