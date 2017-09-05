@@ -29,9 +29,10 @@
 					<v-date-picker v-model="focus" locale="ko-KR" class="hidden-xs-only">
 					</v-date-picker>
 					<v-flex xs12>
-						<v-btn @click.native="showTimeTable = !showTimeTable">showTT</v-btn>
-						<v-btn @click.native="testDataset">testDS</v-btn>
-						<v-btn @click.native="debugSet = !debugSet">showInside</v-btn>
+						<v-btn @click.native="showTimeTable = !showTimeTable">SHOW TT</v-btn>
+						<v-btn @click.native="testDataset">DATASET</v-btn>
+						<v-btn @click.native="debugSet = !debugSet">SHOW TEXT</v-btn>
+						<v-btn @click.native="touchDevice = !touchDevice">TOGGLE TOUCH</v-btn>
 						{{ this.touching }}
 					</v-flex>
 				</v-flex>
