@@ -4,32 +4,30 @@
 			<h2 class="text-center font-exo">Reservation</h2>
 			<v-layout row-md column>
 				<v-flex>
-          <v-flex class="hidden-sm-and-up">
-					<v-flex xs12>
-						<v-btn fab flat small @click="getBefore_mon">
-							<v-icon>keyboard_arrow_left</v-icon>
-						</v-btn>
-						<span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
-						<v-btn fab flat small @click="getNext_mon">
-							<v-icon>keyboard_arrow_right</v-icon>
-						</v-btn>
+					<v-flex class="hidden-sm-and-up">
+						<v-flex xs12>
+							<v-btn fab flat small @click="getBefore_mon">
+								<v-icon>keyboard_arrow_left</v-icon>
+							</v-btn>
+							<span class="indigo--text text--darken-1 headline">{{ today | mon(month_index) }}</span>
+							<v-btn fab flat small @click="getNext_mon">
+								<v-icon>keyboard_arrow_right</v-icon>
+							</v-btn>
+						</v-flex>
+						<v-flex xs12>
+							<v-btn fab flat small @click="getBefore_day">
+								<v-icon>keyboard_arrow_left</v-icon>
+							</v-btn>
+							<v-btn fab class="indigo darken-1 white--text title">{{ today | day(-1) }}</v-btn>
+							<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day }}</v-btn>
+							<v-btn fab class="indigo darken-1 white--text title">{{ today | day(1) }}</v-btn>
+							<v-btn fab flat small @click="getNext_day">
+								<v-icon>keyboard_arrow_right</v-icon>
+							</v-btn>
+						</v-flex>
 					</v-flex>
-					<v-flex xs12>
-						<v-btn fab flat small @click="getBefore_day">
-							<v-icon>keyboard_arrow_left</v-icon>
-						</v-btn>
-						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(-1) }}</v-btn>
-						<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day }}</v-btn>
-						<v-btn fab class="indigo darken-1 white--text title">{{ today | day(1) }}</v-btn>
-						<v-btn fab flat small @click="getNext_day">
-							<v-icon>keyboard_arrow_right</v-icon>
-						</v-btn>
-					</v-flex>
-          </v-flex>
-					<v-date-picker
-	              v-model="focus"
-	              locale="ko-KR" class="hidden-xs-only">
-          </v-date-picker>
+					<v-date-picker v-model="focus" locale="ko-KR" class="hidden-xs-only">
+					</v-date-picker>
 					<v-flex xs12>
 						<v-btn @click.native="showTimeTable = !showTimeTable">showTT</v-btn>
 						<v-btn @click.native="testDataset">testDS</v-btn>
@@ -47,8 +45,8 @@
 									</v-card>
 								</v-layout>
 								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
-									<v-card v-for="j in productId.length" :key="j" @mousedown="mouseDown(i, j)" @mouseup="mouseUp(i, j)" @mouseenter="mouseDrag(i, j)" @touchstart="touchDetect(i, j)" class="pa-1 mx-0 " :class="classInfo(i-1, j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
-										<v-card-text class="caption pa-0">{{ debugSet ? TimeTable[(i-1) * productId.length + j - 1] : '' }}{{debugSet ? ' ' + ((i-1) * productId.length + j - 1) : ''}}</v-card-text>
+									<v-card v-for="j in productId.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1,j-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
+										<v-card-text class="caption pa-0">{{ debugSet ? TimeTable[(i-1)*productId.length+j-1] : '' }}{{debugSet ? ' '+((i-1)*productId.length+j-1) : ''}}</v-card-text>
 									</v-card>
 								</v-layout>
 							</v-flex>
@@ -82,15 +80,10 @@
 				</transition>
 			</v-layout>
 		</v-container>
-    <v-snackbar :timeout="timeout"
-                :top="true"
-                :success="mode === 'success'"
-                :info="mode === 'info'"
-                :warning="mode === 'warning'"
-                v-model="snackbar" class="grey--text text--lighten-3">
-      {{ msg }}
-      <v-btn flat class="white--text" @click.native="snackbar = false">Close</v-btn>
-    </v-snackbar>
+		<v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" v-model="snackbar.show" class="grey--text text--lighten-3">
+			{{ snackbar.msg }}
+			<v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
+		</v-snackbar>
 	</div>
 </template>
 
@@ -102,33 +95,27 @@ export default {
 	components: { VueTimepicker },
 	props: ['date', 'user'],
 	filters: {
-		day: function(val, i) {
-			if (val) {
-				return moment(val).add(i, 'd').format('DD')
-			}
-		},
-		mon: function(val, i) {
-			if (val) {
-				return moment(val).add(i, 'M').format('MM')
-			}
-		}
+		day: (val, i) => val ? moment(val).add(i, 'd').format('DD') : undefined,
+		mon: (val, i) => val ? moment(val).add(i, 'M').format('MM') : undefined
 	},
 	data() {
 		return {
-      msg:'',
-      snackbar: false,
-      timeout: 5000,
-      mode: '',
+			snackbar: {
+				show: false,
+				timeout: 5000,
+				mode: '',
+				msg: '',
+			},
 			focus: null,
 			showTimeTable: true,
 			dialog: false,
-			errMessage: '',
 			retData: [],
 			TimeTable: [],
 			selectItem: null,
 			fromTime: null,
 			toTime: null,
 			touching: false,
+			touchDevice: false,
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName: ['print 1', 'print 2', 'print 3'],
 			people: ['1', '2', '3', '4', '5', '6'],
@@ -149,7 +136,7 @@ export default {
 		}
 	},
 	created() {
-		for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({state: 'empty'})
+		for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
 		if (typeof (this.date) === 'string') {
 			this.focus = new Date(this.date.slice(0, 4),
 				this.date.slice(4, 6) - 1,
@@ -182,31 +169,11 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
-				if (result.success) {
-				  this.mode = 'success'
-          this.msg ='예약되었습니다.'
-          this.snackbar = true
-        }
-				else if (result.code === 0) {
-				  this.mode = 'warning'
-          this.msg ='잘못된 시간값을 입력하셨습니다.'
-          this.snackbar = true
-        }
-				else if (result.code === 1) {
-				  this.mode = 'warning'
-          this.msg ='해당 시간대에 다른 프린터를 이미 예약하셨습니다.'
-          this.snackbar = true
-        }
-				else if (result.code === 2) {
-				  this.mode = 'warning'
-          this.msg ='다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.'
-          this.snackbar = true
-        }
-				else {
-				  this.mode = 'info'
-          this.msg = '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
+				if (result.success !== undefined) this.snackbar = { mode: 'success', msg: '예약되었습니다.', show: true }
+				else if (result.code === 0) this.snackbar = { mode: 'warning', msg: '잘못된 시간값을 입력하셨습니다.', show: true }
+				else if (result.code === 1) this.snackbar = { mode: 'warning', msg: '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', show: true }
+				else if (result.code === 2) this.snackbar = { mode: 'warning', msg: '다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.', show: true }
+				else this.snackbar = { mode: 'info', msg: '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.', show: true }
 				this.showTimeline()
 			}
 			xhr.send('{"start": ' + this.fromTime +
@@ -231,54 +198,57 @@ export default {
 		},
 		testDataset: function() {
 			this.TimeTable = []
-			for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({state: 'empty'})
+			for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
 		},
 		mouseDown: function(time, item) {
-			this.touching = true
-			this.fromTime = time - 1
-			this.selectItem = item - 1
-			this.testDataset()
-			this.TimeTable[(time - 1) * this.productId.length + (item - 1)].state = 'clickFrom'
+			if (!this.touchDevice) {
+				this.touching = true
+				this.fromTime = time
+				this.selectItem = item
+				this.testDataset()
+				this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
+			}
 		},
 		mouseDrag: function(time, item) {
-			if (this.touching) {
+			if (this.touching && !this.touchDevice) {
 				for (let i in [...Array(this.productId.length * 48).keys()]) { if (this.TimeTable[i].state === 'clickDrag') this.TimeTable[i].state = 'empty' }
-				if (this.fromTime < time - 1) { for (let i = this.fromTime + 1; i < time; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
-				else if (this.fromTime > time - 1) { for (let i = this.fromTime - 1; i > time - 2; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				if (this.fromTime < time) { for (let i = this.fromTime + 1; i < time + 1; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				else if (this.fromTime > time) { for (let i = this.fromTime - 1; i > time - 1; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
 			}
 		},
-		mouseUp: function(time, item) {
-			this.touching = false
-			this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickTo'
+		mouseUp: function(time) {
+			if (!this.touchDevice) {
+				this.touching = false
+				this.TimeTable[time * this.productId.length + this.selectItem].state = 'clickTo'
+			}
 		},
 		touchDetect: function(time, item) {
-			console.log(time)
+			this.touchDevice = true
 			if (this.touching) {
+				if (this.fromTime < time) { for (let i = this.fromTime + 1; i < time; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				else if (this.fromTime > time) { for (let i = this.fromTime - 1; i > time; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
+				this.TimeTable[(time) * this.productId.length + this.selectItem].state = 'clickTo'
 				this.touching = false
-				if (this.fromTime < time - 1) { for (let i = this.fromTime + 1; i < time - 1; i++) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
-				else if (this.fromTime > time - 1) { for (let i = this.fromTime - 1; i > time - 1; i--) { if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag' } }
-				this.TimeTable[(time - 1) * this.productId.length + this.selectItem].state = 'clickTo'
 			} else {
+				this.fromTime = time
+				this.selectItem = item
+				for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable[i].state = 'empty'
+				this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
 				this.touching = true
-				this.fromTime = time - 1
-				this.selectItem = item - 1
-				for (let i in [...Array(this.productId.length * 48).keys()]) { this.TimeTable[i].state = 'empty' }
-				this.TimeTable[(time - 1) * this.productId.length + (item - 1)].state = 'clickFrom'
 			}
 		},
-		donothing: function () {},
-		classInfo: function (i, j) {
+		classInfo: function(i, j) {
 			switch (this.TimeTable[i * this.productId.length + j].state) {
 				case 'occupied':
-				return {'grey lighten-2': true}
+					return { 'grey lighten-2': true }
 				case 'clickFrom':
-				return {'red lighten-2': true, 'elevation-3': true}
+					return { 'red lighten-2': true, 'elevation-3': true }
 				case 'clickDrag':
-				return {'red lighten-4': true, 'elevation-3': true}
+					return { 'red lighten-4': true, 'elevation-3': true }
 				case 'clickTo':
-				return {'green lighten-2': true, 'elevation-3': true}
+					return { 'green lighten-2': true, 'elevation-3': true }
 				default:
-				return {}
+					return {}
 			}
 		},
 		getBefore_day: function() { this.today = moment(this.today).subtract(1, 'd') },
@@ -286,8 +256,6 @@ export default {
 		getBefore_mon: function() { this.today = moment(this.today).subtract(1, 'M') },
 		getNext_mon: function() { this.today = moment(this.today).add(1, 'M') }
 	},
-	computed: {
-	}
 }
 </script>
 

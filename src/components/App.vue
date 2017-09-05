@@ -1,12 +1,10 @@
 <template>
-  <v-app id="app" standalone
-  v-touch="{ left: () => {drawer = true}, right: () => {drawer = false} }">
+  <v-app id="app" standalone>
     <v-navigation-drawer
       temporary
       v-model="drawer"
       enable-resize-watcher
       right
-      v-touch="{ left: () => {drawer = true}, right: () => {drawer = false} }"
       overflow
       v-if="!isAdmin">
       <v-list>
