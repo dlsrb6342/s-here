@@ -79,10 +79,6 @@
 				</transition>
 			</v-layout>
 		</v-container>
-		<v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" v-model="snackbar.show" class="grey--text text--lighten-3">
-			{{ snackbar.msg }}
-			<v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
-		</v-snackbar>
 	</div>
 </template>
 
@@ -99,12 +95,6 @@ export default {
 	},
 	data() {
 		return {
-			snackbar: {
-				show: false,
-				timeout: 5000,
-				mode: '',
-				msg: '',
-			},
 			focus: null,
 			showTimeTable: true,
 			dialog: false,
@@ -169,11 +159,11 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
-				if (result.success !== undefined) this.snackbar = { mode: 'success', msg: '예약되었습니다.', show: true }
-				else if (result.code === 0) this.snackbar = { mode: 'warning', msg: '잘못된 시간값을 입력하셨습니다.', show: true }
-				else if (result.code === 1) this.snackbar = { mode: 'warning', msg: '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', show: true }
-				else if (result.code === 2) this.snackbar = { mode: 'warning', msg: '다른 사람이 예약한 시간대입니다.\n다른 시간대를 예약해주세요.', show: true }
-				else this.snackbar = { mode: 'info', msg: '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.', show: true }
+				if (result.success !== undefined) this.$emit('snackbar', '예약되었습니다.', 'success')
+				else if (result.code === 0) this.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'warning')
+				else if (result.code === 1) this.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'warning')
+				else if (result.code === 2) this.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'warning')
+				else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
 				this.showTimeline()
 			}
 			xhr.send('{"start": ' + this.fromTime +
@@ -202,8 +192,7 @@ export default {
 			for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
 			for (let i = 0; i < this.productId.length; i++) {
 				let [j, max] = [Math.floor(Math.random()*48), Math.floor(Math.random()*48)].sort()
-				console.log(j+', '+max)
-				for (; j < max; j++) this.TimeTable[j * this.productId + i].state = 'occupied'
+				for (; j < max; j++) this.TimeTable[j * this.productId.length + i].state = 'occupied'
 			}
 		},
 		mouseDown: function(time, item) {
@@ -237,7 +226,7 @@ export default {
 				this.touching = false
 				if (!this.collision) this.TimeTable[time * this.productId.length + this.selectItem].state = 'clickTo'
 				else {
-					this.snackbar = { show: true, timeout: 5000, mode: 'error', msg: '다른 사람이 예약한 시간대와 겹칩니다.\n다른 시간대를 선택해 주세요.' }
+					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'warning')
 					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
@@ -260,7 +249,7 @@ export default {
 				}
 				if (!this.collision) this.TimeTable[(time) * this.productId.length + this.selectItem].state = 'clickTo'
 				else {
-					this.snackbar = { show: true, timeout: 5000, mode: 'error', msg: '다른 사람이 예약한 시간대와 겹칩니다.\n다른 시간대를 선택해 주세요.' }
+					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
 					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}

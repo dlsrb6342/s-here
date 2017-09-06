@@ -105,7 +105,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <main>
-      <router-view :user="currentUser"></router-view>
+      <router-view :user="currentUser" @snackbar="showSnackbar"></router-view>
     </main>
     <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
@@ -115,21 +115,39 @@
         Powered by S-Hero Project
       </div>
     </v-footer>
+    <v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" :error="snackbar.mode === 'error'" multi-line v-model="snackbar.show" class="grey--text text--lighten-3">
+			{{ snackbar.msg }}
+			<v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
+      <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
+		</v-snackbar>
   </v-app>
 </template>
 
 <script>
 export default {
   name: 'app',
-
   data () {
     return {
+			snackbar: {
+				show: false,
+				timeout: 5000,
+				mode: '',
+				msg: '',
+			},
+      signup: false,
       currentUser: [null, null],
       isAdmin: false,
       drawer: null,
     }
   },
   methods: {
+    showSnackbar: function (showMessage, mode) {
+      this.snackbar.show = true
+      this.snackbar.msg = showMessage
+      this.snackbar.mode = mode
+      if (showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.') this.signup = true
+      else this.signup = false
+    },
     goPage: function (goMessage) { this.$router.push(goMessage) },
     changeUser: user => this.currentUser = user,
     getUser: () => this.currentUser,

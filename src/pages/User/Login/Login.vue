@@ -37,19 +37,6 @@
           </v-card>
         </v-container>
       </v-layout>
-      <v-snackbar :timeout="timeout"
-                  :top="true"
-                  :success="mode === 'success'"
-                  :info="mode === 'info'"
-                  :warning="mode === 'warning'"
-                  :error="mode === 'error'"
-                  :primary="mode === 'primary'"
-                  :secondary="mode === 'secondary'"
-                  v-model="snackbar" class="white--text ">
-        {{ msg }}
-        <v-btn flat v-show="!signup" class="grey--text text--lighten-3" @click.native="snackbar = false">Close</v-btn>
-        <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
-      </v-snackbar>
     </v-container>
 	</div>
 </template>
@@ -71,16 +58,8 @@ export default {
   methods: {
 		goPage: function (goMessage) { this.$router.push(goMessage) },
 		submit: function () {
-			if (this.studentId == '') {
-        this.mode = 'warning'
-        this.msg='학번을 입력해 주세요'
-        this.snackbar = true
-      }
-			else if (this.Password == '') {
-        this.mode = 'warning'
-        this.msg='비밀번호를 입력해 주세요'
-        this.snackbar = true
-      }
+			if (this.studentId == '') this.$emit('snackbar', '학번을 입력해주세요.','warning')
+			else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요', 'warning')
 			else {
 				let xhr = new XMLHttpRequest()
 				xhr.open('POST', '/api/user/login')
@@ -89,32 +68,23 @@ export default {
 					result = JSON.parse(xhr.responseText)
 					this.studentId = ''
 					this.Password = ''
-					if (result.hasOwnProperty('success')) {
-						if (result['success']) this.$emit('setUser', [result['studentId'], result['name']])
-						else {
-						  this.mode = 'warning'
-						  this.msg='이메일 인증이 완료되지 않았습니다.\n킹고 포털 메일함에서 인증 절차를 진행해 주세요.'
-              this.snackbar = true
+					if (result.success === undefined) {
+						if (result.success) {
+              this.$emit('setUser', [result['studentId'], result['name']])
+						  this.$router.push('mainpage')
             }
-						this.$router.push('mainpage')
+						else this.$emit('snackbar', '이메일 인증이 완료되지 않았습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'warning')
 					}
 					else {
-						switch (result['code']) {
+						switch (result.code) {
 							case 0:
-                this.mode = 'error'
-                this.msg='학번 또는 비밀번호가 틀렸습니다.'
-                this.snackbar = true
+                this.$emit('snackbar', '학번 또는 비밀번호가 틀렸습니다.', 'error')
 								break
 							case 1:
-                this.mode = 'warning'
-                this.msg='회원가입을 하셔야만 이용할 수 있는 서비스입니다.\n회원가입 페이지로 이동합니다.'
-								this.signup = true
-                this.snackbar = true
+                this.$emit('snackbar', '회원가입을 하셔야만 이용할 수 있는 서비스입니다.', 'warning')
 								break
 							default:
-                this.mode = 'info'
-                this.msg='알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-                this.snackbar = true
+                this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
 						}
 					}
 				}

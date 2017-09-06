@@ -90,40 +90,17 @@ export default {
   },
   methods: {
     submit: function () {
-      if (this.Email == '') {
-        this.mode = 'warning'
-        this.msg='킹고 이메일 주소를 입력해 주세요.'
-        this.snackbar = true
-      }
-      else if (this.userName == '') {
-        this.mode = 'warning'
-        this.msg='이름을 정확히 입력해 주세요.'
-        this.snackbar = true
-      }
-      else if (this.studentId == '') {
-        this.mode = 'warning'
-        this.msg='학번을 정확히 입력해 주세요.'
-        this.snackbar = true
-      }
-      else if (this.Password == '') {
-        this.mode = 'warning'
-        this.msg='비밀번호를 입력해 주세요'
-        this.snackbar = true
-      }
-      else if (this.Password !== this.Verify) {
-        this.mode = 'warning'
-        this.msg='비밀번호가 일치하지 않습니다.'
-        this.snackbar = true
-        this.Verify = ''
-      }
+      if (this.Email == '') this.$emit('snackbar', '킹고 이메일 주소를 정확히 입력해 주세요.', 'warning')
+      else if (this.userName == '') this.$emit('snackbar', '이름을 정확히 입력해 주세요.', 'warning')
+      else if (this.studentId == '') this.$emit('snackbar', '학번을 정확히 입력해 주세요.', 'warning')
+      else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요.', 'warning')
+      else if (this.Password !== this.Verify) this.$emit('snackbar', '비밀번호가 틀렸습니다.', 'warning')
       else {
         let xhr = new XMLHttpRequest()
         xhr.onreadystatechange = function () {
           let result = JSON.parse(xhr.response)
           if (result.hasOwnProperty('success')) {
-            this.mode = 'success'
-            this.msg='회원가입이 완료되었습니다. 킹고 포털 메일함에서 인증 절차를 진행해 주세요.'
-            this.snackbar = true
+            this.$emit('snackbar', '회원가입이 완료되었습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'success')
             this.Email = ''
             this.studentId = ''
             this.userName = ''
@@ -134,29 +111,19 @@ export default {
           else {
             switch (result.code) {
               case 0:
-                this.mode = 'info'
-                this.msg='스마트카 트랙 이수 학생이 아닙니다. 스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.'
-                this.snackbar = true
+                this.$emit('snackbar', '스마트카 트랙 이수 학생이 아닙니다.<br>스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.', 'info')
                 break
               case 1:
-                this.mode = 'info'
-                this.msg='해당 학번이 존재합니다.'
-                this.snackbar = true
+                this.$emit('snackbar', '해당 학번이 이미 존재합니다.', 'info')
                 break
               case 2:
-                this.mode = 'info'
-                this.msg='비밀번호가 형식에 맞지 않습니다.'
-                this.snackbar = true
+              this.$emit('snackbar', '비밀번호가 형식에 맞지 않습니다.', 'info')
                 break
               case 3:
-                this.mode = 'info'
-                this.msg='등록된 이름과 다른 이름을 입력하셨습니다.\n입력 내용을 확인하시고 이상이 없다면 관리자에게 문의해 주세요.'
-                this.snackbar = true
+                this.$emit('snackbar', '등록된 이름과 다른 이름을 입력하셨습니다.<br>입력하신 이름을 확인하고 이상이 있으면 관리자에게 문의해 주세요.', 'info')
                 break
               default:
-                this.mode = 'info'
-                this.msg='알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-                this.snackbar = true
+                this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
             }
           }
         }

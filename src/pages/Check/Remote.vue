@@ -42,15 +42,6 @@
         </v-layout>
       </v-container>
     </v-container>
-    <v-snackbar :timeout="timeout"
-                :top="true"
-                :success="mode === 'success'"
-                :info="mode === 'info'"
-                :warning="mode === 'warning'"
-                v-model="snackbar" class="grey--text text--lighten-3">
-      {{ msg }}
-      <v-btn flat class="white--text" @click.native="snackbar = false">Close</v-btn>
-    </v-snackbar>
   </div>
 </template>
 
@@ -73,26 +64,10 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
-        if (result.hasOwnProperty('success')) {
-          this.mode = 'success'
-          this.msg = '열렸습니다.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '예약하신 시간대가 아닙니다.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '하드웨어와 연결이 끊어졌습니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
-        else {
-          this.mode = 'info'
-          this.msg = '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
+        if (result.hasOwnProperty('success')) this.$emit('snackbar', '열렸습니다.', 'success')
+        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
     },
@@ -102,26 +77,10 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
-        if (result.hasOwnProperty('success')) {
-          this.mode = 'success'
-          this.msg = '조기 반납되었습니다.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '예약하신 시간대가 아닙니다.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '하드웨어와 연결이 끊어졌습니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
-        else {
-          this.mode = 'info'
-          this.msg = '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
+        if (result.hasOwnProperty('success')) this.$emit('snackbar', '조기반납이 완료되었습니다.', 'success')
+        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
     },
@@ -131,26 +90,10 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
-        if (result.hasOwnProperty('success')) {
-          this.mode = 'success'
-          this.msg = '고장 신고가 접수되었습니다.\n다른 프린터를 예약하여 사용해 주세요.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '잘못된 입력입니다.'
-          this.snackbar = true
-        }
-        else if (result['code'] == 0) {
-          this.mode = 'warning'
-          this.msg = '하드웨어와 연결이 끊어졌습니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
-        else {
-          this.mode = 'info'
-          this.msg = '알 수 없는 오류입니다.\n관리자에게 문의해 주세요.'
-          this.snackbar = true
-        }
+        if (result.hasOwnProperty('success')) this.$emit('snackbar', '고장 신고가 접수되었습니다.<br>다른 프린터를 예약하여 사용해 주세요.', 'success')
+        else if (result['code'] == 0) this.$emit('snackbar', '잘못된 입력입니다.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
     }
