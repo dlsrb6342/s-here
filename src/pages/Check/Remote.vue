@@ -5,37 +5,39 @@
       <v-container class="">
         <v-card class="mb-2 SFhalf-W SFalign-center SFborder">
           <v-select
+            v-bind:items="schedules"
+            item-text="date"
             prepend-icon="schedule"
             class="mt-3 SFhalf-W SFalign-center"></v-select>
         </v-card>
         <v-layout row-sm column justify-space-around class="pt-2">
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat class="SFtall">
-                <v-icon class="SFbtn-lg indigo--text text--lighten-1">lock_open</v-icon>
+              <v-btn flat :disabled="!selected" class="SFtall">
+                <v-icon class="SFbtn-lg indigo--text text--lighten-1" @click.native="sendSignal">lock_open</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
-                <h5 class="btn-caption font-noto grey--text text--darken-1" @click.native="sendSignal">문열림</h5>
+                <h5 class="btn-caption font-noto grey--text text--darken-1">문열림</h5>
               </div>
             </v-card>
           </v-flex>
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat class="SFtall">
-                <v-icon class="SFbtn-lg indigo--text text--lighten-1">directions_run</v-icon>
+              <v-btn flat :disabled="!selected" class="SFtall">
+                <v-icon class="SFbtn-lg indigo--text text--lighten-1" @click.native="earlyReturn">directions_run</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
-                <h5 class="btn-caption font-noto grey--text text--darken-1" @click.native="earlyReturn">조기반납</h5>
+                <h5 class="btn-caption font-noto grey--text text--darken-1">조기반납</h5>
               </div>
             </v-card>
           </v-flex>
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat class="SFtall">
-                <v-icon class="SFbtn-lg indigo--text text--lighten-1">build</v-icon>
+              <v-btn flat :disabled="!selected" class="SFtall">
+                <v-icon class="SFbtn-lg indigo--text text--lighten-1" @click.native="reportToAdmin">build</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
-                <h5 class="btn-caption font-noto grey--text text--darken-1" @click.native="reportToAdmin">고장신고</h5>
+                <h5 class="btn-caption font-noto grey--text text--darken-1">고장신고</h5>
               </div>
             </v-card>
           </v-flex>
@@ -54,7 +56,9 @@ export default {
       snackbar: false,
       timeout: 5000,
       mode: '',
-			isOpen: false
+			isOpen: false,
+      selected: false,
+      schedules: [{text: 'test', date: '2017/09/15'}]
 		}
 	},
 	methods: {

@@ -52,21 +52,32 @@
 									</v-card>
 								</v-layout>
 							</v-flex>
-							<v-dialog v-model="dialog">
-									<v-card class="">
+							<v-dialog v-model="dialog" width="380">
+									<v-card>
 										<v-card-text>
 											<v-flex class="pa-3 SFtimepicker">
 												시작시간
 												<vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat" v-model="defaultStartTime"></vue-timepicker>
 											</v-flex>
 											<v-flex class="pa-3">
-												종료시간
-												<vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat" v-model="defaultEndTime"></vue-timepicker>
+												사용시간
+												<v-slider v-model="toTime" v-bind:min="1" v-bind:max="12" step="1" thumb-label snap></v-slider>
+                        <span class="text-center">{{ toTime * 0.5 }} 시간</span>
 											</v-flex>
-											<v-flex class="pa-3">
-												대여인원
-												<v-select v-bind:items="people" overflow label="1-6"></v-select>
-											</v-flex>
+                      <v-flex class="px-3">
+                        <multiselect v-model="value"
+                                     track-by="ID"
+                                     label="ID"
+                                     placeholder='search memeber ID'
+                                     select-label="check"
+                                     deselect-label="remove"
+                                     :max="6"
+                                     :max-height="110"
+                                     :hide-selected="true"
+                                     :close-on-select="false"
+                                     :multiple="true"
+                                     :options="poeple"></multiselect>
+                      </v-flex>
 										</v-card-text>
 										<v-card-actions>
 											<v-spacer></v-spacer>
@@ -85,9 +96,12 @@
 <script>
 import VueTimepicker from 'vue2-timepicker'
 import moment from 'moment'
+import Multiselect  from 'vue-multiselect'
 export default {
 	name: 'check',
-	components: { VueTimepicker },
+	components: {
+    Multiselect,
+    VueTimepicker },
 	props: ['date', 'user'],
 	filters: {
 		day: (val, i) => val ? moment(val).add(i, 'd').format('DD') : undefined,
@@ -102,13 +116,21 @@ export default {
 			TimeTable: [],
 			selectItem: null,
 			fromTime: null,
-			toTime: null,
+			toTime: 1,
 			touching: false,
 			touchDevice: false,
 			collision: false,
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName: ['print 1', 'print 2', 'print 3'],
-			people: ['1', '2', '3', '4', '5', '6'],
+      value: null,
+			poeple: [
+        { name: '김기환', ID: '2013314573' },
+        { name: '박문기', ID: '2012315373' },
+        { name: '지지민', ID: '2011314583' },
+        { name: '박수아', ID: '2014322573' },
+        { name: '모정수', ID: '2015314573' },
+        { name: '이은영', ID: '2015314573' },
+      ],
 			today: new Date(),
 			date_index: 0,
 			month_index: 0,

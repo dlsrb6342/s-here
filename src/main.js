@@ -3,11 +3,13 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueTimepicker from 'vue2-timepicker'
+import Multiselect from 'vue-multiselect'
 import App from './components/App'
 import router from './router'
 
 Vue.use(Vuetify)
 Vue.use(VueTimepicker)
+Vue.component(Multiselect)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
