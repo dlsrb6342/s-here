@@ -107,6 +107,7 @@
     <main>
       <router-view :user="currentUser" @snackbar="showSnackbar"></router-view>
     </main>
+    <v-alert success value="true">help!</v-alert>
     <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
         <hr><br>
@@ -116,7 +117,7 @@
       </div>
     </v-footer>
     <v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" :error="snackbar.mode === 'error'" multi-line v-model="snackbar.show" class="grey--text text--lighten-3">
-			{{ snackbar.msg }}
+			<div v-html="snackbar.msg" style="text-align: center;"></div>
 			<v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
       <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
 		</v-snackbar>
@@ -194,5 +195,4 @@ export default {
     background-color: white;
     color: #1565c0;
   }
-
 </style>

@@ -69,8 +69,8 @@ export default {
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
         if (result.hasOwnProperty('success')) this.$emit('snackbar', '열렸습니다.', 'success')
-        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'warning')
-        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
@@ -82,8 +82,8 @@ export default {
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
         if (result.hasOwnProperty('success')) this.$emit('snackbar', '조기반납이 완료되었습니다.', 'success')
-        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'warning')
-        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
@@ -95,8 +95,8 @@ export default {
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
         if (result.hasOwnProperty('success')) this.$emit('snackbar', '고장 신고가 접수되었습니다.<br>다른 프린터를 예약하여 사용해 주세요.', 'success')
-        else if (result['code'] == 0) this.$emit('snackbar', '잘못된 입력입니다.', 'warning')
-        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'warning')
+        else if (result['code'] == 0) this.$emit('snackbar', '잘못된 입력입니다.', 'error')
+        else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
       xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')

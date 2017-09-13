@@ -58,8 +58,8 @@ export default {
   methods: {
 		goPage: function (goMessage) { this.$router.push(goMessage) },
 		submit: function () {
-			if (this.studentId == '') this.$emit('snackbar', '학번을 입력해주세요.','warning')
-			else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요', 'warning')
+			if (this.studentId == '') this.$emit('snackbar', '학번을 입력해주세요.','error')
+			else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요', 'error')
 			else {
 				let xhr = new XMLHttpRequest()
 				xhr.open('POST', '/api/user/login')
@@ -73,7 +73,7 @@ export default {
               this.$emit('setUser', [result['studentId'], result['name']])
 						  this.$router.push('mainpage')
             }
-						else this.$emit('snackbar', '이메일 인증이 완료되지 않았습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'warning')
+						else this.$emit('snackbar', '이메일 인증이 완료되지 않았습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'error')
 					}
 					else {
 						switch (result.code) {
@@ -81,7 +81,7 @@ export default {
                 this.$emit('snackbar', '학번 또는 비밀번호가 틀렸습니다.', 'error')
 								break
 							case 1:
-                this.$emit('snackbar', '회원가입을 하셔야만 이용할 수 있는 서비스입니다.', 'warning')
+                this.$emit('snackbar', '회원가입을 하셔야만 이용할 수 있는 서비스입니다.', 'error')
 								break
 							default:
                 this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')

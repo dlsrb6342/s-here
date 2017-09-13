@@ -26,19 +26,20 @@
 							</v-btn>
 						</v-flex>
 					</v-flex>
-					<v-date-picker v-model="focus" locale="ko-KR" class="hidden-xs-only">
-					</v-date-picker>
+					<div @mouseup="showTimeline()">
+						<v-date-picker v-model="focus" locale="ko-KR" class="hidden-xs-only">
+						</v-date-picker>
+					</div>
 					<v-flex xs12>
-						<v-btn @click.native="showTimeTable = !showTimeTable">SHOW TT</v-btn>
-						<v-btn @click.native="testDataset">DATASET</v-btn>
-						<v-btn @click.native="debugSet = !debugSet">SHOW TEXT</v-btn>
-						<v-btn @click.native="touchDevice = !touchDevice">TOGGLE TOUCH</v-btn>
-						<v-btn primary dark @click.native.stop="dialog = true">dialog</v-btn>
-						{{ this.touching }}
+						<v-btn @click.native="testDataset" v-show="isDebug">DATASET</v-btn>
+						<v-btn @click.native="debugSet = !debugSet" v-show="isDebug">SHOW TEXT</v-btn>
+						<v-btn @click.native="touchDevice = !touchDevice" v-show="isDebug">TOGGLE TOUCH</v-btn>
+						<v-btn primary dark @click.native.stop="dialog = true" v-show="isDebug">dialog</v-btn>
+						focus: {{ this.focus }}
 					</v-flex>
 				</v-flex>
 				<transition name="slide-fade">
-					<v-flex lg8 v-if="showTimeTable">
+					<v-flex lg8>
 						<v-layout row-md column>
 							<v-flex lg9 class="elevation-10 white px-2 SFtable">
 								<v-layout row child-flex class="pa-0 my-1">
@@ -110,7 +111,6 @@ export default {
 	data() {
 		return {
 			focus: null,
-			showTimeTable: true,
 			dialog: false,
 			retData: [],
 			TimeTable: [],
@@ -144,36 +144,39 @@ export default {
 				mm: '00',
 			},
 			myFormat: 'HH:mm',
-			debugSet: false,
+			debugSet: true,
+			isDebug: false,
 		}
 	},
 	created() {
-		for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
-		if (typeof (this.date) === 'string') {
+		for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'notload' })
+		if (typeof(this.date) === 'string') {
 			this.focus = new Date(this.date.slice(0, 4),
 				this.date.slice(4, 6) - 1,
 				this.date.slice(6, 8),
 				new Date().getHours())
-			this.retTimeList()
+			this.showTimeline()
 		}
 	},
 	methods: {
 		goPage: function(goMessage) { this.$router.push(goMessage) },
 		retTimeList: function() {
-			this.showTimeTable = true
-			let xhr = new XMLHttpRequest()
-			xhr.open('GET', '/api/item/' + this.focus.toJSON().slice(0, 10).replace(/-/g, ""))
-			xhr.setRequestHeader("Content-type", "application/json")
-			xhr.onreadystatechange = function() {
-				let result = JSON.parse(xhr.responseText)
-				if (result.hasOwnProperty('data')) {
-					this.retData = result.data
-				} else {
-					this.retData = []
-					alert('조회에 실패하였습니다.')
+			if (this.focus !== null) {
+				let xhr = new XMLHttpRequest()
+				xhr.open('GET', '/api/item/' + this.focus.slice(0, 10).replace(/-/g, ""))
+				xhr.setRequestHeader("Content-type", "application/json")
+				xhr.onreadystatechange = function() {
+					console.log(xhr.responseText)
+					let result = JSON.parse(xhr.responseText)
+					if (result.hasOwnProperty('data')) {
+						this.retData = result.data
+					} else {
+						this.retData = []
+						alert('조회에 실패하였습니다.')
+					}
 				}
+				xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 			}
-			xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
 		},
 		reserve: function() {
 			let xhr = new XMLHttpRequest()
@@ -182,10 +185,10 @@ export default {
 			xhr.onreadystatechange = function() {
 				let result = JSON.parse(xhr.responseText)
 				if (result.success !== undefined) this.$emit('snackbar', '예약되었습니다.', 'success')
-				else if (result.code === 0) this.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'warning')
-				else if (result.code === 1) this.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'warning')
-				else if (result.code === 2) this.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'warning')
-				else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+				else if (result.code === 0) this.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'error')
+				else if (result.code === 1) this.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'error')
+				else if (result.code === 2) this.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
+				else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
 				this.showTimeline()
 			}
 			xhr.send('{"start": ' + this.fromTime +
@@ -199,15 +202,15 @@ export default {
 			this.retTimeList()
 			this.TimeTable = []
 			for (let i in [...Array(this.productId.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
-			/*
-			for (item of this.retData) {
-				this.productId.push(item._id)
-				this.productName.push(item.name)
-				for (time of item.occupied) {
-					this.TimeTable[time * productId.length + item._id].state = 'occupied'
+			if (!this.isDebug) {
+				for (item of this.retData) {
+					this.productId.push(item._id)
+					this.productName.push(item.name)
+					for (time of item.occupied) {
+						this.TimeTable[time * productId.length + item._id].state = 'occupied'
+					}
 				}
 			}
-			*/
 		},
 		testDataset: function() {
 			this.TimeTable = []
@@ -222,8 +225,8 @@ export default {
 				this.touching = true
 				this.fromTime = time
 				this.selectItem = item
-				for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
-				this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
+				for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+				if (this.TimeTable[time * this.productId.length + item].state !== 'occupied' && this.TimeTable[time * this.productId.length + item].state !== 'notload') this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
 			}
 		},
 		mouseDrag: function(time, item) {
@@ -232,13 +235,13 @@ export default {
 				if (this.fromTime < time) {
 					for (let i = this.fromTime + 1; i < time + 1; i++) {
 						if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied') this.collision = true
+						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productId.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 				else if (this.fromTime > time) {
 					for (let i = this.fromTime - 1; i > time - 1; i--) {
 						if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied') this.collision = true
+						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productId.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 			}
@@ -246,10 +249,13 @@ export default {
 		mouseUp: function(time) {
 			if (!this.touchDevice) {
 				this.touching = false
-				if (!this.collision) this.TimeTable[time * this.productId.length + this.selectItem].state = 'clickTo'
+				if (!this.collision && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'notload') {
+					this.TimeTable[time * this.productId.length + this.selectItem].state = 'clickTo'
+					if (!this.isDebug) this.dialog = true
+				}
 				else {
-					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'warning')
-					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
+					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
+					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
 			}
@@ -260,32 +266,39 @@ export default {
 				if (this.fromTime < time) {
 					for (let i = this.fromTime + 1; i < time; i++) {
 						if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied') this.collision = true
+						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productId.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 				else if (this.fromTime > time) {
 					for (let i = this.fromTime - 1; i > time; i--) {
 						if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productId.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied') this.collision = true
+						else if (this.TimeTable[i * this.productId.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productId.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
-				if (!this.collision) this.TimeTable[(time) * this.productId.length + this.selectItem].state = 'clickTo'
+				if (!this.collision && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'notload') {
+					this.TimeTable[(time) * this.productId.length + this.selectItem].state = 'clickTo'
+					if (!this.isDebug) this.dialog = true
+				}
 				else {
 					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
-					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
+					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
 				this.touching = false
 			} else {
 				this.fromTime = time
 				this.selectItem = item
-				for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied') this.TimeTable[i].state = 'empty'
-				this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
-				this.touching = true
+				for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+				if (this.TimeTable[time * this.productId.length + item].state !== 'occupied' && this.TimeTable[time * this.productId.length + item].state !== 'notload') {
+					this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
+					this.touching = true
+				}
+				else this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
 			}
 		},
 		classInfo: function(i, j) {
 			switch (this.TimeTable[i * this.productId.length + j].state) {
+				case 'notload':
 				case 'occupied':
 					return { 'grey lighten-2': true }
 				case 'clickFrom':
