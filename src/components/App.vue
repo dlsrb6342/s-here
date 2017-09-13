@@ -99,6 +99,9 @@
         <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('mainpage')">
           로그아웃
         </v-btn>
+        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('admin')">
+          관리자
+        </v-btn>
       </v-toolbar-items>
       <v-toolbar-items class="hidden-md-and-up">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -191,7 +194,7 @@ export default {
     color: #1565c0 !important;
   }
   .SFnav {
-    height: 100px;
+    height: 80px;
     background-color: white;
     color: #1565c0;
   }
