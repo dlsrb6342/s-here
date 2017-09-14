@@ -67,12 +67,6 @@ export default new Router({
       name: 'Confirm',
       component: Confirm,
     },
-    {
-      path: '*',
-      redirect: {
-        name: 'MainPage'
-      }
-    }
   ],
   mode: 'history'
 })
