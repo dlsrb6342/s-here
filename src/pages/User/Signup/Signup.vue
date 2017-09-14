@@ -117,7 +117,7 @@ export default {
                 this.$emit('snackbar', '해당 학번이 이미 존재합니다.', 'warning')
                 break
               case 2:
-              this.$emit('snackbar', '비밀번호가 형식에 맞지 않습니다.', 'error')
+                this.$emit('snackbar', '비밀번호가 형식에 맞지 않습니다.', 'error')
                 break
               case 3:
                 this.$emit('snackbar', '등록된 이름과 다른 이름을 입력하셨습니다.<br>입력하신 이름을 확인하고 이상이 있으면 관리자에게 문의해 주세요.', 'warning')
@@ -134,7 +134,7 @@ export default {
           password: this.Password,
           name: this.userName,
           email: this.Email,
-          _csrf: document.cookie.split(_csrf=)[1]
+          _csrf: document.cookie.split("_csrf=")[1]
         })
       }
     },
