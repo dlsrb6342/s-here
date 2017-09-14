@@ -26,7 +26,7 @@
             <v-data-table
               v-bind:headers="headers"
               :items="items"
-              class="elevation-1">
+              class="">
               <template slot="items" scope="props">
                 <td>{{ props.item.time }}</td>
                 <td v-for="i in 7" :key="i" v-bind:class="{ red: props.item.reservation[i-1]==1 }" class="lighten-3 text-right">{{ props.item.name[i-1] }}</td>
@@ -68,9 +68,9 @@ export default {
     return{
       focus: null,
       menu: null,
-      notice: 'Current Notice',
-      msg: '',
-      headers: [
+      notice: 'Current Notice', /* 현재 notice 내용 */
+      msg: '', /* 수정될 notice 내용 */
+      headers: [ /* time table header 양식 */
         { text: 'Time', align: 'left', sortable:false },
         { text: 'Print1', sortable:false },
         { text: 'Print2', sortable:false },
@@ -80,18 +80,24 @@ export default {
         { text: 'Table1', sortable:false },
         { text: 'Table2', sortable:false }
       ],
+      /* time table data 양식
+      *  time: 예약 시간 (hh:mm)
+      *  name: 예약자 이름 (없을 시 공백)
+      *  ID: 학번(보류)
+      *  reservation: item 예약 여부 (0~4: print1~5, 5~6: table1~2
+      *  */
       items: [
-        { time: '09:00', name: ['예약1','','','','','예약2',''], ID: [], reservation: [1, 0, 0, 0, 0, 1, 0]},
-        { time: '09:30', name: ['예약1','예약3','','','','',''], ID: [], reservation: [1, 1, 0, 0, 0, 0, 0]},
-        { time: '10:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 0, 1, 0, 0, 0]},
-        { time: '10:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 1, 0, 1]},
-        { time: '11:00', name: ['','','','','','',''], ID: [], reservation: [1, 0, 1, 1, 0, 0, 1]},
-        { time: '11:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 0, 0, 1]},
-        { time: '12:00', name: ['','','','','','',''], ID: [], reservation: [0, 1, 0, 0, 0, 0, 1]},
-        { time: '12:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 1, 0, 0, 1]},
-        { time: '13:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 0, 0, 0]},
-        { time: '13:30', name: ['','','','','','',''], ID: [], reservation: [1, 0, 1, 1, 0, 0, 0]},
-        { time: '14:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 0, 0, 1, 0, 1]},
+        { time: '09:00', name: ['예약1','','','','','예약2',''], ID: [], reservation: [1, 0, 0, 0, 0, 1, 0] },
+        { time: '09:30', name: ['예약1','예약3','','','','',''], ID: [], reservation: [1, 1, 0, 0, 0, 0, 0] },
+        { time: '10:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 0, 1, 0, 0, 0] },
+        { time: '10:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 1, 0, 1] },
+        { time: '11:00', name: ['','','','','','',''], ID: [], reservation: [1, 0, 1, 1, 0, 0, 1] },
+        { time: '11:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 0, 0, 1] },
+        { time: '12:00', name: ['','','','','','',''], ID: [], reservation: [0, 1, 0, 0, 0, 0, 1] },
+        { time: '12:30', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 1, 0, 0, 1] },
+        { time: '13:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 1, 0, 0, 0, 0] },
+        { time: '13:30', name: ['','','','','','',''], ID: [], reservation: [1, 0, 1, 1, 0, 0, 0] },
+        { time: '14:00', name: ['','','','','','',''], ID: [], reservation: [0, 0, 0, 0, 1, 0, 1] },
         ]
     }
   }
