@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-layout column>
         <v-flex xs12 md12>
-          <v-card class="SFfloating">
+          <v-card class="SFfloating elevation-15">
             <v-card-media
               src="../../static/img/bg2.jpg"
               height="300px"
@@ -23,8 +23,8 @@
 
           </v-card>
         </v-flex>
-        <v-layout row>
-          <v-flex xs12 md4 v-for="i in 3" :key="i" class="my-2">
+        <v-layout row-md column>
+          <v-flex xs12 md4 v-for="i in 3" :key="i" class="my-3 elevation-8">
             <v-card>
               <v-card-media
                 :src="cards[i-1].src" height="200px"></v-card-media>
@@ -66,5 +66,11 @@ export default {
     font-weight: 400;
     line-height: 3;
     font-family: 'Noto Sans KR', sans-serif;
+  }
+  @media only screen and (max-width: 599px) {
+    .about-desc{
+      font-size: 12px;
+      line-height: 1.5;
+    }
   }
 </style>
