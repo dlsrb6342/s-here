@@ -52,19 +52,21 @@ export default {
 	name: 'remote',
 	data () {
 		return {
-      msg:'',
-      snackbar: false,
-      timeout: 5000,
-      mode: '',
 			isOpen: false,
       selected: false,
       schedules: [{text: 'test', date: '2017/09/15'}]
 		}
 	},
+  created () {
+    this.retReserveList()
+  },
 	methods: {
+    retReserveList: function () {
+      // TODO: complete function
+    },
 		sendSignal: function () {
-      var xhr = new XMLHttpRequest()
-			xhr.open('GET', '/api/open/')
+      let xhr = new XMLHttpRequest()
+			xhr.open('GET', '/api/remote/' + 'door')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
@@ -73,11 +75,11 @@ export default {
         else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
       }
-      xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
     },
     earlyReturn: function () {
-      var xhr = new XMLHttpRequest()
-			//xhr.open('POST', '/api/reserve/')
+      let xhr = new XMLHttpRequest()
+			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
@@ -86,11 +88,12 @@ export default {
         else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
-      xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+      
     },
     reportToAdmin: function () {
-      var xhr = new XMLHttpRequest()
-			//xhr.open('POST', '/api/reserve/')
+      let xhr = new XMLHttpRequest()
+			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         let result = JSON.parse(xhr.responseText)
@@ -99,7 +102,8 @@ export default {
         else if (result['code'] == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
         else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
-      xhr.send('{"_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+      // TODO: _id add
     }
 	}
 }

@@ -110,7 +110,6 @@
     <main>
       <router-view :user="currentUser" @snackbar="showSnackbar"></router-view>
     </main>
-    <v-alert success value="true">help!</v-alert>
     <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
         <hr><br>

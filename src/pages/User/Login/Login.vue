@@ -88,9 +88,11 @@ export default {
 						}
 					}
 				}
-				xhr.send('{"studentId":"' + this.studentId +
-								 '","password":"' + this.Password +
-          			 '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+				xhr.send({
+          studentId: this.studentId,
+					password: this.Password,
+          _csrf: document.cookie.split("_csrf=")[1]
+        })
 			}
 		},
   }

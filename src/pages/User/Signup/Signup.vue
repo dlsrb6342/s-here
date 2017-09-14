@@ -129,11 +129,13 @@ export default {
         }
         xhr.open('POST', '/api/user/signup')
         xhr.setRequestHeader("Content-type", "application/json")
-        xhr.send('{"studentId": "' + this.studentId +
-          '","password": "' + this.Password +
-          '","name": "' + this.userName +
-          '","email": "' + this.Email +
-          '","_csrf": "' + document.cookie.split("_csrf=")[1] + '"}')
+        xhr.send({
+          studentId: this.studentId,
+          password: this.Password,
+          name: this.userName,
+          email: this.Email,
+          _csrf: document.cookie.split(_csrf=)[1]
+        })
       }
     },
     cancel: function () {
