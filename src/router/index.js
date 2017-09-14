@@ -21,6 +21,10 @@ export default new Router({
       component: MainPage
     },
     {
+      path: '/mainpage',
+      redirect: '/'
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: Admin

@@ -28,11 +28,8 @@
           <v-card class="elevation-10">
             <v-card-title>
               <div>
-                <h3 class="headline mb-0">Notice</h3>
-                <div class="caption">
-                  09:00 ~ 23:00<br>
-                  테이블 2 | 프린터 5 | 공구함 5
-                </div>
+                <h3 class="headline mb-0">공지사항</h3>
+                <div class="caption" v-html="msg"></div>
               </div>
             </v-card-title>
             <v-card-media
@@ -71,21 +68,29 @@ export default {
   data () {
     return {
       items: [
-        {
-          src: '../../static/img/bg1.jpg'
-        },
-        {
-          src: '../../static/img/bg2.jpg'
-        },
-        {
-          src: '../../static/img/bg3.jpg'
-        }
+        { src: '../../static/img/bg1.jpg' },
+        { src: '../../static/img/bg2.jpg' },
+        { src: '../../static/img/bg3.jpg' }
       ],
-      msg: 'Welcome to Your Vue.js App'
+      msg: '<br>스마트카 팩토리 예약 시스템에 오신 것을 환영합니다.'
     }
   },
+  created () {
+    //setInterval(this.retNotice(), 10000)
+  },
   methods: {
-    goPage: function (goMessage) { this.$router.push(goMessage) }
+    goPage: function (goMessage) { this.$router.push(goMessage) },
+    retNotice: function () {
+      let xhr = new XMLHttpRequest()
+			xhr.open('GET', '/api/admin/notice') // TODO: fix correct url and request
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.onreadystatechange = function() {
+			  let result = JSON.parse(xhr.responseText)
+        this.msg = result.hasOwnProperty('data') ? result.data : '공지사항 조회에 실패하였습니다.'
+        // TODO: fit type of responseText
+			}
+			xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+    }
   }
 }
 </script>

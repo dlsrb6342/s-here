@@ -148,8 +148,7 @@ export default {
       this.snackbar.show = true
       this.snackbar.msg = showMessage
       this.snackbar.mode = mode
-      if (showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.') this.signup = true
-      else this.signup = false
+      this.signup = showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.' ? true : false
     },
     goPage: function (goMessage) { this.$router.push(goMessage) },
     changeUser: user => this.currentUser = user,
@@ -157,7 +156,7 @@ export default {
     logoutUser: () => {
       let xhr = new XMLHttpRequest()
       xhr.open('POST', '/api/user/logout')
-      xhr.send(null)
+      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
       xhr.onreadystatechange = function () {
         let result = JSON.parse(xhr.responseText)
         if (result.hasOwnProperty('success')) this.currentUser = [null, null]

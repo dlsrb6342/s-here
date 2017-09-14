@@ -53,7 +53,7 @@
 									</v-card>
 								</v-layout>
 							</v-flex>
-							<v-dialog v-model="dialog" width="380">
+							<v-dialog v-model="dialog" width="380" persistent>
 									<v-card>
 										<v-card-text>
 											<v-flex class="pa-3 SFtimepicker">
@@ -77,12 +77,13 @@
                                      :hide-selected="true"
                                      :close-on-select="false"
                                      :multiple="true"
-                                     :options="poeple"></multiselect>
+                                     :options="people"></multiselect>
                       </v-flex>
 										</v-card-text>
 										<v-card-actions>
 											<v-spacer></v-spacer>
-											<v-btn flat class="indigo--text" @click="reserve">Submit</v-btn>
+											<v-btn flat class="indigo--text" @click.native="dialog = false">CANCEL</v-btn>
+											<v-btn flat class="indigo--text" @click.native="reserve">SUBMIT</v-btn>
 										</v-card-actions>
 									</v-card>
 								</v-dialog>
@@ -102,7 +103,8 @@ export default {
 	name: 'check',
 	components: {
     Multiselect,
-    VueTimepicker },
+		VueTimepicker
+	},
 	props: ['date', 'user'],
 	filters: {
 		day: (val, i) => val ? moment(val).add(i, 'd').format('DD') : undefined,
@@ -123,7 +125,7 @@ export default {
 			productId: ['print 1', 'print 2', 'print 3'],
 			productName: ['print 1', 'print 2', 'print 3'],
       value: null,
-			poeple: [
+			people: [
         { name: '김기환', ID: '2013314573' },
         { name: '박문기', ID: '2012315373' },
         { name: '지지민', ID: '2011314583' },
@@ -144,7 +146,7 @@ export default {
 				mm: '00',
 			},
 			myFormat: 'HH:mm',
-			debugSet: true,
+			debugSet: false,
 			isDebug: false,
 		}
 	},
@@ -172,7 +174,7 @@ export default {
 						this.retData = result.data
 					} else {
 						this.retData = []
-						alert('조회에 실패하였습니다.')
+						this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 					}
 				}
 				xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
@@ -195,7 +197,7 @@ export default {
 				start: this.fromTime,
 				end: this.toTime,
 				itemId: 0, // TODO: itemID에 들어갈 값
-				date: this.showFocus.replace(/-/g, ''),
+				date: this.focus.replace(/-/g, ''),
 				people: [], // TODO: people에 들어갈 값
 				_csrf: document.cookie.split("_csrf=")[1]
 			})
@@ -260,7 +262,7 @@ export default {
 					}
 				}
 				else {
-					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
+					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
@@ -286,7 +288,7 @@ export default {
 					if (!this.isDebug) this.dialog = true
 				}
 				else {
-					this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
+					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
@@ -299,7 +301,7 @@ export default {
 					this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
 					this.touching = true
 				}
-				else this.$emit('snackbar', '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.', 'error')
+				else this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 			}
 		},
 		classInfo: function(i, j) {
@@ -308,11 +310,11 @@ export default {
 				case 'occupied':
 					return { 'grey lighten-2': true }
 				case 'clickFrom':
-					return { 'red lighten-2': true, 'elevation-3': true }
+					return { 'red lighten-3': true, 'elevation-3': true }
 				case 'clickDrag':
 					return { 'red lighten-4': true, 'elevation-3': true }
 				case 'clickTo':
-					return { 'green lighten-2': true, 'elevation-3': true }
+					return { 'red lighten-3': true, 'elevation-3': true }
 				default:
 					return {}
 			}
@@ -320,7 +322,11 @@ export default {
 		getBefore_day: function() { this.today = moment(this.today).subtract(1, 'd') },
 		getNext_day: function() { this.today = moment(this.today).add(1, 'd') },
 		getBefore_mon: function() { this.today = moment(this.today).subtract(1, 'M') },
-		getNext_mon: function() { this.today = moment(this.today).add(1, 'M') }
+		getNext_mon: function() { this.today = moment(this.today).add(1, 'M') },
+		querySelections: function () {
+			// for async selection
+			// TODO: edit multiselect tag and fill this function
+		},
 	},
 }
 </script>
