@@ -170,9 +170,8 @@ export default {
 				xhr.onreadystatechange = function() {
 					console.log(xhr.responseText)
 					let result = JSON.parse(xhr.responseText)
-					if (result.hasOwnProperty('data')) {
-						this.retData = result.data
-					} else {
+					if (result.data !== undefined) this.retData = result.data
+					else {
 						this.retData = []
 						this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 					}
@@ -286,8 +285,7 @@ export default {
 				if (!this.collision && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.productId.length + this.selectItem].state !== 'notload') {
 					this.TimeTable[(time) * this.productId.length + this.selectItem].state = 'clickTo'
 					if (!this.isDebug) this.dialog = true
-				}
-				else {
+				} else {
 					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 					for (let i in [...Array(this.productId.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
@@ -300,8 +298,7 @@ export default {
 				if (this.TimeTable[time * this.productId.length + item].state !== 'occupied' && this.TimeTable[time * this.productId.length + item].state !== 'notload') {
 					this.TimeTable[time * this.productId.length + item].state = 'clickFrom'
 					this.touching = true
-				}
-				else this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
+				} else this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 			}
 		},
 		classInfo: function(i, j) {

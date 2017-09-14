@@ -97,9 +97,11 @@ export default {
       else if (this.Password !== this.Verify) this.$emit('snackbar', '비밀번호가 틀렸습니다.', 'warning')
       else {
         let xhr = new XMLHttpRequest()
+        xhr.open('POST', '/api/user/signup')
+        xhr.setRequestHeader("Content-type", "application/json")
         xhr.onreadystatechange = function () {
           let result = JSON.parse(xhr.response)
-          if (result.hasOwnProperty('success')) {
+          if (result.success !== undefined) {
             this.$emit('snackbar', '회원가입이 완료되었습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'success')
             this.Email = ''
             this.studentId = ''
@@ -127,8 +129,6 @@ export default {
             }
           }
         }
-        xhr.open('POST', '/api/user/signup')
-        xhr.setRequestHeader("Content-type", "application/json")
         xhr.send({
           studentId: this.studentId,
           password: this.Password,

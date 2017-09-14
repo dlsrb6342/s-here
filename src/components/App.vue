@@ -159,7 +159,7 @@ export default {
       xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
       xhr.onreadystatechange = function () {
         let result = JSON.parse(xhr.responseText)
-        if (result.hasOwnProperty('success')) this.currentUser = [null, null]
+        if (result.success !== undefined) this.currentUser = [null, null]
       }
     },
   }

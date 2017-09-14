@@ -86,7 +86,7 @@ export default {
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
 			  let result = JSON.parse(xhr.responseText)
-        this.msg = result.hasOwnProperty('data') ? result.data : '공지사항 조회에 실패하였습니다.'
+        this.msg = result.data !== undefined ? result.data : '공지사항 조회에 실패하였습니다.'
         // TODO: fit type of responseText
 			}
 			xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
