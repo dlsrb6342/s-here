@@ -1,6 +1,5 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import WebSocket from 'ws';
 import { Reservation, Trouble } from '../models';
 import { getNow } from '../utils';
 

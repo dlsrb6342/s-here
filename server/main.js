@@ -84,7 +84,6 @@ app.use((req, res, next) => {
   return next();
 });
 
-
 app.get(/^.(?!ws).*$/, (req, res) => {
   res.sendFile(path.resolve(__dirname, './../dist/index.html'));
 });

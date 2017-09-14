@@ -22,7 +22,7 @@ router.get('/:date', (req, res) => {
       code: 0
     });
   }
-  Item.find({}, (err, items) => {
+  Item.find({ active: true }, (err, items) => {
     if (err) throw err;
     let itemList = [], itemMap = {};
     items.forEach(item => {

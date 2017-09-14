@@ -1,4 +1,4 @@
-Item inquiry API
+Item API
     •   아이템 목록 ( /api/item/:date GET )
       return value :
         요청에 성공했을 때 : { 

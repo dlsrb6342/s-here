@@ -1,0 +1,14 @@
+Admin API
+    •   고장신고 내역 ( /api/admin/trouble GET )
+      return value :
+        요청에 성공했을 때 : { data: [{reservation : , content : , time : } ... ] }
+
+
+    •   공지사항 수정 ( /api/admin/notice POST )
+      content type : application/json
+        {
+          content :  
+        }
+
+      return value :
+        요청에 성공했을 때 : { success : true }

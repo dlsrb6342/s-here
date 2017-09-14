@@ -217,7 +217,7 @@ router.post('/lostpw', (req, res) => {
         code: 1
       });
     };
-    let newPassword = uuidV4();
+    let newPassword = uuidV4().replace(/-/g, "");
     user.password = user.generateHash(newPassword);
     let mailOptions = {
       from: config.mailer.from,

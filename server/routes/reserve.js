@@ -121,7 +121,8 @@ router.delete('/:_id', (req, res) => {
         code: 1
       });
     };
-    if (reservation.user.toString() !== req.session.userInfo._id) {
+    if (reservation.user.toString() !== req.session.userInfo._id
+                          || req.session.userInfo.name !== 'admin') {
       return res.status(403).json({
         error: "NOT_ALLOWED",
         code: 2

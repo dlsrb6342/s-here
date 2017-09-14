@@ -1,4 +1,4 @@
-User API
+Remote API
     •   Open ( /api/remote/:rasp GET )
       rasp : 하드웨어 이름(door)
       return value :
