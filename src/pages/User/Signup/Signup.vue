@@ -48,7 +48,6 @@
                     label="Enter your Password"
                     v-model="Password"
                     :rules="[v => !!v || '비밀번호를 입력해 주세요.', v => v && v.length >= 9 || '비밀번호는 최소 9자 입니다.']"
-                    name="pw"
                     min="9"
                     :append-icon="e1 ? 'visibility' : 'visibility_off'"
                     :append-icon-cb="() => (e1 = !e1)"
@@ -64,7 +63,6 @@
                     v-model="Verify"
                     label="Verify your Password"
                     :rules="pwdRules"
-                    name="pw"
                     min="9"
                     :type='password'
                     name="verify"
