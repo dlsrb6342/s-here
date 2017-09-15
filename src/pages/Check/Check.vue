@@ -164,42 +164,46 @@ export default {
 		goPage: function(goMessage) { this.$router.push(goMessage) },
 		retTimeList: function() {
 			if (this.focus !== null) {
-				let xhr = new XMLHttpRequest()
+				let xhr = new XMLHttpRequest(), self = this
 				xhr.open('GET', '/api/item/' + this.focus.slice(0, 10).replace(/-/g, ""))
 				xhr.setRequestHeader("Content-type", "application/json")
 				xhr.onreadystatechange = function() {
-					console.log(xhr.responseText)
-					let result = JSON.parse(xhr.responseText)
-					if (result.data !== undefined) this.retData = result.data
-					else {
-						this.retData = []
-						this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
+					if (xhr.readyState === XMLHttpRequest.DONE) {
+						console.log(xhr.responseText)
+						let result = JSON.parse(xhr.responseText)
+						if (result.data !== undefined) this.retData = result.data
+						else {
+							self.retData = []
+							self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
+						}
 					}
 				}
-				xhr.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
+				xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
 			}
 		},
 		reserve: function() {
-			let xhr = new XMLHttpRequest()
+			let xhr = new XMLHttpRequest(), self = this
 			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-				let result = JSON.parse(xhr.responseText)
-				if (result.success !== undefined) this.$emit('snackbar', '예약되었습니다.', 'success')
-				else if (result.code === 0) this.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'error')
-				else if (result.code === 1) this.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'error')
-				else if (result.code === 2) this.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
-				else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
-				this.showTimeline()
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					let result = JSON.parse(xhr.responseText)
+					if (result.success !== undefined) self.$emit('snackbar', '예약되었습니다.', 'success')
+					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'error')
+					else if (result.code === 1) self.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'error')
+					else if (result.code === 2) self.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
+					else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
+					self.showTimeline()
+				}
 			}
-			xhr.send('{'+
-				'start: "'+this.fromTime+'",'+
-				'end: '+this.toTime+','+
-				'itemId: '+0+','+ // TODO: itemID에 들어갈 값
-				'date: '+this.focus.replace(/-/g, '')+','+
-				'people: '+[]+','+ // TODO: people에 들어갈 값
-				'_csrf: '+document.cookie.split("_csrf=")[1]
-			+'}')
+			xhr.send(JSON.stringify({
+				start: this.fromTime,
+				end: this.toTime,
+				itemId: 0, // TODO: itemID에 들어갈 값
+				date: this.focus.replace(/-/g, ''),
+				people: [], // TODO: people에 들어갈 값
+				_csrf: document.cookie.split("_csrf=")[1]
+			}))
 		},
 		showTimeline: function() {
 			this.retTimeList()

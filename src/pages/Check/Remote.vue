@@ -65,45 +65,51 @@ export default {
       // TODO: complete function
     },
 		sendSignal: function () {
-      let xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), self = this
 			xhr.open('GET', '/api/remote/' + 'door')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-        let result = JSON.parse(xhr.responseText)
-        if (result.success !== undefined) this.$emit('snackbar', '열렸습니다.', 'success')
-        else if (result.code == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
-        else if (result.code == 1) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
-        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          if (result.success !== undefined) self.$emit('snackbar', '열렸습니다.', 'success')
+          else if (result.code == 0) self.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
+          else if (result.code == 1) self.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
+          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
+        }
       }
-      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
     },
     earlyReturn: function () {
-      let xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), self = this
 			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-        let result = JSON.parse(xhr.responseText)
-        if (result.success !== undefined) this.$emit('snackbar', '조기반납이 완료되었습니다.', 'success')
-        else if (result.code == 0) this.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
-        else if (result.code == 0) this.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
-        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          if (result.success !== undefined) self.$emit('snackbar', '조기반납이 완료되었습니다.', 'success')
+          else if (result.code == 0) self.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
+          else if (result.code == 0) self.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
+          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+        }
       }
-      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
       
     },
     reportToAdmin: function () {
-      let xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), self = this
 			xhr.open('POST', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-        let result = JSON.parse(xhr.responseText)
-        if (result.success !== undefined) this.$emit('snackbar', '고장 신고가 접수되었습니다.<br>다른 프린터를 예약하여 사용해 주세요.', 'success')
-        else if (result['code'] == 0) this.$emit('snackbar', '잘못된 입력입니다.', 'error')
-        else if (result['code'] == 1) this.$emit('snackbar', '존재하지 않는 예약입니다.', 'error')
-        else if (result['code'] == 2) this.$emit('snackbar', '예약한 회원과 요청한 회원이 다릅니다.<br>신청한 사람이 신고해 주시기 바랍니다.', 'error')
-        else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          if (result.success !== undefined) self.$emit('snackbar', '고장 신고가 접수되었습니다.<br>다른 프린터를 예약하여 사용해 주세요.', 'success')
+          else if (result['code'] == 0) self.$emit('snackbar', '잘못된 입력입니다.', 'error')
+          else if (result['code'] == 1) self.$emit('snackbar', '존재하지 않는 예약입니다.', 'error')
+          else if (result['code'] == 2) self.$emit('snackbar', '예약한 회원과 요청한 회원이 다릅니다.<br>신청한 사람이 신고해 주시기 바랍니다.', 'error')
+          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+        }
       }
-      xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
       // TODO: _id add
     }
 	}

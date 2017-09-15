@@ -5,57 +5,76 @@
       <v-layout row>
         <v-container fluid class="pa-2 mb-5">
           <v-card class="elevation-5 SFcontent-box SFalign-center">
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="Email"
-                  name="E-mail"
-                  label="E-mail address"
-                  suffix=""
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="studentId"
-                  name="student_id"
-                  label="Student ID"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="userName"
-                  name="user_Name"
-                  label="Name"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="Password"
-                  name="password"
-                  label="Password"
-                  type="password"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="Verify"
-                  name="verify"
-                  label="Password Again"
-                  type="password"
-                ></v-text-field>
-              </v-flex>
-            </v-layout>
-            <v-layout row justify-space-around>
-              <v-btn flat @click="submit">Submit</v-btn>
-            </v-layout>
+            <v-form v-model="valid" lazy-validation ref="form">
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    label="E-mail address"
+                    v-model="Email"
+                    :rules="[v => !!v || '이메일을 입력해 주세요.', v => v && v.split('@').length == 2 && (v.split('.').length == 2 || v.split('.').length == 3) || '잘못된 이메일입니다.']"
+                    required
+                    name="E-mail"
+                    suffix=""
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    label="Student ID"
+                    v-model="studentId"
+                    :rules="[v => !!v || '학번을 입력해 주세요.', v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                    :counter="10"
+                    required
+                    name="student_id"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    label="Name"
+                    v-model="userName"
+                    :rules="[v => !!v || '이름을 입력해 주세요.']"
+                    :counter="10"
+                    required
+                    name="user_Name"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    label="Enter your Password"
+                    v-model="Password"
+                    :rules="[v => !!v || '비밀번호를 입력해 주세요.', v => v && v.length >= 9 || '비밀번호는 최소 9자 입니다.']"
+                    name="pw"
+                    min="9"
+                    :append-icon="e1 ? 'visibility' : 'visibility_off'"
+                    :append-icon-cb="() => (e1 = !e1)"
+                    :type="e1 ? 'password' : 'text'"
+                    name="password"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              {{ this.password }}
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="Verify"
+                    label="Verify your Password"
+                    :rules="pwdRules"
+                    name="pw"
+                    min="9"
+                    :type='password'
+                    name="verify"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+              <v-layout row justify-space-around>
+                <v-btn flat @click="submit">Submit</v-btn>
+              </v-layout>
+            </v-form>
           </v-card>
         </v-container>
       </v-layout>
@@ -68,6 +87,9 @@ export default {
   name: 'signup',
   data () {
     return {
+      valid: false,
+      e1: true,
+      pwdRules: [v => !!v || '비밀번호를 다시 입력해 주세요.', v => v && this.password == v || '비밀번호가 일치하지 않습니다.'],
       Email: '',
       userName: '',
       studentId: '',
@@ -76,59 +98,61 @@ export default {
     }
   },
   methods: {
-    emitSnackbar: function (sendMessage, mode) { this.$emit('snackbar', sendMessage, mode) },
     goPage: function(goMessage) { this.$router.push(goMessage) },
     submit: function () {
-      if (this.Email == '') this.emitSnackbar('킹고 이메일 주소를 정확히 입력해 주세요.', 'warning')
-      else if (this.userName == '') this.emitSnackbar('이름을 정확히 입력해 주세요.', 'warning')
-      else if (this.studentId == '') this.emitSnackbar('학번을 정확히 입력해 주세요.', 'warning')
-      else if (this.Password == '') this.emitSnackbar('비밀번호를 입력해 주세요.', 'warning')
-      else if (this.Password !== this.Verify) this.emitSnackbar('비밀번호가 틀렸습니다.', 'warning')
-      else {
-        let xhr = new XMLHttpRequest()
+      /*
+      if (this.Email == '') this.$emit('snackbar', '킹고 이메일 주소를 정확히 입력해 주세요.', 'warning')
+      else if (this.userName == '') this.$emit('snackbar', '이름을 정확히 입력해 주세요.', 'warning')
+      else if (this.studentId == '') this.$emit('snackbar', '학번을 정확히 입력해 주세요.', 'warning')
+      else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요.', 'warning')
+      else if (this.Password !== this.Verify) this.$emit('snackbar', '비밀번호가 틀렸습니다.', 'warning')
+      else*/ if (this.$refs.form.validate()) {
+        let xhr = new XMLHttpRequest(), self = this
         xhr.open('POST', '/api/user/signup')
         xhr.setRequestHeader("Content-type", "application/json")
         
         xhr.onreadystatechange = function () {
-          let result = JSON.parse(xhr.responseText)
-          if (result.success !== undefined) {
-            this.emitSnackbar('회원가입이 완료되었습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'success')
-            this.Email = ''
-            this.studentId = ''
-            this.userName = ''
-            this.Password = ''
-            this.Verify = ''
-            this.goPage('mainpage')
-          }
-          else {
-            switch (result.code) {
-              case 0:
-                this.emitSnackbar('스마트카 트랙 이수 학생이 아닙니다.<br>스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.', 'info')
-                break
-              case 1:
-                this.emitSnackbar('해당 학번이 이미 존재합니다.', 'warning')
-                break
-              case 2:
-                this.emitSnackbar('비밀번호가 형식에 맞지 않습니다.', 'error')
-                break
-              case 3:
-                this.emitSnackbar('등록된 이름과 다른 이름을 입력하셨습니다.<br>입력하신 이름을 확인하고 이상이 있으면 관리자에게 문의해 주세요.', 'warning')
-                break
-              default:
-                this.emitSnackbar('알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            let result = JSON.parse(xhr.responseText)
+            if (result.success !== undefined) {
+              self.$emit('snackbar', '회원가입이 완료되었습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'success')
+              self.Email = ''
+              self.studentId = ''
+              self.userName = ''
+              self.Password = ''
+              self.Verify = ''
+              self.goPage('mainpage')
+            }
+            else {
+              switch (result.code) {
+                case 0:
+                  self.$emit('snackbar', '스마트카 트랙 이수 학생이 아닙니다.<br>스마트카 트랙 이수 학생이라면 관리자에게 문의해 주세요.', 'info')
+                  break
+                case 1:
+                  self.$emit('snackbar', '해당 학번이 이미 존재합니다.', 'warning')
+                  break
+                case 2:
+                  self.$emit('snackbar', '비밀번호가 형식에 맞지 않습니다.', 'error')
+                  break
+                case 3:
+                  self.$emit('snackbar', '등록된 이름과 다른 이름을 입력하셨습니다.<br>입력하신 이름을 확인하고 이상이 있으면 관리자에게 문의해 주세요.', 'warning')
+                  break
+                default:
+                  self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+              }
             }
           }
         }
         
-        /*
-        console.log({
+        
+        console.log(JSON.stringify({
           studentId: this.studentId,
           password: this.Password,
           name: this.userName,
           email: this.Email,
           _csrf: document.cookie.split("_csrf=")[1]
-        })
-        */
+        }))
+        /*
         console.log('{'+
           '"studentId":"'+ this.studentId+'",'+
           '"password":"'+ this.Password+'",'+
@@ -136,14 +160,8 @@ export default {
           '"email":"'+ this.Email+'",'+
           '"_csrf":"'+ document.cookie.split("_csrf=")[1]+
         '"}')
-        xhr.send(
-        '{'+
-          '"studentId":"'+ this.studentId+'",'+
-          '"password":"'+ this.Password+'",'+
-          '"name":"'+ this.userName+'",'+
-          '"email":"'+ this.Email+'",'+
-          '"_csrf":"'+ document.cookie.split("_csrf=")[1]+
-        '"}')
+        */
+        xhr.send(JSON.stringify({ studentId: this.studentId, password: this.Password, name: this.userName, email: this.Email, _csrf: document.cookie.split("_csrf=")[1] }))
         
       }
     },

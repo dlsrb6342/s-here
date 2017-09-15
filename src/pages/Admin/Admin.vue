@@ -107,35 +107,36 @@ export default {
     },
     retTimeTableList: function () {
       // xhr: reservation list retriever, xhr2: item id retriever
-      let xhr = new XMLHttpRequest(), xhr2 = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), xhr2 = new XMLHttpRequest(), self = this
 			xhr.open('GET', '/api/reserve/')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-				console.log(xhr.responseText)
-				let result = JSON.parse(xhr.responseText)
-				if (result.success !== undefined) {
-					this.retData = result.data
-				} else {
-					this.retData = []
-					this.$emit('snackbar', 'DB 조회 실패. 서버 관리자에게 문의바람.', 'error')
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          if (result.success !== undefined) {
+            self.retData = result.data
+          } else {
+            self.retData = []
+            self.$emit('snackbar', 'DB 조회 실패. 서버 관리자에게 문의바람.', 'error')
+          }
         }
-        
       }
       xhr2.open('GET', '/api/item/' + new Date().toJSON().slice(0,10).replace(/-/g,''))
 			xhr2.setRequestHeader("Content-type", "application/json")
 			xhr2.onreadystatechange = function() {
-				console.log(xhr.responseText)
-        this.headers = []
-				if (JSON.parse(xhr2.responseText).data !== undefined) {
-          for (let data of JSON.parse(xhr2.responseText).data) {
-            this.header.push({ text: data.name, sortable: false })
-            this.itemData.push(data)
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          this.headers = []
+          if (JSON.parse(xhr2.responseText).data !== undefined) {
+            for (let data of JSON.parse(xhr2.responseText).data) {
+              self.header.push({ text: data.name, sortable: false })
+              self.itemData.push(data)
+            }
           }
+          else self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
         }
-				else this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
-			}
-			xhr.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
-			xhr2.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
+      }
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1]}))
+      xhr2.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1]}))
     },
   },
 }

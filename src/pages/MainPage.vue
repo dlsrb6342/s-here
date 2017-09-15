@@ -81,15 +81,17 @@ export default {
   methods: {
     goPage: function (goMessage) { this.$router.push(goMessage) },
     retNotice: function () {
-      let xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), self = this
 			xhr.open('GET', '/api/admin/notice') // TODO: fix correct url and request
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-			  let result = JSON.parse(xhr.responseText)
-        this.msg = result.data !== undefined ? result.data : '공지사항 조회에 실패하였습니다.'
-        // TODO: fit type of responseText
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          self.msg = result.data !== undefined ? result.data : '공지사항 조회에 실패하였습니다.'
+          // TODO: fit type of responseText
+        }
 			}
-			xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+			xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
     }
   }
 }

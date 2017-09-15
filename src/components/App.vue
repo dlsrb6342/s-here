@@ -154,12 +154,15 @@ export default {
     changeUser: user => this.currentUser = user,
     getUser: () => this.currentUser,
     logoutUser: () => {
-      let xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest(), self = this
       xhr.open('POST', '/api/user/logout')
-      xhr.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
+      xhr.send(JSON.stringify({_csrf: document.cookie.split("_csrf=")[1] }))
       xhr.onreadystatechange = function () {
-        let result = JSON.parse(xhr.responseText)
-        if (result.success !== undefined) this.currentUser = [null, null]
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          console.log(xhr.responseText)
+          let result = JSON.parse(xhr.responseText)
+          if (result.success !== undefined) self.currentUser = [null, null]
+        }
       }
     },
   }
