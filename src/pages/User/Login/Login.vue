@@ -70,7 +70,7 @@ export default {
 					this.Password = ''
 					if (result.success === undefined) {
 						if (result.success) {
-              this.$emit('setUser', [result['studentId'], result['name']])
+              this.$emit('setUser', [result['student;;Id'], result['name']])
 						  this.$router.push('mainpage')
             }
 						else this.$emit('snackbar', '이메일 인증이 완료되지 않았습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'error')
@@ -88,11 +88,11 @@ export default {
 						}
 					}
 				}
-				xhr.send({
-          studentId: this.studentId,
-					password: this.Password,
-          _csrf: document.cookie.split("_csrf=")[1]
-        })
+				xhr.send('{'+
+          '"studentId": "'+this.studentId+'",'+
+					'"password": "'+this.Password+'",'+
+          '"_csrf": "'+document.cookie.split("_csrf=")[1]+
+        '"}')
 			}
 		},
   }

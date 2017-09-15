@@ -176,7 +176,7 @@ export default {
 						this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 					}
 				}
-				xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
+				xhr.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
 			}
 		},
 		reserve: function() {
@@ -192,14 +192,14 @@ export default {
 				else this.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
 				this.showTimeline()
 			}
-			xhr.send({
-				start: this.fromTime,
-				end: this.toTime,
-				itemId: 0, // TODO: itemID에 들어갈 값
-				date: this.focus.replace(/-/g, ''),
-				people: [], // TODO: people에 들어갈 값
-				_csrf: document.cookie.split("_csrf=")[1]
-			})
+			xhr.send('{'+
+				'start: "'+this.fromTime+'",'+
+				'end: '+this.toTime+','+
+				'itemId: '+0+','+ // TODO: itemID에 들어갈 값
+				'date: '+this.focus.replace(/-/g, '')+','+
+				'people: '+[]+','+ // TODO: people에 들어갈 값
+				'_csrf: '+document.cookie.split("_csrf=")[1]
+			+'}')
 		},
 		showTimeline: function() {
 			this.retTimeList()

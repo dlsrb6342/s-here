@@ -134,8 +134,8 @@ export default {
         }
 				else this.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 			}
-			xhr.send({ _csrf: document.cookie.split("_csrf=")[1] })
-			xhr2.send({ _csrf: document.cookie.split("_csrf=")[1] })
+			xhr.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
+			xhr2.send('{ "_csrf": "'+document.cookie.split("_csrf=")[1]+'" }')
     },
   },
 }
