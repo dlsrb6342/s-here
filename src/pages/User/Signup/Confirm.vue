@@ -28,8 +28,6 @@ export default {
         }
       }
     }
-    console.log(this.$route.query.token)
-    console.log(document.cookie.split("_csrf=")[1])
     xhr.send(JSON.stringify({ token: this.$route.query.token, _csrf: document.cookie.split("_csrf=")[1] }))
   }
 }

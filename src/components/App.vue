@@ -159,7 +159,6 @@ export default {
       xhr.send(JSON.stringify({_csrf: document.cookie.split("_csrf=")[1] }))
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
-          console.log(xhr.responseText)
           let result = JSON.parse(xhr.responseText)
           if (result.success !== undefined) self.currentUser = [null, null]
         }

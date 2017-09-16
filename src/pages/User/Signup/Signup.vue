@@ -13,7 +13,8 @@
                     v-model="Email"
                     :rules="[v => !!v || '이메일을 입력해 주세요.', v => v && v.split('@').length == 2 && (v.split('.').length == 2 || v.split('.').length == 3) || '잘못된 이메일입니다.']"
                     required
-                    name="E-mail"
+                    autofocus
+                    validate-on-blur="true"
                     suffix=""
                   ></v-text-field>
                 </v-flex>
@@ -26,7 +27,7 @@
                     :rules="[v => !!v || '학번을 입력해 주세요.', v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
                     :counter="10"
                     required
-                    name="student_id"
+                    validate-on-blur="true"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -36,9 +37,8 @@
                     label="Name"
                     v-model="userName"
                     :rules="[v => !!v || '이름을 입력해 주세요.']"
-                    :counter="10"
                     required
-                    name="user_Name"
+                    validate-on-blur="true"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -52,7 +52,7 @@
                     :append-icon="e1 ? 'visibility' : 'visibility_off'"
                     :append-icon-cb="() => (e1 = !e1)"
                     :type="e1 ? 'password' : 'text'"
-                    name="password"
+                    validate-on-blur="true"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -64,8 +64,7 @@
                     label="Verify your Password"
                     :rules="pwdRules"
                     min="9"
-                    :type='password'
-                    name="verify"
+                    :type="password"
                   ></v-text-field>
                 </v-flex>
               </v-layout>
@@ -87,7 +86,7 @@ export default {
     return {
       valid: false,
       e1: true,
-      pwdRules: [v => !!v || '비밀번호를 다시 입력해 주세요.', v => v && this.password == v || '비밀번호가 일치하지 않습니다.'],
+      pwdRules: [v => !!v || '비밀번호를 다시 입력해 주세요.', v => v && this.Password == v || '비밀번호가 일치하지 않습니다.'],
       Email: '',
       userName: '',
       studentId: '',
@@ -98,13 +97,7 @@ export default {
   methods: {
     goPage: function(goMessage) { this.$router.push(goMessage) },
     submit: function () {
-      /*
-      if (this.Email == '') this.$emit('snackbar', '킹고 이메일 주소를 정확히 입력해 주세요.', 'warning')
-      else if (this.userName == '') this.$emit('snackbar', '이름을 정확히 입력해 주세요.', 'warning')
-      else if (this.studentId == '') this.$emit('snackbar', '학번을 정확히 입력해 주세요.', 'warning')
-      else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요.', 'warning')
-      else if (this.Password !== this.Verify) this.$emit('snackbar', '비밀번호가 틀렸습니다.', 'warning')
-      else*/ if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         let xhr = new XMLHttpRequest(), self = this
         xhr.open('POST', '/api/user/signup')
         xhr.setRequestHeader("Content-type", "application/json")
@@ -141,24 +134,6 @@ export default {
             }
           }
         }
-        
-        
-        console.log(JSON.stringify({
-          studentId: this.studentId,
-          password: this.Password,
-          name: this.userName,
-          email: this.Email,
-          _csrf: document.cookie.split("_csrf=")[1]
-        }))
-        /*
-        console.log('{'+
-          '"studentId":"'+ this.studentId+'",'+
-          '"password":"'+ this.Password+'",'+
-          '"name":"'+ this.userName+'",'+
-          '"email":"'+ this.Email+'",'+
-          '"_csrf":"'+ document.cookie.split("_csrf=")[1]+
-        '"}')
-        */
         xhr.send(JSON.stringify({ studentId: this.studentId, password: this.Password, name: this.userName, email: this.Email, _csrf: document.cookie.split("_csrf=")[1] }))
         
       }
