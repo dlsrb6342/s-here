@@ -26,10 +26,7 @@
 							</v-btn>
 						</v-flex>
 					</v-flex>
-					<div @mouseup="showTimeline()">
-						<v-date-picker v-model="focus" locale="ko-KR" class="hidden-xs-only">
-						</v-date-picker>
-					</div>
+					<v-date-picker actions v-model="focus" locale="ko-KR"  class="hidden-xs-only" @click.native="retTimeList()"></v-date-picker>
 					<v-flex xs12>
 						<v-btn @click.native="testDataset" v-show="isDebug">DATASET</v-btn>
 						<v-btn @click.native="debugSet = !debugSet" v-show="isDebug">SHOW TEXT</v-btn>
@@ -169,11 +166,18 @@ export default {
 				xhr.setRequestHeader("Content-type", "application/json")
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState === XMLHttpRequest.DONE) {
+						console.log(xhr.responseText)
 						let result = JSON.parse(xhr.responseText)
 						if (result.data !== undefined) this.retData = result.data
 						else {
 							self.retData = []
-							self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
+							switch (result.code) {
+								case -3:
+								self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
+								break
+								default:
+								self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
+							}
 						}
 					}
 				}

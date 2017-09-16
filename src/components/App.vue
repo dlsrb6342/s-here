@@ -120,8 +120,9 @@
     </v-footer>
     <v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" :error="snackbar.mode === 'error'" multi-line v-model="snackbar.show" class="grey--text text--lighten-3">
 			<div v-html="snackbar.msg" style="text-align: center;"></div>
-			<v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
       <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
+      <v-btn flat v-show="login" class="grey--text text--lighten-3" @click="goPage('login')">Log In</v-btn>
+      <v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
 		</v-snackbar>
   </v-app>
 </template>
@@ -138,6 +139,7 @@ export default {
 				msg: '',
 			},
       signup: false,
+      login: false,
       currentUser: [null, null],
       isAdmin: false,
       drawer: null,
@@ -149,6 +151,7 @@ export default {
       this.snackbar.msg = showMessage
       this.snackbar.mode = mode
       this.signup = showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.' ? true : false
+      this.login = showMessage === '로그인 하셔야만 이용하실 수 있습니다.' ? true : false
     },
     goPage: function (goMessage) { this.$router.push(goMessage) },
     changeUser: user => this.currentUser = user,
