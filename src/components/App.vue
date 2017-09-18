@@ -6,14 +6,15 @@
       enable-resize-watcher
       right
       overflow
-      v-if="!isAdmin">
+      width="65%"
+      v-if="!isAdmin" class="SFdrawer">
       <v-list>
         <v-list-tile @click.native="goPage('mainpage')">
           <v-list-tile-action>
             <v-icon large>dashboard</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
+            <v-list-tile-title>메인</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click.native="goPage('about')">
@@ -21,7 +22,7 @@
             <v-icon large>question_answer</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>About</v-list-tile-title>
+            <v-list-tile-title>소개</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click.native="goPage('check')">
@@ -29,7 +30,7 @@
             <v-icon large>event</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Book</v-list-tile-title>
+            <v-list-tile-title>공간예약</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click.native="goPage('remote')">
@@ -37,7 +38,7 @@
             <v-icon large>settings_remote</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Smart Key</v-list-tile-title>
+            <v-list-tile-title>스마트키</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click.native="goPage('contact')">
@@ -45,7 +46,7 @@
             <v-icon large>call</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>contact</v-list-tile-title>
+            <v-list-tile-title>문의사항</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-spacer></v-spacer>
@@ -54,7 +55,7 @@
             <v-icon large>input</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Sign in</v-list-tile-title>
+            <v-list-tile-title>로그인</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-if="!this.currentUser[0]" @click.native="goPage('signup')">
@@ -62,15 +63,15 @@
             <v-icon large>assignment</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Sing up</v-list-tile-title>
+            <v-list-tile-title>회원가입</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile v-if="this.currentUser[0]" @click.native="goPage('signup')">
+        <v-list-tile v-if="this.currentUser[0]" @click.native="logoutUser()">
           <v-list-tile-action>
             <v-icon large>directions_run</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Sing out</v-list-tile-title>
+            <v-list-tile-title>로그아웃</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -215,5 +216,10 @@ export default {
     height: 80px;
     background-color: white;
     color: #1565c0;
+  }
+  @media only screen and (max-width: 599px){
+    .SFdrawer{
+      width: 65%;
+    }
   }
 </style>
