@@ -97,7 +97,7 @@
         <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] == null" @click.native="goPage('login')">
           로그인
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] !== null" @click.native="goPage('mainpage')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] !== null" @click.native="logoutUser()">
           로그아웃
         </v-btn>
         <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] == 'admin'" @click.native="goPage('admin')">
@@ -163,7 +163,10 @@ export default {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
-          if (result.hasOwnPropery('success')) self.currentUser = [null, null]
+          if (result.hasOwnProperty('success')) {
+            self.currentUser = [null, null]
+            self.goPage('mainpage')
+          }
         }
       }
     },

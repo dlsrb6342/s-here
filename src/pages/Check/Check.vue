@@ -26,60 +26,35 @@
 							</v-btn>
 						</v-flex>
 					</v-flex>
-					<v-date-picker actions v-model="focus" locale="ko-KR" class="hidden-xs-only" @click.native="retTimeList()"></v-date-picker>
+					<v-date-picker actions v-model="focus" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
 					<v-flex xs12 v-show="isDebug">
 						<v-btn @click.native="testDataset">DATASET</v-btn>
 						<v-btn @click.native="showStyl = !showStyl">SHOW TEXT</v-btn>
 						<v-btn @click.native="touchDevice = !touchDevice">TOGGLE TOUCH</v-btn>
 						<v-btn primary dark @click.native.stop="dialog = true">dialog</v-btn>
 						<br>
-						{{ selToTimeMin }}
+						{{ focus }}
 					</v-flex>
 				</v-flex>
 				<transition name="slide-fade">
-					<v-flex lg8>
+					<v-flex lg8 v-show="product.length != 0">
 						<v-layout row-md column>
 							<v-flex lg9 class="elevation-10 white px-2 SFtable">
 								<v-layout row child-flex class="pa-0 my-1">
-									<v-card v-for="(item, j) in productName" :key="j" class="pa-1 my-1 mx-0">
+									<v-card v-for="(item, j) in product.name" :key="j" class="pa-1 my-1 mx-0">
 										<v-card-text class="pa-0">{{ item }}</v-card-text>
 									</v-card>
 								</v-layout>
 								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
-									<v-card v-for="j in productName.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1,j-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
-										<v-card-text class="caption pa-0">{{ showStyl ? TimeTable[(i-1)*productName.length+j-1] : '' }}{{showStyl ? ' '+((i-1)*productName.length+j-1) : ''}}</v-card-text>
+									<v-card v-for="j in product.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1,j-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
+										<v-card-text class="caption pa-0">{{ showStyl ? TimeTable[(i-1)*product.length+j-1] : '' }}{{showStyl ? ' '+((i-1)*product.length+j-1) : ''}}</v-card-text>
 									</v-card>
 								</v-layout>
 							</v-flex>
 							<v-dialog v-model="dialog" width="480" persistent>
 								<v-card>
-									<v-card-title class="headline text-md-center">{{ productName[selectItem] }}</v-card-title>
+									<v-card-title class="headline text-md-center">{{ product.name[selectItem] }}</v-card-title>
 									<v-card-text>
-										<!--
-												<v-flex class="pa-3 SFtimepicker">
-													시작시각
-													<vue-timepicker hide-clear-button :minute-interval="30" :format="myFormat" v-model="defaultStartTime"></vue-timepicker>
-												</v-flex>
-												<v-flex class="pa-3">
-													사용시간
-													<v-slider v-model="toTime" v-bind:min="1" v-bind:max="12" step="1" thumb-label snap></v-slider>
-	                        <span class="text-center">{{ toTime * 0.5 }} 시간</span>
-												</v-flex>
-	                      <v-flex class="px-3">
-	                        <multiselect v-model="value"
-	                                     track-by="ID"
-	                                     label="ID"
-	                                     placeholder='search memeber ID'
-	                                     select-label="check"
-	                                     deselect-label="remove"
-	                                     :max="6"
-	                                     :max-height="110"
-	                                     :hide-selected="true"
-	                                     :close-on-select="false"
-	                                     :multiple="true"
-	                                     :options="people"></multiselect>
-	                      </v-flex>
-												-->
 										<v-layout row wrap>
 											<v-flex xs5><v-select label="시작 시각" :items="hourItems" v-model="selFromTimeHour" item-text="hour"></v-select></v-flex>
 											<v-flex xs5><v-select :items="minItems" v-model="selFromTimeMin" item-text="min"></v-select></v-flex>
@@ -131,7 +106,11 @@ export default {
 			touching: false,
 			touchDevice: false,
 			collision: false,
-			productName: ['print 1', 'print 2', 'print 3'],
+			product: {
+				length: 0,
+				id: [],
+				name: [],
+			},
 			value: null,
 			hourItems: [
 				{ hour: '오전 12시', value: 0 }, { hour: '오전 01시', value: 2 }, { hour: '오전 02시', value: 4 },
@@ -156,7 +135,7 @@ export default {
 				{ name: '모정수', ID: '2015314573' },
 				{ name: '이은영', ID: '2015314573' },
 			],
-			today: new Date(),
+			today: null,
 			date_index: 0,
 			month_index: 0,
 			Day: null,
@@ -178,7 +157,7 @@ export default {
 		},
 	},
 	created() {
-		for (let i in [...Array(this.productName.length * 48).keys()]) this.TimeTable.push({ state: 'notload' })
+		for (let i in [...Array(this.product.length * 48).keys()]) this.TimeTable.push({ state: 'notload' })
 		if (typeof (this.date) === 'string') {
 			this.focus = new Date(this.date.slice(0, 4),
 				this.date.slice(4, 6) - 1,
@@ -188,15 +167,30 @@ export default {
 		}
 	},
 	methods: {
-		retTimeList: function() {
+		showTimeline: function() {
 			if (this.focus !== null) {
 				let xhr = new XMLHttpRequest(), self = this
 				xhr.open('GET', '/api/item/' + this.focus.slice(0, 10).replace(/-/g, ""))
 				xhr.setRequestHeader("Content-type", "application/json")
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState === XMLHttpRequest.DONE) {
+						self.product = { length: 0, id: [], name: [], }
 						let result = JSON.parse(xhr.responseText)
-						if (result.data !== undefined) this.retData = result.data
+						if (result.hasOwnProperty('data')) {
+							self.retData = result.data
+							self.TimeTable = []
+							for (let item of result.data) {
+								self.product.length += 1
+								self.product.id.push(item._id)
+								self.product.name.push(item.name)
+							}
+							for (let i in [...Array(self.product.length * 48).keys()]) self.TimeTable.push({ state: 'empty' })
+							for (let item of result.data) {
+								for (let time of item.occupied) {
+									self.TimeTable[parseInt(time.toString().slice(8)) * self.product.length + self.product.id.indexOf(item._id)].state = 'occupied'
+								}
+							}
+						}
 						else {
 							self.retData = []
 							switch (result.code) {
@@ -211,7 +205,7 @@ export default {
 				}
 				xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
 			}
-		},
+		},	
 		reserve: function() {
 			let xhr = new XMLHttpRequest(), self = this
 			xhr.open('POST', '/api/reserve/')
@@ -227,33 +221,29 @@ export default {
 					self.showTimeline()
 				}
 			}
+			console.log(JSON.stringify({
+				start: this.fromTime,
+				end: this.toTime,
+				itemId: this.product.id[this.selectItem],
+				date: this.focus.replace(/-/g, ''),
+				people: [], // TODO: 사용자 목록 생성
+				_csrf: document.cookie.split("_csrf=")[1]
+			}))
 			xhr.send(JSON.stringify({
 				start: this.fromTime,
 				end: this.toTime,
-				itemId: this.selectItem,
+				itemId: this.product.id[this.selectItem],
 				date: this.focus.replace(/-/g, ''),
 				people: [], // TODO: 사용자 목록 생성
 				_csrf: document.cookie.split("_csrf=")[1]
 			}))
 		},
-		showTimeline: function() {
-			this.retTimeList()
-			this.TimeTable = []
-			for (let i in [...Array(this.productName.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
-			for (item of this.retData) {
-				this.productName.push(item._id)
-				this.productName.push(item.name)
-				for (time of item.occupied) {
-					this.TimeTable[time * productName.length + item._id].state = 'occupied'
-				}
-			}
-		},
 		testDataset: function() {
 			this.TimeTable = []
-			for (let i in [...Array(this.productName.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
-			for (let i = 0; i < this.productName.length; i++) {
+			for (let i in [...Array(this.product.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
+			for (let i = 0; i < this.product.length; i++) {
 				let [j, max] = [Math.floor(Math.random() * 48), Math.floor(Math.random() * 48)].sort()
-				for (; j < max; j++) this.TimeTable[j * this.productName.length + i].state = 'occupied'
+				for (; j < max; j++) this.TimeTable[j * this.product.length + i].state = 'occupied'
 			}
 		},
 		mouseDown: function(time, item) {
@@ -261,23 +251,23 @@ export default {
 				this.touching = true
 				this.fromTime = time
 				this.selectItem = item
-				for (let i in [...Array(this.productName.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
-				if (this.TimeTable[time * this.productName.length + item].state !== 'occupied' && this.TimeTable[time * this.productName.length + item].state !== 'notload') this.TimeTable[time * this.productName.length + item].state = 'clickFrom'
+				for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+				if (this.TimeTable[time * this.product.length + item].state !== 'occupied' && this.TimeTable[time * this.product.length + item].state !== 'notload') this.TimeTable[time * this.product.length + item].state = 'clickFrom'
 			}
 		},
 		mouseDrag: function(time, item) {
 			if (this.touching && !this.touchDevice) {
-				for (let i in [...Array(this.productName.length * 48).keys()]) { if (this.TimeTable[i].state === 'clickDrag') this.TimeTable[i].state = 'empty' }
+				for (let i in [...Array(this.product.length * 48).keys()]) { if (this.TimeTable[i].state === 'clickDrag') this.TimeTable[i].state = 'empty' }
 				if (this.fromTime < time) {
 					for (let i = this.fromTime + 1; i < time + 1; i++) {
-						if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productName.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productName.length + this.selectItem].state === 'notload') this.collision = true
+						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
+						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 				else if (this.fromTime > time) {
 					for (let i = this.fromTime - 1; i > time - 1; i--) {
-						if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productName.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productName.length + this.selectItem].state === 'notload') this.collision = true
+						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
+						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 			}
@@ -285,8 +275,8 @@ export default {
 		mouseUp: function(time) {
 			if (!this.touchDevice) {
 				this.touching = false
-				if (!this.collision && this.TimeTable[time * this.productName.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.productName.length + this.selectItem].state !== 'notload') {
-					this.TimeTable[time * this.productName.length + this.selectItem].state = 'clickTo'
+				if (!this.collision && this.TimeTable[time * this.product.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.product.length + this.selectItem].state !== 'notload') {
+					this.TimeTable[time * this.product.length + this.selectItem].state = 'clickTo'
 					this.toTime = time
 					if (this.fromTime > this.toTime)[this.fromTime, this.toTime] = [this.toTime, this.fromTime]
 					this.fromTimeChanged()
@@ -294,8 +284,8 @@ export default {
 					this.dialog = true
 				}
 				else {
-					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
-					for (let i in [...Array(this.productName.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+					this.$emit('snackbar', this.focus !== null ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.focus !== null ? 'error' : 'info')
+					for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
 			}
@@ -305,18 +295,18 @@ export default {
 			if (this.touching) {
 				if (this.fromTime < time) {
 					for (let i = this.fromTime + 1; i < time; i++) {
-						if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productName.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productName.length + this.selectItem].state === 'notload') this.collision = true
+						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
+						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 				else if (this.fromTime > time) {
 					for (let i = this.fromTime - 1; i > time; i--) {
-						if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'empty') this.TimeTable[i * this.productName.length + this.selectItem].state = 'clickDrag'
-						else if (this.TimeTable[i * this.productName.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.productName.length + this.selectItem].state === 'notload') this.collision = true
+						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
+						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
-				if (!this.collision && this.TimeTable[time * this.productName.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.productName.length + this.selectItem].state !== 'notload') {
-					this.TimeTable[(time) * this.productName.length + this.selectItem].state = 'clickTo'
+				if (!this.collision && this.TimeTable[time * this.product.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.product.length + this.selectItem].state !== 'notload') {
+					this.TimeTable[(time) * this.product.length + this.selectItem].state = 'clickTo'
 					this.toTime = time
 					if (this.fromTime > this.toTime)[this.fromTime, this.toTime] = [this.toTime, this.fromTime]
 					this.fromTimeChanged()
@@ -324,22 +314,22 @@ export default {
 					this.dialog = true
 				} else {
 					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
-					for (let i in [...Array(this.productName.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+					for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
 				this.touching = false
 			} else {
 				this.fromTime = time
 				this.selectItem = item
-				for (let i in [...Array(this.productName.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
-				if (this.TimeTable[time * this.productName.length + item].state !== 'occupied' && this.TimeTable[time * this.productName.length + item].state !== 'notload') {
-					this.TimeTable[time * this.productName.length + item].state = 'clickFrom'
+				for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
+				if (this.TimeTable[time * this.product.length + item].state !== 'occupied' && this.TimeTable[time * this.product.length + item].state !== 'notload') {
+					this.TimeTable[time * this.product.length + item].state = 'clickFrom'
 					this.touching = true
 				} else this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
 			}
 		},
 		classInfo: function(i, j) {
-			switch (this.TimeTable[i * this.productName.length + j].state) {
+			switch (this.TimeTable[i * this.product.length + j].state) {
 				case 'notload':
 				case 'occupied':
 					return { 'grey lighten-2': true }
@@ -367,6 +357,7 @@ export default {
 		toTimeChanged: function(val) {
 			this.selToTimeHour = this.hourItems[parseInt(this.toTime/2)]
 			this.selToTimeMin = this.minItems[this.toTime%2]
+			this.duration = this.toTime - this.fromTime
 		},
 	},
 	computed: {

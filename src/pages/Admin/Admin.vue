@@ -126,7 +126,7 @@ export default {
 			xhr2.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           this.headers = []
-          if (JSON.parse(xhr2.responseText).data !== undefined) {
+          if (JSON.parse(xhr2.responseText).hasOwnProperty('data')) {
             for (let data of JSON.parse(xhr2.responseText).data) {
               self.header.push({ text: data.name, sortable: false })
               self.itemData.push(data)

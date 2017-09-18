@@ -87,7 +87,7 @@ export default {
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
-          self.msg = result.data !== undefined ? result.data : '공지사항 조회에 실패하였습니다.'
+          self.msg = result.hasOwnProperty('data') ? result.data : '공지사항 조회에 실패하였습니다.'
           // TODO: fit type of responseText
         }
 			}
