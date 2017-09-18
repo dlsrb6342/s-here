@@ -39,7 +39,7 @@
                 <v-btn flat @click="goPage('signup')">
                   Sign up
                 </v-btn>
-                <v-btn icon class="hidden-xs-only" flat @click.native="this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info')" v-tooltip:top="{ html: '비밀번호를 잊으셨나요?' }"  > <!--go.page(lost)로 수정-->
+                <v-btn icon class="hidden-xs-only" flat @click.native="lostPW()" v-tooltip:top="{ html: '비밀번호를 잊으셨나요?' }"  > <!--go.page(lost)로 수정-->
                   <v-icon>account_circle</v-icon>
                 </v-btn>
               </v-layout>
@@ -64,10 +64,9 @@ export default {
 		}
 	},
   methods: {
-		goPage: function (goMessage) { this.$router.push(goMessage) },
+    goPage: function (goMessage) { this.$router.push(goMessage) },
+    lostPW: function () {this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info')},
 		submit: function () {
-      //if (this.studentId == '') this.$emit('snackbar', '학번을 입력해주세요.','error')
-			//else if (this.Password == '') this.$emit('snackbar', '비밀번호를 입력해 주세요', 'error')
       if (this.$refs.form.validate()) {
 				let xhr = new XMLHttpRequest(), self = this
 				xhr.open('POST', '/api/user/login')

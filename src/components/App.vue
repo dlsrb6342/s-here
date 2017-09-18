@@ -120,9 +120,9 @@
     </v-footer>
     <v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" :error="snackbar.mode === 'error'" multi-line v-model="snackbar.show" class="grey--text text--lighten-3">
 			<div v-html="snackbar.msg" style="text-align: center;"></div>
-      <v-btn flat v-show="signup" class="grey--text text--lighten-3" @click="goPage('signup')">Sign Up</v-btn>
-      <v-btn flat v-show="login" class="grey--text text--lighten-3" @click="goPage('login')">Log In</v-btn>
-      <v-btn flat class="white--text" @click.native="snackbar.show = false">Close</v-btn>
+      <v-btn flat v-show="signup" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('signup')">Sign Up</v-btn>
+      <v-btn flat v-show="login" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('login')">Log In</v-btn>
+      <v-btn flat class="white--text mx-0 px-1" @click.native="snackbar.show = false">Close</v-btn>
 		</v-snackbar>
   </v-app>
 </template>
@@ -171,9 +171,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   main{
     background-image: url("../../static/img/content-bg-1-uai-2064x2064.jpg");
+  }
+  .snack__content {
+    padding: 30px 30px 30px 30px;
   }
   #app-footer {
     width: 100%;
