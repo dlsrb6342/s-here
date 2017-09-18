@@ -76,7 +76,7 @@ export default {
             let result = JSON.parse(xhr.responseText)
             self.studentId = ''
             self.Password = ''
-            if (result.success === undefined) {
+            if (typeof result.success !== undefined) {
               if (result.success) {
                 self.$emit('setUser', [result['student;;Id'], result['name']])
                 self.$router.push('mainpage')
