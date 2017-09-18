@@ -79,10 +79,10 @@ export default {
     //setInterval(this.retNotice(), 10000)
   },
   methods: {
-    goPage: function (goMessage) { this.$router.push(goMessage) },
     retNotice: function () {
       let xhr = new XMLHttpRequest(), self = this
-			xhr.open('GET', '/api/admin/notice') // TODO: fix correct url and request
+      // TODO: fix correct url and request
+			xhr.open('GET', '/api/admin/notice') 
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -97,7 +97,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   div.non-padding{
     padding: 0;

@@ -24,11 +24,14 @@
                   <v-text-field
                     label="Student ID"
                     v-model="studentId"
-                    :rules="[v => !!v || '학번을 입력해 주세요.', v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                    :rules="[v => !!v || '학번을 입력해 주세요.']"
                     :counter="10"
                     required
                     validate-on-blur="true"
                   ></v-text-field>
+                  <!--
+                    , v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                  -->
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -95,24 +98,22 @@ export default {
     }
   },
   methods: {
-    goPage: function(goMessage) { this.$router.push(goMessage) },
     submit: function () {
       if (this.$refs.form.validate()) {
         let xhr = new XMLHttpRequest(), self = this
         xhr.open('POST', '/api/user/signup')
         xhr.setRequestHeader("Content-type", "application/json")
-        
         xhr.onreadystatechange = function () {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             let result = JSON.parse(xhr.responseText)
-            if (result.success !== undefined) {
+            if (result.hasOwnProperty('success')) {
               self.$emit('snackbar', '회원가입이 완료되었습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'success')
               self.Email = ''
               self.studentId = ''
               self.userName = ''
               self.Password = ''
               self.Verify = ''
-              self.goPage('mainpage')
+              self.$router.push('mainpage')
             }
             else {
               switch (result.code) {

@@ -11,11 +11,14 @@
                   <v-text-field
                     label="Student ID"
                     v-model="studentId"
-                    :rules="[v => !!v || '학번을 입력해 주세요.', v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                    :rules="[v => !!v || '학번을 입력해 주세요.']"
                     :counter="10"
                     required
                     name="id"
                   ></v-text-field>
+                  <!--
+                    , v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                  -->
                 </v-flex>
               </v-layout>
               <v-layout row>
@@ -65,7 +68,7 @@ export default {
 	},
   methods: {
     goPage: function (goMessage) { this.$router.push(goMessage) },
-    lostPW: function () {this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info')},
+    lostPW: function () { this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info') },
 		submit: function () {
       if (this.$refs.form.validate()) {
 				let xhr = new XMLHttpRequest(), self = this
@@ -76,9 +79,9 @@ export default {
             let result = JSON.parse(xhr.responseText)
             self.studentId = ''
             self.Password = ''
-            if (typeof result.success !== undefined) {
+            if (result.hasOwnProperty('success')) {
               if (result.success) {
-                self.$emit('setUser', [result['student;;Id'], result['name']])
+                self.$emit('setUser', [result.studentId, result.name])
                 self.$router.push('mainpage')
               }
               else self.$emit('snackbar', '이메일 인증이 완료되지 않았습니다.<br>킹고 포털 메일함에서 인증 절차를 진행해 주세요.', 'error')

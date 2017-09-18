@@ -14,7 +14,7 @@ export default {
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         let result = JSON.parse(xhr.responseText)
-        if (result.success !== undefined) {
+        if (result.hasOwnProperty('success')) {
           self.$emit('snackbar', '메일 인증이 완료되었습니다!', 'success')
           self.$router.push('mainpage')
         } else {

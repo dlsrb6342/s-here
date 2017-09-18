@@ -113,7 +113,7 @@ export default {
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
-          if (result.success !== undefined) {
+          if (result.hasOwnProperty('success')) {
             self.retData = result.data
           } else {
             self.retData = []

@@ -81,6 +81,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="SFnav-btn hidden-sm-and-down mr-5">
+        {{ this.currentUser }}
         <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('about')">
           소개
         </v-btn>
@@ -93,13 +94,13 @@
         <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('remote')">
           스마트키
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('login')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] == null" @click.native="goPage('login')">
           로그인
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" v-if="!this.currentUser[0]" @click.native="goPage('mainpage')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] !== null" @click.native="goPage('mainpage')">
           로그아웃
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" @click.native="goPage('admin')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] == 'admin'" @click.native="goPage('admin')">
           관리자
         </v-btn>
       </v-toolbar-items>
@@ -108,7 +109,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <main>
-      <router-view :user="currentUser" @snackbar="showSnackbar"></router-view>
+      <router-view :user="currentUser" @snackbar="showSnackbar" @setUser="changeUser"></router-view>
     </main>
     <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
@@ -120,8 +121,8 @@
     </v-footer>
     <v-snackbar :timeout="snackbar.timeout" :top="true" :success="snackbar.mode === 'success'" :info="snackbar.mode === 'info'" :warning="snackbar.mode === 'warning'" :error="snackbar.mode === 'error'" multi-line v-model="snackbar.show" class="grey--text text--lighten-3">
 			<div v-html="snackbar.msg" style="text-align: center;"></div>
-      <v-btn flat v-show="signup" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('signup')">Sign Up</v-btn>
-      <v-btn flat v-show="login" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('login')">Log In</v-btn>
+      <v-btn flat v-show="signupMsg" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('signup')">Sign Up</v-btn>
+      <v-btn flat v-show="loginMsg" class="grey--text text--lighten-3 mr-0 px-1" @click="goPage('login')">Log In</v-btn>
       <v-btn flat class="white--text mx-0 px-1" @click.native="snackbar.show = false">Close</v-btn>
 		</v-snackbar>
   </v-app>
@@ -138,8 +139,8 @@ export default {
 				mode: '',
 				msg: '',
 			},
-      signup: false,
-      login: false,
+      signupMsg: false,
+      loginMsg: false,
       currentUser: [null, null],
       isAdmin: false,
       drawer: null,
@@ -150,20 +151,19 @@ export default {
       this.snackbar.show = true
       this.snackbar.msg = showMessage
       this.snackbar.mode = mode
-      this.signup = showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.' ? true : false
-      this.login = showMessage === '로그인 하셔야만 이용하실 수 있습니다.' ? true : false
+      this.signupMsg = showMessage === '회원가입을 하셔야만 이용할 수 있는 서비스입니다.' ? true : false
+      this.loginMsg = showMessage === '로그인 하셔야만 이용하실 수 있습니다.' ? true : false
     },
     goPage: function (goMessage) { this.$router.push(goMessage) },
-    changeUser: user => this.currentUser = user,
-    getUser: () => this.currentUser,
-    logoutUser: () => {
+    changeUser: function (user) { this.currentUser = user },
+    logoutUser: function () {
       let xhr = new XMLHttpRequest(), self = this
       xhr.open('POST', '/api/user/logout')
-      xhr.send(JSON.stringify({_csrf: document.cookie.split("_csrf=")[1] }))
+      xhr.send(JSON.stringify({_csrf: document.cookie.split("_csrf=")[1]}))
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
-          if (result.success !== undefined) self.currentUser = [null, null]
+          if (result.hasOwnPropery('success')) self.currentUser = [null, null]
         }
       }
     },
@@ -177,6 +177,15 @@ export default {
   }
   .snack__content {
     padding: 30px 30px 30px 30px;
+  }
+  .application--light .toolbar {
+    background-color: #ffffff;
+  }
+  div .list__tile__title {
+    text-align: center;
+  }
+  div .input-group__selections__comma{
+    margin: auto;
   }
   #app-footer {
     width: 100%;
