@@ -12,3 +12,10 @@ Admin API
 
       return value :
         요청에 성공했을 때 : { success : true }
+
+
+    •   고장신고 내역 ( /api/admin/notice GET )
+      return value :
+        요청에 성공했을 때 : { data:  }
+
+

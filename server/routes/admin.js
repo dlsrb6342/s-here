@@ -28,4 +28,12 @@ router.post('/notice', (req, res) => {
   return res.json({ success: true });
 });
 
+router.get('/notice', (req, res) => {
+  let redisClient = req.app.get('redisClient');
+  redisClient.get('notice', (err, reply) => {
+    if (err) throw err;
+    return res.json({ data: reply });
+  });
+});
+
 export default router;
