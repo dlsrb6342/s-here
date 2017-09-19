@@ -101,7 +101,7 @@
         <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] !== null" @click.native="logoutUser()">
           로그아웃
         </v-btn>
-        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] == 'admin'" @click.native="goPage('admin')">
+        <v-btn flat class="SFbtn SF-menu-font" v-if="currentUser[0] != 'admin'" @click.native="goPage('admin')">
           관리자
         </v-btn>
       </v-toolbar-items>
