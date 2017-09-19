@@ -92,14 +92,12 @@ export default {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
           self.schedules = []
+          console.log(xhr.responseText)
           if (result.hasOwnProperty('success')) {
             self.retData = result.data
             for (let item of result.data) {
               self.schedules.push({
-                text: item['start'].toString().slice(4,6) + '월 ' +
-                      item['start'].toString().slice(6,8) + '일' + 
-                      parseInt(item['start'].toString().slice(8,10))/2 + '시 ~ ' +
-                      parseInt(item['end'].toString().slice(8,10))/2 + '시' ,
+                text: item['start'].toString().slice(6,8) + '일: ' + parseInt(parseInt(item['start'].toString().slice(8,10))/2) + '시 '+(parseInt(item['start'].toString().slice(8,10))%2 == 1 ? '반' : '')+' ~ ' +  + parseInt(parseInt(item['start'].toString().slice(8,10))/2) + '시 '+(parseInt(item['start'].toString().slice(8,10))%2 == 1 ? '반' : ''),
                 value: item['_id'],
               })
             }
@@ -137,6 +135,7 @@ export default {
           else if (result.code == 1) self.$emit('snackbar', '존재하지 않는 예약입니다.', 'error')
           else if (result.code == 2) self.$emit('snackbar', '예약한 회원과 요청한 회원이 다릅니다.', 'error')
           else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+          self.select = {}
           self.retReserveList()
         }
       }

@@ -121,7 +121,7 @@ export default {
     retTimeTableList: function () {
       // xhr: reservation list retriever, xhr2: item id retriever
       let xhr = new XMLHttpRequest(), xhr2 = new XMLHttpRequest(), self = this
-			xhr.open('GET', '/api/reserve/') // TODO: async retrieveing(currently disabled.)
+			xhr.open('GET', '/api/admin/timetable/' + new Date().toJSON().slice(0,10).replace(/-/g,''))
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {

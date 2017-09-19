@@ -25,16 +25,9 @@
 								<v-icon>keyboard_arrow_right</v-icon>
 							</v-btn>
 						</v-flex>
+						<v-btn xs @click.native="showTimeline()">조회하기</v-btn>
 					</v-flex>
 					<v-date-picker actions :date-format="v => v.slice(0,10).replace(/-/g,'')" :formatted-value.sync="sendData.date" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
-					<v-flex xs12 v-show="isDebug">
-						<v-btn @click.native="testDataset">DATASET</v-btn>
-						<v-btn @click.native="showStyl = !showStyl">SHOW TEXT</v-btn>
-						<v-btn @click.native="touchDevice = !touchDevice">TOGGLE TOUCH</v-btn>
-						<v-btn primary dark @click.native.stop="dialog = true">dialog</v-btn>
-						<br>
-						{{ sendData.date }}
-					</v-flex>
 				</v-flex>
 				<transition name="slide-fade">
 					<v-flex lg8 v-show="product.length != 0">
@@ -47,7 +40,7 @@
 								</v-layout>
 								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
 									<v-card v-for="j in product.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
-										<v-card-text class="caption pa-0">{{ showStyl ? TimeTable[(i-1)*product.length+j-1] : '' }}{{showStyl ? ' '+((i-1)*product.length+j-1) : ''}}</v-card-text>
+										<v-card-text class="caption pa-0 ma-1">{{ TimeTable[(i-1) * product.length + (j-1)].text }}</v-card-text>
 									</v-card>
 								</v-layout>
 							</v-flex>
@@ -120,7 +113,6 @@ export default {
 				id: [],
 				name: [],
 			},
-			
 			hourItems: [
 				{ hour: '오전 12시', value: 0 }, { hour: '오전 01시', value: 2 }, { hour: '오전 02시', value: 4 },
 				{ hour: '오전 03시', value: 6 }, { hour: '오전 04시', value: 8 }, { hour: '오전 05시', value: 10 },
@@ -144,7 +136,7 @@ export default {
 				{ name: '모정수', ID: '2015314573' },
 				{ name: '이은영', ID: '2015314573' },
 			],
-			today: null,
+			today: new Date(),
 			date_index: 0,
 			month_index: 0,
 			Day: null,
@@ -185,7 +177,10 @@ export default {
 								self.product.id.push(item._id)
 								self.product.name.push(item.name)
 							}
-							for (let i in [...Array(self.product.length * 48).keys()]) self.TimeTable.push({ state: 'empty' })
+							for (let i in [...Array(self.product.length * 48).keys()]) self.TimeTable.push({
+								text: (parseInt(i/self.product.length) % 2 == 1) ? "" : (self.hourItems[parseInt(i/self.product.length/2)].hour + ' ' + self.minItems[parseInt(i/self.product.length) % 2].min),
+								state: 'empty'
+							})
 							for (let item of result.data) {
 								for (let time of item.occupied) {
 									self.TimeTable[parseInt(time.toString().slice(8)) * self.product.length + self.product.id.indexOf(item._id)].state = 'occupied'
@@ -200,6 +195,7 @@ export default {
 									break
 								case 0:
 									self.$emit('snackbar', '오늘 이전의 날짜를 선택하셨습니다.', 'error')
+									break
 								default:
 									self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 							}
@@ -235,14 +231,6 @@ export default {
 			this.sendData._csrf = document.cookie.split("_csrf=")[1]
 			console.log(JSON.stringify(this.sendData))
 			xhr.send(JSON.stringify(this.sendData))
-		},
-		testDataset: function() {
-			this.TimeTable = []
-			for (let i in [...Array(this.product.length * 48).keys()]) this.TimeTable.push({ state: 'empty' })
-			for (let i = 0; i < this.product.length; i++) {
-				let [j, max] = [Math.floor(Math.random() * 48), Math.floor(Math.random() * 48)].sort()
-				for (; j < max; j++) this.TimeTable[j * this.product.length + i].state = 'occupied'
-			}
 		},
 		mouseDown: function(time, item) {
 			if (!this.touchDevice) {
