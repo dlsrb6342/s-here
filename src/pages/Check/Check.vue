@@ -26,7 +26,7 @@
 							</v-btn>
 						</v-flex>
 					</v-flex>
-					<v-date-picker actions :date-format="v => v.toJSON().slice(0,10).replace(/-/g,'')" :formatted-value.sync="sendData.date" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
+					<v-date-picker actions :date-format="v => v.slice(0,10).replace(/-/g,'')" :formatted-value.sync="sendData.date" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
 					<v-flex xs12 v-show="isDebug">
 						<v-btn @click.native="testDataset">DATASET</v-btn>
 						<v-btn @click.native="showStyl = !showStyl">SHOW TEXT</v-btn>
@@ -198,6 +198,8 @@ export default {
 								case -3:
 									self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
 									break
+								case 0:
+									self.$emit('snackbar', '오늘 이전의 날짜를 선택하셨습니다.', 'error')
 								default:
 									self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
 							}
