@@ -75,6 +75,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', api);
 
+app.get('/api/notice', (req, res) => {
+  let redisClient = req.app.get('redisClient');
+  redisClient.get('notice', (err, reply) => {
+    if (err) throw err;
+    return res.json({ data: reply });
+  });
+});
+
 /* csrf setting */
 app.use(csrf());
 app.use((req, res, next) => {

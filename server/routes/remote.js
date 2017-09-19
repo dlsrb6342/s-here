@@ -15,6 +15,24 @@ router.use((req, res, next) => {
   next();
 });
 
+router.get('/', (req, res) => {
+  let now = getNow();
+  Reservation.find({ 
+    $or : [
+      { user: req.session.userInfo._id },
+      { people: req.session.userInfo._id }
+    ], $and: [
+      { start: { $lte: now }},
+      { end: { $gte: now }}
+    ]}, (err, reservations) => {
+    if (err) throw err;
+    return res.json({
+      success: true,
+      data: reservations
+    });
+  });
+});
+
 router.get('/:rasp', (req, res) => {
   let student_id = req.session.userInfo._id;
   let now = getNow(); 
@@ -76,4 +94,5 @@ router.post('/trouble/:_id', (req, res) => {
     });
   });
 });
+
 export default router;

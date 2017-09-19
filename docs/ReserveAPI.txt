@@ -26,9 +26,9 @@ Reserve API
             code == 2 : 로그인한 회원이 이미 예약한 날짜일 때
             code == 3 : 입력된 회원이 회원가입을 하지 않았을 때
             code == 4 : 이미 예약된 시간일 때 
+  
 
-
-    •   예약 목록 ( /api/reserve/ GET )
+     •  전체 예약 목록 ( /api/reservation/ GET )
       return value : 
         요청에 성공했을 때 : { 
           success : true,
@@ -36,4 +36,4 @@ Reserve API
             reservation,
             ...
           ]
-        }
+        }   

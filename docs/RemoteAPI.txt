@@ -7,6 +7,7 @@ Remote API
             code == 0 : 해당 시간에 허용된 사용자가 아닐 때
             code == 1 : 하드웨어와 연결이 안되어있을 때
 
+
     •   고장 신고 ( /api/trouble/:_id POST )
       _id : 예약 _id
       content type : application/json
@@ -20,3 +21,14 @@ Remote API
             code == 0 : _id가 올바르지 않을 때 
             code == 1 : 존재하지 않는 예약일 때
             code == 2 : 예약한 회원과 요청한 회원이 다를 경우
+
+
+    •  현재시간에 해당하는 예약 목록 ( /api/remote/ GET )
+      return value : 
+        요청에 성공했을 때 : { 
+          success : true,
+          data : [
+            reservation,
+            ...
+          ]
+        }
