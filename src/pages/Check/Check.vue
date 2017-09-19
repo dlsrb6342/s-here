@@ -109,7 +109,7 @@ export default {
 				start: null,
 				end: null,
 				itemId: null,
-				people: null
+				people: []
 			},
 			duration: null,
 			touching: false,
@@ -230,7 +230,6 @@ export default {
 					self.showTimeline()
 				}
 			}
-			// this.sendData.date = this.sendData.date.replace(/-/g, '')
 			this.sendData.start = this.selFromTimeHour.value + this.selFromTimeMin.value
 			this.sendData.end = this.selToTimeHour.value + this.selToTimeMin.value
 			this.sendData._csrf = document.cookie.split("_csrf=")[1]
@@ -359,8 +358,6 @@ export default {
 				this.duration = this.click.second - this.click.first
 		},
 	},
-	computed: {
-	}
 }
 </script>
 

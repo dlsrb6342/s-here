@@ -18,7 +18,7 @@ Admin API
         요청에 성공했을 때 : { success : true }
 
 
-    •   고장신고 내역 ( /api/admin/timetable/:date GET )
+    •  어드민용 예약현황 조회 ( /api/admin/timetable/:date GET )
       return value :
         요청에 성공했을 때 : { data: {
           아이템 이름: [{

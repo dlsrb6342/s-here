@@ -57,8 +57,10 @@ export default {
       xhr.open(responseType, this.destination)
       xhr.setRequestHeader("Content-Type", "application/json")
       xhr.onreadystatechange = function () { if (xhr.readyState === XMLHttpRequest.DONE) self.retData = xhr.responseText }
-      JSON.stringify(JSON.parse(this.data))
-      xhr.send(this.data)
+      let temp = JSON.parse(this.data)
+      temp._csrf = document.cookie.split("_csrf=")[1]
+      console.log(temp)
+      xhr.send(JSON.stringify(temp))
     }
   }
 }
