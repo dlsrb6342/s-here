@@ -62,8 +62,9 @@
 											<v-flex xs5><v-select label="종료 시각" :items="hourItems" v-model="selToTimeHour" item-text="hour"></v-select></v-flex>
 											<v-flex xs5><v-select :items="minItems" v-model="selToTimeMin" item-text="min"></v-select></v-flex>
 											<v-flex xs2><v-card-text class="subheading">까지</v-card-text></v-flex>
-											<v-flex xs9><v-slider label="사용시간" :max="47-fromTime" :min='1' v-model="duration"></v-slider></v-flex>
-											<v-flex xs3><v-card-text class="subheading">{{ parseInt(duration/2) == 0 ? '' : parseInt(duration/2)+'시간'}}{{ duration % 2 == 0 ? '00' : '30'}}분</v-card-text></v-flex>
+											<v-flex xs8><v-slider label="사용시간" :max="47-fromTime" :min='1' v-model="duration"></v-slider></v-flex>
+											<v-flex xs4><v-card-text class="subheading">{{ parseInt(duration/2) == 0 ? '' : parseInt(duration/2)+'시간'}}{{ duration % 2 == 0 ? '00' : '30'}}분</v-card-text></v-flex>
+											{{ fromTime }}  / {{ toTime}}
 											<v-flex xs12>
 												<!-- TODO: 사용자 목록 생성 -->
 											</v-flex>
@@ -149,8 +150,8 @@ export default {
 		}
 	},
 	watch: {
-		selFromTimeMin: function (val) { this.fromTime = this.selFromTimeHour.value + this.selFromTimeMin.value },
-		selToTimeMin: function (val) { this.toTime = this.selToTimeHour.value + this.selToTimeMin.value },
+		selFromTimeMin: function (val) { this.fromTime = this.selFromTimeHour.value + this.val.value },
+		selToTimeMin: function (val) { if (this.toTime > this.fromTime) this.toTime = this.selToTimeHour.value + this.val.value },
 		duration: function(val) {
 			this.selToTimeHour = this.hourItems[parseInt((this.fromTime+val)/2)]
 			this.selToTimeMin = this.minItems[(this.fromTime+val)%2]
@@ -169,7 +170,7 @@ export default {
 	methods: {
 		showTimeline: function() {
 			if (this.focus !== null) {
-				let xhr = new XMLHttpRequest(), self = this
+				let xhr = new XMLHttpRequest(), self = this	
 				xhr.open('GET', '/api/item/' + this.focus.slice(0, 10).replace(/-/g, ""))
 				xhr.setRequestHeader("Content-type", "application/json")
 				xhr.onreadystatechange = function() {
@@ -213,8 +214,12 @@ export default {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === XMLHttpRequest.DONE) {
 					let result = JSON.parse(xhr.responseText)
-					if (result.hasOwnProperty('success')) self.$emit('snackbar', '예약되었습니다.', 'success')
-					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.', 'error')
+					if (result.hasOwnProperty('success')) {
+						self.$emit('snackbar', '예약되었습니다.', 'success')
+						self.dialog = false
+						self.showTimeline()
+					}
+					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.('+self.fromTime+','+self.toTime+')', 'error')
 					else if (result.code === 1) self.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'error')
 					else if (result.code === 2) self.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
 					else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
@@ -223,7 +228,7 @@ export default {
 			}
 			console.log(JSON.stringify({
 				start: this.fromTime,
-				end: this.toTime,
+				end: this.toTime + 1,
 				itemId: this.product.id[this.selectItem],
 				date: this.focus.replace(/-/g, ''),
 				people: [], // TODO: 사용자 목록 생성
@@ -231,7 +236,7 @@ export default {
 			}))
 			xhr.send(JSON.stringify({
 				start: this.fromTime,
-				end: this.toTime,
+				end: this.toTime + 1,
 				itemId: this.product.id[this.selectItem],
 				date: this.focus.replace(/-/g, ''),
 				people: [], // TODO: 사용자 목록 생성
@@ -279,8 +284,7 @@ export default {
 					this.TimeTable[time * this.product.length + this.selectItem].state = 'clickTo'
 					this.toTime = time
 					if (this.fromTime > this.toTime)[this.fromTime, this.toTime] = [this.toTime, this.fromTime]
-					this.fromTimeChanged()
-					this.toTimeChanged()
+					this.TimeChanged()
 					this.dialog = true
 				}
 				else {
@@ -308,9 +312,8 @@ export default {
 				if (!this.collision && this.TimeTable[time * this.product.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.product.length + this.selectItem].state !== 'notload') {
 					this.TimeTable[(time) * this.product.length + this.selectItem].state = 'clickTo'
 					this.toTime = time
-					if (this.fromTime > this.toTime)[this.fromTime, this.toTime] = [this.toTime, this.fromTime]
-					this.fromTimeChanged()
-					this.toTimeChanged()
+					if (this.fromTime > this.toTime) [this.fromTime, this.toTime] = [this.toTime, this.fromTime]
+					this.TimeChanged()
 					this.dialog = true
 				} else {
 					this.$emit('snackbar', this.TimeTable === [] ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.TimeTable === [] ? 'error' : 'info')
@@ -350,14 +353,14 @@ export default {
 		querySelections: function() {
 			// TODO: 사용자 목록 생성
 		},
-		fromTimeChanged: function() {
-			this.selFromTimeHour = this.hourItems[parseInt(this.fromTime/2)]
-			this.selFromTimeMin = this.minItems[this.fromTime%2]
-		},
-		toTimeChanged: function(val) {
-			this.selToTimeHour = this.hourItems[parseInt(this.toTime/2)]
-			this.selToTimeMin = this.minItems[this.toTime%2]
-			this.duration = this.toTime - this.fromTime
+		TimeChanged: function() {
+			if (this.toTime > this.fromTime) {
+				this.selFromTimeHour = this.hourItems[parseInt(this.fromTime/2)]
+				this.selFromTimeMin = this.minItems[this.fromTime%2]
+				this.selToTimeHour = this.hourItems[parseInt(this.toTime/2)]
+				this.selToTimeMin = this.minItems[this.toTime%2]
+				this.duration = this.toTime - this.fromTime
+			}
 		},
 	},
 	computed: {

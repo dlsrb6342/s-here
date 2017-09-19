@@ -76,10 +76,10 @@ export default {
     }
   },
   created () {
-    //setInterval(this.retNotice(), 10000)
+    setInterval(this.getNotice(), 10000)
   },
   methods: {
-    retNotice: function () {
+    getNotice: function () {
       let xhr = new XMLHttpRequest(), self = this
       // TODO: fix correct url and request
 			xhr.open('GET', '/api/admin/notice') 
@@ -88,7 +88,6 @@ export default {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
           self.msg = result.hasOwnProperty('data') ? result.data : '공지사항 조회에 실패하였습니다.'
-          // TODO: fit type of responseText
         }
 			}
 			xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))

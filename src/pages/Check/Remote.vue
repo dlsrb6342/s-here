@@ -5,7 +5,7 @@
       <v-container class="">
         <v-card class="mb-2 SFhalf-W SFalign-center SFborder">
           <v-select
-            v-bind:items="schedules"
+            :items="schedules"
             item-text="date"
             prepend-icon="schedule"
             class="mt-3 SFhalf-W SFalign-center"></v-select>
@@ -54,7 +54,10 @@ export default {
 		return {
 			isOpen: false,
       selected: false,
-      schedules: [{text: 'test', date: '2017/09/15'}]
+      loading: false,
+      schedules: [],
+      search: null,
+      select: [],
 		}
 	},
   created () {
@@ -62,11 +65,24 @@ export default {
   },
 	methods: {
     retReserveList: function () {
-      // TODO: complete function
+      let xhr = new XMLHttpRequest(), self = this
+			xhr.open('GET', '/api/reserve/') 
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          console.log(xhr.responseText)
+          if (result.hasOwnProperty('success')) {
+            
+          }
+          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
+        }
+      }
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
     },
 		sendSignal: function () {
       let xhr = new XMLHttpRequest(), self = this
-			xhr.open('GET', '/api/remote/' + 'door')  
+			xhr.open('GET', '/api/remote/door')  
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -81,7 +97,7 @@ export default {
     },
     earlyReturn: function () {
       let xhr = new XMLHttpRequest(), self = this
-			xhr.open('POST', '/api/reserve/')
+			xhr.open('POST', '/api/reserve/') // TODO
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -90,6 +106,7 @@ export default {
           else if (result.code == 0) self.$emit('snackbar', '예약하신 시간대가 아닙니다.', 'error')
           else if (result.code == 0) self.$emit('snackbar', '하드웨어와 연결이 끊어졌습니다.<br>관리자에게 문의해 주세요.', 'error')
           else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
+          self.retReserveList()
         }
       }
       xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
@@ -97,7 +114,7 @@ export default {
     },
     reportToAdmin: function () {
       let xhr = new XMLHttpRequest(), self = this
-			xhr.open('POST', '/api/reserve/')
+			xhr.open('POST', '/api/reserve/') // TODO
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -111,7 +128,7 @@ export default {
       }
       xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
       // TODO: _id add
-    }
+    },
 	}
 }
 </script>

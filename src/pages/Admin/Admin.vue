@@ -25,14 +25,14 @@
             <v-card-title>
               <h6>Currnet Notice</h6>
             </v-card-title>
-            <v-card-text v-model="notice">{{ notice }}</v-card-text>
+            <v-card-text v-model="notice"></v-card-text>
             <hr>
             <v-layout row>
               <v-flex md8 class="pl-4">
                 <v-text-field v-model="msg" name="notice" label="Edit notice"></v-text-field>
               </v-flex>
               <v-flex md2 class="pt-2">
-                <v-btn flat @click.native="notice = msg">submit</v-btn>
+                <v-btn flat @click.native="setNotice()">submit</v-btn>
               </v-flex>
             </v-layout>
           </v-card>
@@ -45,6 +45,7 @@
 <script>
 export default {
   name: 'admin',
+  props: ['user'],
   data() {
     return {
       focus: null,
@@ -66,7 +67,7 @@ export default {
       time: 예약 시간 (hh:mm)
       name: 예약자 이름 (없을 시 공백)
       ID: 학번(보류)
-      reservation: item 예약 여부 (0~4: print1~5, 5~6: table1~2
+      reservation: 각 예약마다 style 적용(?)
       */
       TableList: [
         /*
@@ -84,43 +85,58 @@ export default {
         */
       ],
       itemData: [],
-      retData: []
+      retData: [],
+      gotData: [false, false],
     }
   },
   created () {
-    setInterval(this.refreshTable, 30000)
+    /*
+    if (user[0] !== 'admin') {
+      this.$emit('snackbar', '관리자가 아니면 접속할 수 없는 페이지입니다.', 'error')
+      this.$router.push('mainpage')
+    }
+    */
+    setInterval(this.retTimeTableList, 30000)
+  },
+  watch: {
+    gotData: function (val) {
+      if (val[0] && val[1]) { // All retrieve is done. make table!
+        this.TableList = []
+        for (let i in [...Array(48).keys()]) {
+          this.TableList.push({
+            time: parseInt(i / 2) + (i % 2 == 1 ? ':30' : ':00'),
+            name: [],
+            reservation: [],
+          })
+        }
+        for (let item of this.retData) {
+          // user, item, start, end, people
+        }
+        // All done.
+        this.gotData = [false, false]
+      }
+    }
   },
   methods: {
-    refreshTable: function () {
-      this.retTimeTableList()
-      for (let i in [...Array(48).keys()]) {
-        let nameArray = []
-        for (let j in [...Array()])
-        this.TableList.push({
-          time: Math.floor(i / 2) + (i % 2 == 1 ? ':30' : ':00'),
-          name: [],
-        })
-      }
-      for (let item of this.retData) {
-        // user, item, start, end, people
-      }
-    },
     retTimeTableList: function () {
       // xhr: reservation list retriever, xhr2: item id retriever
       let xhr = new XMLHttpRequest(), xhr2 = new XMLHttpRequest(), self = this
-			xhr.open('GET', '/api/reserve/')
+			xhr.open('GET', '/api/reserve/') // TODO: async retrieveing(currently disabled.)
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           let result = JSON.parse(xhr.responseText)
           if (result.hasOwnProperty('success')) {
             self.retData = result.data
+            self.gotData[0] = true
           } else {
             self.retData = []
             self.$emit('snackbar', 'DB 조회 실패. 서버 관리자에게 문의바람.', 'error')
           }
         }
       }
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1]}))
+      // [{"name":"프린터1","_id":"598959115abbb30381c2f3d5","occupied":[]}] << 이렇게 올거임
       xhr2.open('GET', '/api/item/' + new Date().toJSON().slice(0,10).replace(/-/g,''))
 			xhr2.setRequestHeader("Content-type", "application/json")
 			xhr2.onreadystatechange = function() {
@@ -131,13 +147,32 @@ export default {
               self.header.push({ text: data.name, sortable: false })
               self.itemData.push(data)
             }
+            self.gotData[1] = true
           }
           else self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
         }
       }
-      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1]}))
       xhr2.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1]}))
     },
+    getNotice: function () {
+      let xhr = new XMLHttpRequest(), self = this
+			xhr.open('GET', '/api/admin/notice') 
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          self.notice = result.hasOwnProperty('data') ? result.data : '공지사항 조회에 실패하였습니다.'
+        }
+			}
+			xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
+    },
+    setNotice: function () {
+      let xhr = new XMLHttpRequest(), self = this
+			xhr.open('notice', '/api/admin/notice') 
+			xhr.setRequestHeader("Content-type", "application/json")
+			xhr.onreadystatechange = function() { if (xhr.readyState === XMLHttpRequest.DONE) self.getNotice() }
+			xhr.send(JSON.stringify({ content: this.msg , _csrf: document.cookie.split("_csrf=")[1] }))
+    }
   },
 }
 </script>
