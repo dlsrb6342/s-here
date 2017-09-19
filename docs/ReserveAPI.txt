@@ -28,7 +28,7 @@ Reserve API
             code == 4 : 이미 예약된 시간일 때 
   
 
-     •  전체 예약 목록 ( /api/reservation/ GET )
+     •  전체 예약 목록 ( /api/reserve/ GET )
       return value : 
         요청에 성공했을 때 : { 
           success : true,

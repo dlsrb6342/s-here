@@ -17,8 +17,10 @@ router.use((req, res, next) => {
 
 router.get('/', (req, res) => {
   let now = getNow();
-  Reservation.find({ start: { $gte: now }})
-             .exec((err, reservations) => {
+  Reservation.find({ 
+    start: { $gte: now },
+    user: req.session.userInfo._id
+    }, (err, reservations) => {
     if (err) throw err;
     return res.json({
       success: true,
