@@ -220,8 +220,10 @@ export default {
 						self.showTimeline()
 					}
 					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.('+self.fromTime+','+self.toTime+')', 'error')
-					else if (result.code === 1) self.$emit('snackbar', '해당 시간대에 다른 프린터를 이미 예약하셨습니다.', 'error')
-					else if (result.code === 2) self.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
+					else if (result.code === 1) self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
+					else if (result.code === 2) self.$emit('snackbar', '이미 예약하신 시간대입니다.<br>다시 한번 확인해 주세요.', 'error')
+					else if (result.code === 3) self.$emit('snackbar', '회원가입을 하셔야만 이용할 수 있는 서비스입니다.', 'error')
+					else if (result.code === 4) self.$emit('snackbar', '다른 사람이 예약한 시간대입니다.<br>다른 시간대를 예약해주세요.', 'error')
 					else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'warning')
 					self.showTimeline()
 				}
