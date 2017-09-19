@@ -83,7 +83,7 @@ export default {
     getNotice: function () {
       let xhr = new XMLHttpRequest(), self = this
       // TODO: fix correct url and request
-			xhr.open('GET', '/api/admin/notice')
+			xhr.open('GET', '/api/notice')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {

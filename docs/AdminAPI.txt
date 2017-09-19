@@ -4,6 +4,10 @@ Admin API
         요청에 성공했을 때 : { data: [{reservation : , content : , time : } ... ] }
 
 
+    •   공지사항 조회 ( /api/notice GET )
+      return value :
+        요청에 성공했을 때 : { data: reply(String) }
+
     •   공지사항 수정 ( /api/admin/notice POST )
       content type : application/json
         {

@@ -26,14 +26,14 @@
 							</v-btn>
 						</v-flex>
 					</v-flex>
-					<v-date-picker actions v-model="focus" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
+					<v-date-picker actions :date-format="v => v.toJSON().slice(0,10).replace(/-/g,'')" :formatted-value.sync="sendData.date" locale="ko-KR" class="hidden-xs-only" @click.native="showTimeline()"></v-date-picker>
 					<v-flex xs12 v-show="isDebug">
 						<v-btn @click.native="testDataset">DATASET</v-btn>
 						<v-btn @click.native="showStyl = !showStyl">SHOW TEXT</v-btn>
 						<v-btn @click.native="touchDevice = !touchDevice">TOGGLE TOUCH</v-btn>
 						<v-btn primary dark @click.native.stop="dialog = true">dialog</v-btn>
 						<br>
-						{{ focus }}
+						{{ sendData.date }}
 					</v-flex>
 				</v-flex>
 				<transition name="slide-fade">
@@ -46,7 +46,7 @@
 									</v-card>
 								</v-layout>
 								<v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
-									<v-card v-for="j in product.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1,j-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
+									<v-card v-for="j in product.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
 										<v-card-text class="caption pa-0">{{ showStyl ? TimeTable[(i-1)*product.length+j-1] : '' }}{{showStyl ? ' '+((i-1)*product.length+j-1) : ''}}</v-card-text>
 									</v-card>
 								</v-layout>
@@ -62,9 +62,9 @@
 											<v-flex xs5><v-select label="종료 시각" :items="hourItems" v-model="selToTimeHour" item-text="hour"></v-select></v-flex>
 											<v-flex xs5><v-select :items="minItems" v-model="selToTimeMin" item-text="min"></v-select></v-flex>
 											<v-flex xs2><v-card-text class="subheading">까지</v-card-text></v-flex>
-											<v-flex xs8><v-slider label="사용시간" :max="47-fromTime" :min='1' v-model="duration"></v-slider></v-flex>
+											<v-flex xs8><v-slider label="사용시간" :max="47-click.first" :min='1' v-model="duration"></v-slider></v-flex>
 											<v-flex xs4><v-card-text class="subheading">{{ parseInt(duration/2) == 0 ? '' : parseInt(duration/2)+'시간'}}{{ duration % 2 == 0 ? '00' : '30'}}분</v-card-text></v-flex>
-											{{ fromTime }}  / {{ toTime}}
+											{{ click.first }}  / {{ click.second}}
 											<v-flex xs12>
 												<!-- TODO: 사용자 목록 생성 -->
 											</v-flex>
@@ -96,13 +96,21 @@ export default {
 	},
 	data() {
 		return {
-			focus: null,
 			dialog: false,
 			retData: [],
 			TimeTable: [],
 			selectItem: null,
-			fromTime: null,
-			toTime: null,
+			click: {
+				first: null,
+				second: null
+			},
+			sendData: {
+				date: null,
+				start: null,
+				end: null,
+				itemId: null,
+				people: null
+			},
 			duration: null,
 			touching: false,
 			touchDevice: false,
@@ -112,7 +120,7 @@ export default {
 				id: [],
 				name: [],
 			},
-			value: null,
+			
 			hourItems: [
 				{ hour: '오전 12시', value: 0 }, { hour: '오전 01시', value: 2 }, { hour: '오전 02시', value: 4 },
 				{ hour: '오전 03시', value: 6 }, { hour: '오전 04시', value: 8 }, { hour: '오전 05시', value: 10 },
@@ -149,18 +157,10 @@ export default {
 			isDebug: true,
 		}
 	},
-	watch: {
-		selFromTimeMin: function (val) { this.fromTime = this.selFromTimeHour.value + this.val.value },
-		selToTimeMin: function (val) { if (this.toTime > this.fromTime) this.toTime = this.selToTimeHour.value + this.val.value },
-		duration: function(val) {
-			this.selToTimeHour = this.hourItems[parseInt((this.fromTime+val)/2)]
-			this.selToTimeMin = this.minItems[(this.fromTime+val)%2]
-		},
-	},
 	created() {
 		for (let i in [...Array(this.product.length * 48).keys()]) this.TimeTable.push({ state: 'notload' })
 		if (typeof (this.date) === 'string') {
-			this.focus = new Date(this.date.slice(0, 4),
+			this.sendData.date = new Date(this.date.slice(0, 4),
 				this.date.slice(4, 6) - 1,
 				this.date.slice(6, 8),
 				new Date().getHours())
@@ -169,9 +169,9 @@ export default {
 	},
 	methods: {
 		showTimeline: function() {
-			if (this.focus !== null) {
+			if (this.sendData.date !== null) {
 				let xhr = new XMLHttpRequest(), self = this	
-				xhr.open('GET', '/api/item/' + this.focus.slice(0, 10).replace(/-/g, ""))
+				xhr.open('GET', '/api/item/' + this.sendData.date.slice(0, 10).replace(/-/g, ""))
 				xhr.setRequestHeader("Content-type", "application/json")
 				xhr.onreadystatechange = function() {
 					if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -219,7 +219,7 @@ export default {
 						self.dialog = false
 						self.showTimeline()
 					}
-					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.('+self.fromTime+','+self.toTime+')', 'error')
+					else if (result.code === 0) self.$emit('snackbar', '잘못된 시간값을 입력하셨습니다.('+self.sendData.start+','+self.sendData.end+')', 'error')
 					else if (result.code === 1) self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
 					else if (result.code === 2) self.$emit('snackbar', '이미 예약하신 시간대입니다.<br>다시 한번 확인해 주세요.', 'error')
 					else if (result.code === 3) self.$emit('snackbar', '회원가입을 하셔야만 이용할 수 있는 서비스입니다.', 'error')
@@ -228,22 +228,12 @@ export default {
 					self.showTimeline()
 				}
 			}
-			console.log(JSON.stringify({
-				start: this.fromTime,
-				end: this.toTime + 1,
-				itemId: this.product.id[this.selectItem],
-				date: this.focus.replace(/-/g, ''),
-				people: [], // TODO: 사용자 목록 생성
-				_csrf: document.cookie.split("_csrf=")[1]
-			}))
-			xhr.send(JSON.stringify({
-				start: this.fromTime,
-				end: this.toTime + 1,
-				itemId: this.product.id[this.selectItem],
-				date: this.focus.replace(/-/g, ''),
-				people: [], // TODO: 사용자 목록 생성
-				_csrf: document.cookie.split("_csrf=")[1]
-			}))
+			// this.sendData.date = this.sendData.date.replace(/-/g, '')
+			this.sendData.start = this.selFromTimeHour.value + this.selFromTimeMin.value
+			this.sendData.end = this.selToTimeHour.value + this.selToTimeMin.value
+			this.sendData._csrf = document.cookie.split("_csrf=")[1]
+			console.log(JSON.stringify(this.sendData))
+			xhr.send(JSON.stringify(this.sendData))
 		},
 		testDataset: function() {
 			this.TimeTable = []
@@ -256,23 +246,24 @@ export default {
 		mouseDown: function(time, item) {
 			if (!this.touchDevice) {
 				this.touching = true
-				this.fromTime = time
+				this.click.first = time
 				this.selectItem = item
+				this.sendData.itemId = this.product.id[item]
 				for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 				if (this.TimeTable[time * this.product.length + item].state !== 'occupied' && this.TimeTable[time * this.product.length + item].state !== 'notload') this.TimeTable[time * this.product.length + item].state = 'clickFrom'
 			}
 		},
-		mouseDrag: function(time, item) {
+		mouseDrag: function(time) {
 			if (this.touching && !this.touchDevice) {
 				for (let i in [...Array(this.product.length * 48).keys()]) { if (this.TimeTable[i].state === 'clickDrag') this.TimeTable[i].state = 'empty' }
-				if (this.fromTime < time) {
-					for (let i = this.fromTime + 1; i < time + 1; i++) {
+				if (this.click.first < time) {
+					for (let i = this.click.first + 1; i < time + 1; i++) {
 						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
 						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
-				else if (this.fromTime > time) {
-					for (let i = this.fromTime - 1; i > time - 1; i--) {
+				else if (this.click.first > time) {
+					for (let i = this.click.first - 1; i > time - 1; i--) {
 						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
 						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
@@ -284,13 +275,13 @@ export default {
 				this.touching = false
 				if (!this.collision && this.TimeTable[time * this.product.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.product.length + this.selectItem].state !== 'notload') {
 					this.TimeTable[time * this.product.length + this.selectItem].state = 'clickTo'
-					this.toTime = time
-					if (this.fromTime > this.toTime)[this.fromTime, this.toTime] = [this.toTime, this.fromTime]
+					this.click.second = time
+					if (this.click.first > this.click.second)[this.click.first, this.click.second] = [this.click.second, this.click.first]
 					this.TimeChanged()
 					this.dialog = true
 				}
 				else {
-					this.$emit('snackbar', this.focus !== null ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.focus !== null ? 'error' : 'info')
+					this.$emit('snackbar', this.sendData.date !== null ? '다른 사람이 예약한 시간대와 겹칩니다.<br>다른 시간대를 선택해 주세요.' : '날짜를 선택해 주세요.', this.sendData.date !== null ? 'error' : 'info')
 					for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 					this.collision = false
 				}
@@ -299,22 +290,22 @@ export default {
 		touchDetect: function(time, item) {
 			this.touchDevice = true
 			if (this.touching) {
-				if (this.fromTime < time) {
-					for (let i = this.fromTime + 1; i < time; i++) {
+				if (this.click.first < time) {
+					for (let i = this.click.first + 1; i < time; i++) {
 						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
 						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
-				else if (this.fromTime > time) {
-					for (let i = this.fromTime - 1; i > time; i--) {
+				else if (this.click.first > time) {
+					for (let i = this.click.first - 1; i > time; i--) {
 						if (this.TimeTable[i * this.product.length + this.selectItem].state === 'empty') this.TimeTable[i * this.product.length + this.selectItem].state = 'clickDrag'
 						else if (this.TimeTable[i * this.product.length + this.selectItem].state === 'occupied' || this.TimeTable[i * this.product.length + this.selectItem].state === 'notload') this.collision = true
 					}
 				}
 				if (!this.collision && this.TimeTable[time * this.product.length + this.selectItem].state !== 'occupied' && this.TimeTable[time * this.product.length + this.selectItem].state !== 'notload') {
 					this.TimeTable[(time) * this.product.length + this.selectItem].state = 'clickTo'
-					this.toTime = time
-					if (this.fromTime > this.toTime) [this.fromTime, this.toTime] = [this.toTime, this.fromTime]
+					this.click.second = time
+					if (this.click.first > this.click.second) [this.click.first, this.click.second] = [this.click.second, this.click.first]
 					this.TimeChanged()
 					this.dialog = true
 				} else {
@@ -324,8 +315,9 @@ export default {
 				}
 				this.touching = false
 			} else {
-				this.fromTime = time
+				this.click.first = time
 				this.selectItem = item
+				this.sendData.itemId = this.product.id[item]
 				for (let i in [...Array(this.product.length * 48).keys()]) if (this.TimeTable[i].state !== 'occupied' && this.TimeTable[i].state !== 'notload') this.TimeTable[i].state = 'empty'
 				if (this.TimeTable[time * this.product.length + item].state !== 'occupied' && this.TimeTable[time * this.product.length + item].state !== 'notload') {
 					this.TimeTable[time * this.product.length + item].state = 'clickFrom'
@@ -336,14 +328,15 @@ export default {
 		classInfo: function(i, j) {
 			switch (this.TimeTable[i * this.product.length + j].state) {
 				case 'notload':
-				case 'occupied':
 					return { 'grey lighten-2': true }
+				case 'occupied':
+					return { 'grey lighten-1': true }
 				case 'clickFrom':
-					return { 'red lighten-3': true, 'elevation-3': true }
+					return { 'red lighten-3': true, 'elevation-2': true }
 				case 'clickDrag':
-					return { 'red lighten-4': true, 'elevation-3': true }
+					return { 'red lighten-4': true, 'elevation-2': true }
 				case 'clickTo':
-					return { 'red lighten-3': true, 'elevation-3': true }
+					return { 'red lighten-3': true, 'elevation-2': true }
 				default:
 					return {}
 			}
@@ -356,13 +349,12 @@ export default {
 			// TODO: 사용자 목록 생성
 		},
 		TimeChanged: function() {
-			if (this.toTime > this.fromTime) {
-				this.selFromTimeHour = this.hourItems[parseInt(this.fromTime/2)]
-				this.selFromTimeMin = this.minItems[this.fromTime%2]
-				this.selToTimeHour = this.hourItems[parseInt(this.toTime/2)]
-				this.selToTimeMin = this.minItems[this.toTime%2]
-				this.duration = this.toTime - this.fromTime
-			}
+			console.log(JSON.stringify(this.click))
+				this.selFromTimeHour = this.hourItems[parseInt(this.click.first/2)]
+				this.selFromTimeMin = this.minItems[this.click.first%2]
+				this.selToTimeHour = this.hourItems[parseInt(this.click.second/2)]
+				this.selToTimeMin = this.minItems[this.click.second%2]
+				this.duration = this.click.second - this.click.first
 		},
 	},
 	computed: {
