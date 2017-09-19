@@ -9,7 +9,7 @@
               height="300px"
               style="opacity: 0.7">
               <v-card-title>
-                <h2 class="indigo--text text--darken-4">SMART CAR Learning Factory</h2>
+                <h2 class="grey--text text--lighten-4">SMART CAR Learning Factory</h2>
               </v-card-title>
             </v-card-media>
             <v-card-text class="pa-4">

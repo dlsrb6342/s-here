@@ -18,9 +18,9 @@
 							<v-btn fab flat small @click="getBefore_day">
 								<v-icon>keyboard_arrow_left</v-icon>
 							</v-btn>
-							<v-btn fab class="indigo darken-1 white--text title">{{ today | day(-1) }}</v-btn>
-							<v-btn fab large class="indigo darken-1 white--text headline">{{ today | day }}</v-btn>
-							<v-btn fab class="indigo darken-1 white--text title">{{ today | day(1) }}</v-btn>
+							<v-btn fab small class="indigo darken-1 white--text title mx-1">{{ today | day(-1) }}</v-btn>
+							<v-btn fab class="indigo darken-1 white--text headline mx-1">{{ today | day }}</v-btn>
+							<v-btn fab small class="indigo darken-1 white--text title mx-1">{{ today | day(1) }}</v-btn>
 							<v-btn fab flat small @click="getNext_day">
 								<v-icon>keyboard_arrow_right</v-icon>
 							</v-btn>
@@ -206,7 +206,7 @@ export default {
 				}
 				xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
 			}
-		},	
+		},
 		reserve: function() {
 			let xhr = new XMLHttpRequest(), self = this
 			xhr.open('POST', '/api/reserve/')
@@ -369,6 +369,11 @@ export default {
 </script>
 
 <style scoped>
+  @media only screen and (max-width: 599px){
+    .SFwide{
+      padding: 10px;
+    }
+  }
 div .picker {
 	margin: 0 auto;
 }

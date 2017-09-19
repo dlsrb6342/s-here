@@ -3,6 +3,7 @@
     <v-carousel class="hidden-sm-and-down elevation-15">
       <v-carousel-item v-for="(item, i) in this.items" :src="item.src" :key="i"></v-carousel-item>
     </v-carousel>
+    <h4 class="hidden-md-and-up font-exo text-center mt-3 mb-1">SMART CAR FACTORY</h4>
     <hr class="mt-5 mb-5">
     <v-container fluid class="non-padding text-left mb-5">
       <v-layout row-md column>
@@ -45,8 +46,8 @@
               <div>
                 <h3 class="headline mb-0">문의사항</h3>
                 <div class="caption">
-                  Learning factory 운영진<br>
-                  WE UP 사업단
+                  Learning factory 운영진 (031.290.5699)<br>
+                  WE UP 사업단 (031.290.5612)
                 </div>
               </div>
             </v-card-title>
@@ -82,7 +83,7 @@ export default {
     getNotice: function () {
       let xhr = new XMLHttpRequest(), self = this
       // TODO: fix correct url and request
-			xhr.open('GET', '/api/admin/notice') 
+			xhr.open('GET', '/api/admin/notice')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {

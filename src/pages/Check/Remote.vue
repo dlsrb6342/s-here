@@ -82,7 +82,7 @@ export default {
     },
 		sendSignal: function () {
       let xhr = new XMLHttpRequest(), self = this
-			xhr.open('GET', '/api/remote/door')  
+			xhr.open('GET', '/api/remote/door')
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -110,7 +110,7 @@ export default {
         }
       }
       xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
-      
+
     },
     reportToAdmin: function () {
       let xhr = new XMLHttpRequest(), self = this
