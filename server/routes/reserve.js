@@ -21,7 +21,13 @@ router.get('/', (req, res) => {
     $or : [
       { user: req.session.userInfo._id },
       { people: req.session.userInfo._id }
-    ], start: { $lte: now }}, (err, reservations) => {
+    ], $or : [
+      { start: { $gte: now } },
+      { $and: [
+        {start: { $lte: now }},
+        {end: { $gte: now }}
+      ]}
+    ]}, (err, reservations) => {
     if (err) throw err;
     return res.json({
       success: true,

@@ -9,7 +9,8 @@
     "dev": "node build/dev-server.js",
     "dev-server": "NODE_ENV=development nodemon --exec babel-node --presets=es2015 ./server/main.js --watch server",
     "start": "node public/main.js",
-    "build": "babel server --out-dir public --presets=es2015 && node build/build.js"
+    "build": "babel server --out-dir public --presets=es2015 && node build/build.js",
+    "server-build": "babel server --out-dir public --presets=es2015"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
