@@ -14,8 +14,15 @@ Admin API
         요청에 성공했을 때 : { success : true }
 
 
-    •   고장신고 내역 ( /api/admin/notice GET )
+    •   고장신고 내역 ( /api/admin/timetable/:date GET )
       return value :
-        요청에 성공했을 때 : { data:  }
-
-
+        요청에 성공했을 때 : { data: {
+          아이템 이름: [{
+            user: {
+              name : , student_id : 
+            },
+            start: ,
+            end
+          }, ... ],
+          ...
+        }}
