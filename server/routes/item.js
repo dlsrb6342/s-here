@@ -13,6 +13,13 @@ router.use((req, res, next) => {
   next();
 });
 
+router.get('/test', (req, res) => {
+  Item.find({}, (err, items) => {
+    console.log(items);
+    return res.json({data: items});
+  });
+});
+
 router.get('/:date', (req, res) => {
   let date = parseInt(req.params.date);
   let today = new Date();
@@ -21,22 +28,25 @@ router.get('/:date', (req, res) => {
       error: "INVALID_DATE",
       code: 0
     });
-  }
+  };
   Item.aggregate([
-    { $match: { 
-      active: true 
-    }},
-    { $unwind: '$occupied' },
-    { $match: { $and: [
-      { occupied: { $gte: date * 100 }}, 
-      { occupied: { $lt: (date + 1) * 100 }}
-    ]}},
-    { $group : {
-      _id: "$_id",
-      occupied: { $addToSet : "$occupied" }
+    { $match: { active: true }},
+    { $project: {
+      name: 1, category: 1,
+      occupied: {
+        $filter: {
+          input: { $setUnion: [ "$occupied", [] ]},
+          as: "o",
+          cond: { $and : [
+            { $gte: [ "$$o", date * 100 ]},
+            { $lt: [ "$$o", (date + 1) * 100 ]}
+          ]}
+        }
+      }
     }}
   ], (err, items) => {
     if (err) throw err;
+    console.log(items);
     return res.json({ data: items });
   });
 });
