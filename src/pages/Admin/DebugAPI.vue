@@ -56,7 +56,12 @@ export default {
       let xhr = new XMLHttpRequest(), self = this
       xhr.open(responseType, this.destination)
       xhr.setRequestHeader("Content-Type", "application/json")
-      xhr.onreadystatechange = function () { if (xhr.readyState === XMLHttpRequest.DONE) self.retData = xhr.responseText }
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          self.retData = xhr.responseText
+          self.$emit('snackbar', '전송 완료', 'success')
+        }
+      }
       let temp = JSON.parse(this.data)
       temp._csrf = document.cookie.split("_csrf=")[1]
       console.log(temp)

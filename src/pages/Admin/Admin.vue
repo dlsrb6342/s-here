@@ -18,11 +18,11 @@
       <v-btn dark secondary @click.native="currentTab = 'debugapi'" v-if="currentTab === 'debugapi'">디버깅</v-btn>
       <v-spacer></v-spacer>
     </v-layout>
-    <reservation v-show="currentTab === 'reservation'"></reservation>
-    <notice v-show="currentTab === 'notice'"></notice>
-    <troubleshoot v-show="currentTab === 'troubleshoot'"></troubleshoot>
-    <usermanage v-show="currentTab === 'usermanage'"></usermanage>
-    <debugapi v-show="currentTab === 'debugapi'"></debugapi>
+    <reservation v-show="currentTab === 'reservation'" @snackbar="Snackbar"></reservation>
+    <notice v-show="currentTab === 'notice'" @snackbar="Snackbar"></notice>
+    <troubleshoot v-show="currentTab === 'troubleshoot'" @snackbar="Snackbar"></troubleshoot>
+    <usermanage v-show="currentTab === 'usermanage'" @snackbar="Snackbar"></usermanage>
+    <debugapi v-show="currentTab === 'debugapi'" @snackbar="Snackbar"></debugapi>
   </div>
 </template>
 
@@ -47,6 +47,9 @@ export default {
       currentTab: 'reservation',
     }
   },
+  methods: {
+    Snackbar: function (msg, mode) { this.$emit('snackbar', msg, mode) }
+  }
 }
 </script>
 
