@@ -1,5 +1,5 @@
 <template>
-	<div class="view align-center vertical-center-flex">
+  <div class="view align-center vertical-center-flex">
     <v-container class="SFcontent-boxM">
       <h2 class="text-center font-exo">Sign In</h2>
       <v-layout row>
@@ -8,31 +8,15 @@
             <v-form v-model="valid" lazy-validation ref="form">
               <v-layout row>
                 <v-flex lg12 xs12>
-                  <v-text-field
-                    label="Student ID"
-                    v-model="studentId"
-                    :rules="[v => !!v || '학번을 입력해 주세요.']"
-                    :counter="10"
-                    required
-                    name="id"
-                  ></v-text-field>
+                  <v-text-field label="Student ID" v-model="studentId" :rules="[v => !!v || '학번을 입력해 주세요.']" :counter="10" required name="id" @keypress.native="v => v.key === 'Enter' && submit()"></v-text-field>
                   <!--
-                    , v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
-                  -->
+                      , v => v && v.replace(/\D/g,'').length == 10 && v.length == 10 || '학번은 숫자 10자 입니다']"
+                    -->
                 </v-flex>
               </v-layout>
               <v-layout row>
                 <v-flex lg12 xs12>
-                  <v-text-field
-                    label="Password"
-                    v-model="Password"
-                    :rules="[v => !!v || '비밀번호를 입력해 주세요.', v => v && v.length >= 9 || '비밀번호는 최소 9자 입니다.']"
-                    name="pw"
-                    min="9"
-                    :append-icon="e1 ? 'visibility' : 'visibility_off'"
-                    :append-icon-cb="() => (e1 = !e1)"
-                    :type="e1 ? 'password' : 'text'"
-                  ></v-text-field>
+                  <v-text-field label="Password" v-model="Password" :rules="[v => !!v || '비밀번호를 입력해 주세요.', v => v && v.length >= 9 || '비밀번호는 최소 9자 입니다.']" name="pw" min="9" :append-icon="e1 ? 'visibility' : 'visibility_off'" :append-icon-cb="() => (e1 = !e1)" :type="e1 ? 'password' : 'text'" @keypress.native="v => v.key === 'Enter' && submit()"></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row justify-space-around>
@@ -42,7 +26,8 @@
                 <v-btn flat @click="goPage('signup')">
                   Sign up
                 </v-btn>
-                <v-btn icon class="hidden-xs-only" flat @click.native="lostPW()" v-tooltip:top="{ html: '비밀번호를 잊으셨나요?' }"  > <!--go.page(lost)로 수정-->
+                <v-btn icon class="hidden-xs-only" flat @click.native="lostPW()" v-tooltip:top="{ html: '비밀번호를 잊으셨나요?' }">
+                  <!--go.page(lost)로 수정-->
                   <v-icon>account_circle</v-icon>
                 </v-btn>
               </v-layout>
@@ -51,30 +36,30 @@
         </v-container>
       </v-layout>
     </v-container>
-	</div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'login',
-	data () {
-		return {
+  data() {
+    return {
       valid: false,
       signup: false,
       e1: true,
       studentId: '',
       Password: '',
-		}
-	},
+    }
+  },
   methods: {
-    goPage: function (goMessage) { this.$router.push(goMessage) },
-    lostPW: function () { this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info') },
-		submit: function () {
+    goPage: function(goMessage) { this.$router.push(goMessage) },
+    lostPW: function() { this.$emit('snackbar', '관리자에게 문의해 주세요.', 'info') },
+    submit: function() {
       if (this.$refs.form.validate()) {
-				let xhr = new XMLHttpRequest(), self = this
-				xhr.open('POST', '/api/user/login')
-				xhr.setRequestHeader('Content-type', 'application/json')
-				xhr.onreadystatechange = function () {
+        let xhr = new XMLHttpRequest(), self = this
+        xhr.open('POST', '/api/user/login')
+        xhr.setRequestHeader('Content-type', 'application/json')
+        xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             let result = JSON.parse(xhr.responseText)
             self.studentId = ''
@@ -105,8 +90,8 @@ export default {
           password: this.Password,
           _csrf: document.cookie.split("_csrf")[1]
         }))
-			}
-		},
+      }
+    },
   }
 }
 </script>
