@@ -73,7 +73,7 @@ export default {
         { src: '../../static/img/bg2.jpg' },
         { src: '../../static/img/bg3.jpg' }
       ],
-      msg: '<br>스마트카 팩토리 예약 시스템에 오신 것을 환영합니다.'
+      msg: '스마트카 팩토리 예약 시스템에 오신 것을 환영합니다.'
     }
   },
   created () {

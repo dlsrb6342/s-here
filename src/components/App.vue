@@ -110,7 +110,9 @@
       </v-toolbar-items>
     </v-toolbar>
     <main>
-      <router-view :user="currentUser" @snackbar="showSnackbar" @setUser="changeUser"></router-view>
+      <router-view :user="currentUser" @snackbar="showSnackbar" @setUser="changeUser">
+        <center>페이지 로딩에 실패하였습니다.</center>
+      </router-view>
     </main>
     <v-footer id="app-footer" class="vertical-center">
       <div class="text-center">
@@ -221,5 +223,15 @@ export default {
     .SFdrawer{
       width: 65%;
     }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity .3s
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0
   }
 </style>

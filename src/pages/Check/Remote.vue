@@ -10,7 +10,7 @@
         <v-layout row-sm column justify-space-around class="pt-2">
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat :disabled="select === {}" class="SFtall" @click.native="sendSignal()">
+              <v-btn flat :disabled="select == {}" class="SFtall" @click.native="sendSignal()">
                 <v-icon class="SFbtn-lg indigo--text text--lighten-1">lock_open</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
@@ -20,7 +20,7 @@
           </v-flex>
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat :disabled="select === {}" class="SFtall" @click.native="earlyReturn()">
+              <v-btn flat :disabled="select == {}" class="SFtall" @click.native="earlyReturn()">
                 <v-icon class="SFbtn-lg indigo--text text--lighten-1">directions_run</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
@@ -30,7 +30,7 @@
           </v-flex>
           <v-flex md3 sm4 class="my-2">
             <v-card class="elevation-10">
-              <v-btn flat :disabled="select === {}" class="SFtall" @click.native.stop="dialog = true">
+              <v-btn flat :disabled="select == {}" class="SFtall" @click.native.stop="dialog = true">
                 <v-icon class="SFbtn-lg indigo--text text--lighten-1">build</v-icon>
               </v-btn>
               <div class="hidden-xs-only text-center pa-3">
@@ -44,6 +44,7 @@
                 </v-card-title>
                 <v-select :items="['필라멘트 부족', '오토 레벨링 실패', '노즐 막힘', '기타']" v-model="troubletype"></v-select>
                 <v-text-field v-model="troubleMsg" v-show="troubletype === '기타'" multi-line></v-text-field>
+                <v-spacer></v-spacer>
                 <v-btn dark primary @click.native="reportTrouble()">신고</v-btn>
                 <v-btn dark primary @click.native="dialog = false, troubletype = ''">닫기</v-btn>
               </v-card>
@@ -52,7 +53,6 @@
         </v-layout>
       </v-container>
     </v-container>
-
   </div>
 </template>
 
@@ -64,6 +64,7 @@ export default {
       isOpen: false,
       selected: false,
       troubletype: null,
+      itemMaps: {},
       troubleMsg: '',
       dialog: false,
       loading: false,
@@ -73,10 +74,26 @@ export default {
       retData: [],
     }
   },
-  created() {
+  beforeCreate() {
+    this.retItemMaps()
     this.retReserveList()
   },
   methods: {
+    retItemMaps: function () {
+      let xhr = new XMLHttpRequest(), self = this
+      xhr.open('GET', '/api/item/' + new Date().toJSON().slice(0,10).replace(/-/g,''))
+      xhr.setRequestHeader("Content-type", "application/json")
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          let result = JSON.parse(xhr.responseText)
+          self.itemMap = {}
+          if (result.hasOwnProperty('success')) {
+            for (let item of result.data) self.itemMap[item['_id']] = item.name
+          } else self.$emit('snackbar', '아이템 목록을 조회하지 못하였습니다.', 'error')
+        }
+      }
+      xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
+    },
     retReserveList: function() {
       let xhr = new XMLHttpRequest(), self = this
       xhr.open('GET', '/api/reserve/')
@@ -89,12 +106,13 @@ export default {
             self.retData = result.data
             for (let item of result.data) {
               self.schedules.push({
-                text: item['start'].toString().slice(6, 8) + '일: ' + parseInt(parseInt(item['start'].toString().slice(8, 10)) / 2) + '시 ' + (parseInt(item['start'].toString().slice(8, 10)) % 2 == 1 ? '반' : '') + ' ~ ' + + parseInt(parseInt(item['end'].toString().slice(8, 10)) / 2) + '시 ' + (parseInt(item['end'].toString().slice(8, 10)) % 2 == 1 ? '반' : ''),
+                text: '('+itemMaps[item['item']]+')'+item['start'].toString().slice(6, 8) + '일 ' + parseInt(parseInt(item['start'].toString().slice(8, 10)) / 2) + ':' + (parseInt(item['start'].toString().slice(8, 10)) % 2 == 1 ? '30' : '00') + '~' + parseInt(parseInt(item['end'].toString().slice(8, 10)) / 2) + ':' + (parseInt(item['end'].toString().slice(8, 10)) % 2 == 1 ? '30' : '00'),
                 value: item['_id'],
               })
             }
           }
-          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요..', 'info')
+          else if (result.code == -3) self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
+          else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
         }
       }
       xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))
@@ -147,9 +165,9 @@ export default {
           else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
         }
       }
-      if (troubletype === '필라멘트 부족') this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 필라멘트 부족 으로 접수됨.'
-      else if (troubletype === '오토 레벨링 실패') this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 오토 레벨링 실패 으로 접수됨.'
-      else if (troubletype === '노즐 막힘') this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 노즐 막힘 으로 접수됨.'
+      if (this.troubletype === '필라멘트 부족') this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 필라멘트 부족 으로 접수됨.'
+      else if (this.troubletype === '오토 레벨링 실패') this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 오토 레벨링 실패 으로 접수됨.'
+      else if (this.troubletype === '노즐 막힘') this.troubleMsg = '[itemId:' + this.retData['item' ] + '] 가 고장내역: 노즐 막힘 으로 접수됨.'
       else this.troubleMsg = '[itemId:' + this.retData['item'] + '] 가 고장내역: 기타(' + this.troubleMsg + ') 으로 접수됨.'
       xhr.send(JSON.stringify({ content: this.troubleMsg, _csrf: document.cookie.split("_csrf=")[1] }))
     },

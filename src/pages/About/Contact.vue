@@ -1,5 +1,5 @@
 <template>
-	<div class="contact container view">
+	<div class="contact container view" v-once>
       <h2 class="mt-5 text-center font-exo">CONTACT</h2>
       <v-container fluid class="mt-5">
         <v-layout row>

@@ -34,13 +34,19 @@
             <v-layout row-md column>
               <v-flex lg9 class="elevation-10 white px-2 SFtable">
                 <v-layout row child-flex class="pa-0 my-1">
+                  <v-card class="pa-1 my-1 mx-0">
+                    <v-card-text class="pa-0"></v-card-text>
+                  </v-card>
                   <v-card v-for="(item, j) in product.name" :key="j" class="pa-1 my-1 mx-0">
                     <v-card-text class="pa-0">{{ item }}</v-card-text>
                   </v-card>
                 </v-layout>
                 <v-layout row child-flex class="pa-0 my-0" v-for="i in 48" :key="i">
+                  <v-card class="pa-1 mx-0 " style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
+                    <v-card-text class="caption pa-0 ma-1">{{ hourItems[parseInt((i-1)/2)]['hour'] }} {{ minItems[(i-1) % 2]['min'] }}</v-card-text>
+                  </v-card>
                   <v-card v-for="j in product.length" :key="j" @touchend="touchDetect(i-1,j-1)" @mousedown="mouseDown(i-1,j-1)" @mouseup="mouseUp(i-1)" @mouseenter="mouseDrag(i-1)" class="pa-1 mx-0 " :class="classInfo(i-1,j-1)" style="-ms-user-select: none;-moz-user-select: -moz-none;-khtml-user-select: none;-webkit-user-select: none;user-select: none;">
-                    <v-card-text class="caption pa-0 ma-1">{{ TimeTable[(i-1) * product.length + (j-1)].text }}</v-card-text>
+                    <v-card-text class="caption pa-0 ma-1"></v-card-text>
                   </v-card>
                 </v-layout>
               </v-flex>
@@ -401,15 +407,5 @@ export default {
 
 div .picker {
   margin: 0 auto;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .3s
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0
 }
 </style>
