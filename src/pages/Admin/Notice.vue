@@ -1,5 +1,5 @@
 <template>
-  <div id="notice">
+  <div class="view container notice">
     <v-container class="SFwide">
       <v-flex md12 class="mt-3" >
         <v-card>
@@ -51,8 +51,10 @@ export default {
 			xhr.open('POST', '/api/admin/notice') 
 			xhr.setRequestHeader("Content-type", "application/json")
 			xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE) self.getNotice()
-        else self.$emit('snackbar', '공지사항 수정 실패. 서버 관리자에게 문의바람.', 'error')
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          self.getNotice()
+          if (self.msg != self.notice) self.$emit('snackbar', '공지사항 수정 실패. 서버 관리자에게 문의바람.', 'error')
+        }
       }
 			xhr.send(JSON.stringify({ content: this.msg, _csrf: document.cookie.split("_csrf=")[1] }))
     }

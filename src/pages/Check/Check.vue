@@ -199,6 +199,7 @@ export default {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             self.product = { length: 0, id: [], name: [], }
             let result = JSON.parse(xhr.responseText)
+            self.retData = []
             if (result.hasOwnProperty('data')) {
               self.retData = result.data
               self.TimeTable = []
@@ -217,19 +218,9 @@ export default {
                 }
               }
             }
-            else {
-              self.retData = []
-              switch (result.code) {
-                case -3:
-                  self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
-                  break
-                case 0:
-                  self.$emit('snackbar', '오늘 이전의 날짜를 선택하셨습니다.', 'error')
-                  break
-                default:
-                  self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
-              }
-            }
+            else if (result.code === -3) self.$emit('snackbar', '로그인 하셔야만 이용하실 수 있습니다.', 'error')
+            else if (result.code === 0) self.$emit('snackbar', '오늘 이전의 날짜를 선택하셨습니다.', 'error')
+            else self.$emit('snackbar', '조회에 실패하였습니다.', 'warning')
           }
         }
         xhr.send(JSON.stringify({ _csrf: document.cookie.split("_csrf=")[1] }))

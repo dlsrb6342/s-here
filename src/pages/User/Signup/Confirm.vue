@@ -17,15 +17,9 @@ export default {
         if (result.hasOwnProperty('success')) {
           self.$emit('snackbar', '메일 인증이 완료되었습니다!', 'success')
           self.$router.push('mainpage')
-        } else {
-          switch (result.code) {
-            case 0:
-              self.$emit('snackbar', '잘못된 토큰입니다.', 'error')
-              break
-            default:
-              self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
-          }
         }
+        else if (result.code === 0) self.$emit('snackbar', '잘못된 토큰입니다.', 'error')
+        else self.$emit('snackbar', '알 수 없는 오류입니다.<br>관리자에게 문의해 주세요.', 'info')
       }
     }
     xhr.send(JSON.stringify({ token: this.$route.query.token, _csrf: document.cookie.split("_csrf=")[1] }))
