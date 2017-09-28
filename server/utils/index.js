@@ -1,7 +1,8 @@
 function getNow() {
   let today = new Date();
-  let date = today.toJSON().slice(0,10).split('-').join('');
-  let now = date + (today.getHours() * 2 + (today.getMinutes() >= 30 ? 1 : 2))
+  let month = today.getMonth() > 8 ? today.getMonth() + 1 : "0" + (today.getMonth() + 1)
+  let date = "" + today.getFullYear() + month + today.getDate(); 
+  let now = date + (today.getHours() * 2 + (today.getMinutes() >= 30 ? 1 : 0))
   return now;
 }
 

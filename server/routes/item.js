@@ -15,7 +15,6 @@ router.use((req, res, next) => {
 
 router.get('/test', (req, res) => {
   Item.find({}, (err, items) => {
-    console.log(items);
     return res.json({data: items});
   });
 });
@@ -46,7 +45,6 @@ router.get('/:date', (req, res) => {
     }}
   ], (err, items) => {
     if (err) throw err;
-    console.log(items);
     return res.json({ data: items });
   });
 });

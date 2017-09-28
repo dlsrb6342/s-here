@@ -17,10 +17,13 @@ router.use((req, res, next) => {
 
 router.get('/', (req, res) => {
   let now = getNow();
-  Reservation.find({ 
+  let _id = mongoose.Types.ObjectId(req.session.userInfo._id);
+  Reservation.find({
     start: { $gte: now },
-    user: req.session.userInfo._id
-    }, (err, reservations) => {
+    $or: [
+      { user:_id }, { people: _id }
+    ]}).populate('item', 'name').
+    exec((err, reservations) => {
     if (err) throw err;
     return res.json({
       success: true,
@@ -55,20 +58,20 @@ router.post('/', (req, res) => {
         code: 1
       });
     };
-    users.forEach((user) => {
-      if (user.reservations.includes(date)) {
+    for(let i = 0; i < users.length; i++){
+      if (users[i].reservations.includes(parseInt(date))) {
         return res.status(400).json({
           error: "ALREADY_RESERVED",
           code: 2
         });
       };
-      if (!user.active || !user.confirmed) {
+      if (!users[i].active || !users[i].confirmed) {
         return res.status(403).json({
           error: "INVALID_USER",
           code: 3
         });
       };
-    });
+    }
     Item.findById(itemId, (err, item) => {
       if (err) throw err;
       let occupied = item.occupied.filter((value) => {

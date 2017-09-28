@@ -17,14 +17,15 @@ router.use((req, res, next) => {
 
 router.get('/', (req, res) => {
   let now = getNow();
+  let _id = mongoose.Types.ObjectId(req.session.userInfo._id);
   Reservation.find({ 
     $or : [
-      { user: req.session.userInfo._id },
-      { people: req.session.userInfo._id }
+      { user: _id }, { people: _id }
     ], $and: [
       { start: { $lte: now }},
       { end: { $gte: now }}
-    ]}, (err, reservations) => {
+    ]}).populate('item', 'name').
+    exec((err, reservations) => {
     if (err) throw err;
     return res.json({
       success: true,
