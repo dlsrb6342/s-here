@@ -97,6 +97,9 @@ export default {
 </script>
 
 <style scoped>
+  div.caption{
+    height: 36px;
+  }
   div.non-padding{
     padding: 0;
   }

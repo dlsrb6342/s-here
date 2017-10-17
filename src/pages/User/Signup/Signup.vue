@@ -32,7 +32,7 @@
               {{ this.password }}
               <v-layout row>
                 <v-flex xs12>
-                  <v-text-field v-model="Verify" label="Verify your Password" :rules="pwdRules" min="9" :type="password"></v-text-field>
+                  <v-text-field v-model="Verify" label="Verify your Password" :rules="pwdRules" min="9" :type="'password'"></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row justify-space-around>
